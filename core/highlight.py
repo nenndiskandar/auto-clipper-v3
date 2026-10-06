@@ -1360,6 +1360,7 @@ Aturan: pilih highlight yang paling sesuai brief di atas, prioritas momen yang m
             # WORKFLOW Step7 manifest source: simpan URL agar manifest.json per-clip terisi.
             # KEEP-ALL: section/raw + transcript + clips tetap disimpan (no deletion).
             self._last_source_url = url or ""
+            # Mark session as processing right away
             session_data_file = session_dir / "session_data.json"
             session_data = {}
             if session_data_file.exists():
