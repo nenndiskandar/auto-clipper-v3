@@ -1,0 +1,139 @@
+"""
+Logging utilities for Auto Clipper
+"""
+
+import sys
+import os
+import re
+import traceback
+from datetime import datetime
+from pathlib import Path
+
+ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")
+
+
+def strip_ansi(text: str) -> str:
+    """Remove ANSI escape sequences from a string (for plain-text targets)."""
+    return ANSI_RE.sub("", text)
+
+
+# Enable console logging when running from terminal (not frozen)
+DEBUG_MODE = not getattr(sys, 'frozen', False)
+
+# Error log file path (will be set by setup_error_logging)
+ERROR_LOG_FILE = None
+
+# Optional GUI sink callback: receives every debug/error line (for in-app console)
+LOG_SINK = None
+
+
+def set_log_sink(callback):
+    """Register a callback that receives debug/error lines for in-app display.
+
+    Args:
+        callback: callable(msg: str) invoked with each formatted log line.
+    """
+    global LOG_SINK
+    LOG_SINK = callback
+
+
+def _emit_sink(msg: str):
+    """Push a line to the registered GUI sink, ignoring sink failures."""
+    if LOG_SINK is not None:
+        try:
+            LOG_SINK(msg)
+        except Exception:
+            pass
+
+
+def setup_error_logging(app_dir: Path):
+    """Setup error logging to file
+    
+    Args:
+        app_dir: Application directory where error.log will be created
+    """
+    global ERROR_LOG_FILE
+    ERROR_LOG_FILE = app_dir / "error.log"
+    
+    # Create log file if not exists
+    if not ERROR_LOG_FILE.exists():
+        ERROR_LOG_FILE.touch()
+    
+    # Redirect stderr to file for uncaught exceptions
+    sys.stderr = ErrorLogWriter(ERROR_LOG_FILE)
+
+
+class ErrorLogWriter:
+    """Custom writer that writes to both file and devnull"""
+    
+    def __init__(self, log_file: Path):
+        self.log_file = log_file
+        self.terminal = sys.__stderr__  # Keep reference to original stderr
+    
+    def write(self, message):
+        """Write message to log file"""
+        if message.strip():  # Only write non-empty messages
+            try:
+                with open(self.log_file, 'a', encoding='utf-8') as f:
+                    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    f.write(f"[{timestamp}] {message}")
+                    if not message.endswith('\n'):
+                        f.write('\n')
+            except Exception:
+                pass  # Silently fail if can't write to log
+    
+    def flush(self):
+        """Flush - required for file-like object"""
+        pass
+
+
+def debug_log(*args, **kwargs):
+    """Log to console only in debug mode (running from terminal).
+    Accepts multiple positional args (joined with a space) and ignores
+    common print() kwargs (end/file/flush) so call sites can be migrated
+    from print() without behavioural changes.
+    ANSI colors are kept for the GUI sink (LogPanel renders them) but
+    stripped for plain-text console/file output."""
+    msg = " ".join(str(a) for a in args)
+    if DEBUG_MODE:
+        # stderr only — jangan kotori stdout yang dipakai untuk JSON IPC (phase1_campaign)
+        try:
+            print(f"[DEBUG] {strip_ansi(msg)}", file=sys.stderr)
+        except Exception:
+            print(f"[DEBUG] {strip_ansi(msg)}")
+    _emit_sink(msg)
+
+
+def log_error(error_msg: str, exception: Exception = None):
+    """Log error to file with timestamp and traceback
+    
+    Args:
+        error_msg: Human-readable error message
+        exception: Optional exception object to log traceback
+    """
+    if ERROR_LOG_FILE is None:
+        return
+    
+    try:
+        with open(ERROR_LOG_FILE, 'a', encoding='utf-8') as f:
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            f.write(f"\n{'='*80}\n")
+            f.write(f"[{timestamp}] ERROR\n")
+            f.write(f"{'='*80}\n")
+            f.write(f"{error_msg}\n")
+            
+            if exception:
+                f.write(f"\nException Type: {type(exception).__name__}\n")
+                f.write(f"Exception Message: {str(exception)}\n")
+                f.write(f"\nTraceback:\n")
+                f.write(traceback.format_exc())
+            
+            f.write(f"{'='*80}\n\n")
+    except Exception:
+        pass  # Silently fail if can't write to log
+    _emit_sink(f"[ERROR] {error_msg}")
+
+
+def get_error_log_path() -> Path:
+    """Get the path to error log file"""
+    return ERROR_LOG_FILE

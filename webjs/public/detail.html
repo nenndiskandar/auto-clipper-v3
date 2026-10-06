@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auto Clipper</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+<style>
+a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible {
+  outline: 2px solid #facc15 !important;
+  outline-offset: 2px !important;
+}
+
+  /* pastikan kontrol Plyr tidak ter-potong di player sempit */
+  .plyr { width: 100%; max-width: 100%; }
+  .plyr__controls { flex-wrap: wrap; row-gap: 4px; }
+  .plyr--full-ui .plyr__controls { justify-content: center; }
+  #player { background: #000; }
+</style>
+<script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        accent: 'var(--accent)',
+        surface: { 0:'var(--bg-page)', 1:'var(--bg-surface)', 2:'var(--bg-surface-2)', 3:'var(--border)' },
+        zinc: { 450: '#8b8b96', 650: '#43434c' }
+      }
+    }
+  }
+}
+</script>
+<link rel="stylesheet" href="/app.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+<script>
+// FORCE CACHE CLEAR AND SW UNREGISTER
+(async function() {
+  if (localStorage.getItem('force_cleared_v13')) return;
+  try {
+    if ('serviceWorker' in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for (let r of regs) await r.unregister();
+    }
+    if ('caches' in window) {
+      const keys = await caches.keys();
+      for (let k of keys) await caches.delete(k);
+    }
+    localStorage.setItem('force_cleared_v13', '1');
+    window.location.reload(true);
+  } catch (e) {}
+})();
+</script>
+
+</head>
+<body class="min-h-screen flex flex-col md:flex-row antialiased ">
+
+<!-- SIDEBAR -->
+<aside class="w-full md:w-64 border-b md:border-b-0 md:border-r border-zinc-800  flex flex-col shrink-0">
+  <div class="p-4 border-b border-zinc-800 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="w-7 h-7 rounded-lg logo-mark flex items-center justify-center font-black text-sm"><i class="bi bi-lightning-charge-fill text-amber-400"></i></span>
+      <span class="font-bold text-sm tracking-wide text-white font-heading">AUTO<span class="text-[var(--accent)]">CLIPPER</span></span>
+    </div>
+    <div class="flex items-center gap-2"><button class="darkmode-btn darkmode-compact" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button><a href="/logout" class="min-h-[32px] min-w-[44px] flex items-center justify-center text-xs text-zinc-400 hover:text-white transition md:hidden">Logout</a></div>
+  </div>
+
+  <nav aria-label="Menu Utama" class="p-2 md:p-3 flex flex-row md:flex-col gap-1.5 flex-wrap" id="sidebarLinks">
+    <a href="/" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition bg-[var(--accent)] text-[var(--accent-text)] font-bold shadow-sm"><i class="bi bi-house-door"></i><span>Library Sesi</span></a>
+    <a href="/create.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-plus-square text-emerald-400"></i><span>Create Clip</span></a>
+    <a href="/tasks.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-list-task text-amber-400"></i><span>Antrean Tasks</span></a>
+    <a href="/story.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-film text-fuchsia-400"></i><span>AI Story</span></a>
+    <a href="/facebook.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-facebook text-blue-400"></i><span>FB Auto Upload</span></a>
+    <a href="/cookies.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-shield-lock text-orange-400"></i><span>Cookies YouTube</span></a>
+    <a href="/ternaklip.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-bullseye text-teal-400"></i><span>TernakKlip</span></a>
+    <a href="/dependencies.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-box-seam text-violet-400"></i><span>Dependencies</span></a>
+    <a href="/settings.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-gear text-zinc-400"></i><span>Settings & AI</span></a>
+  </nav>
+
+  <!-- Engine Status Indication -->
+  <div class="mt-auto px-4 py-3 border-t border-zinc-800/80 hidden md:flex flex-col gap-2 text-xs text-zinc-400 bg-zinc-950/40">
+    <span class="font-semibold text-[10px] uppercase tracking-wider text-zinc-400"><i class="bi bi-cpu text-emerald-400"></i> Engine Status</span>
+    <div class="flex items-center justify-between">
+      <span>FFmpeg</span>
+      <span id="st_ffmpeg" class="w-2.5 h-2.5 rounded-full bg-zinc-600" title="Checking..."></span>
+    </div>
+    <div class="flex items-center justify-between">
+      <span>yt-dlp</span>
+      <span id="st_ytdlp" class="w-2.5 h-2.5 rounded-full bg-zinc-600" title="Checking..."></span>
+    </div>
+    <div class="flex items-center justify-between">
+      <span>Deno</span>
+      <span id="st_deno" class="w-2.5 h-2.5 rounded-full bg-zinc-600" title="Checking..."></span>
+    </div>
+    <div class="flex items-center justify-between">
+      <span>AI Proxy</span>
+      <span id="st_ai" class="w-2.5 h-2.5 rounded-full bg-zinc-600" title="Checking..."></span>
+    </div>
+  </div>
+
+  <div class="p-4 border-t border-zinc-800 hidden md:flex items-center justify-between text-xs">
+    <span class="text-zinc-400 truncate max-w-[130px]" id="whoami"></span>
+    <div class="flex items-center gap-2"><button class="darkmode-btn darkmode-compact" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button><a href="/logout" class="text-zinc-400 hover:text-white transition">Logout</a></div>
+  </div>
+
+  <!-- Engine Status Mobile -->
+  <div class="md:hidden flex items-center justify-around px-4 py-2.5 border-t border-b border-zinc-800/80 bg-zinc-950/60 text-[10px] text-zinc-300">
+    <div class="flex items-center gap-1.5"><span id="st_ffmpeg_mob" class="w-2 h-2 rounded-full bg-zinc-600" title="Checking..."></span><span>FFmpeg</span></div>
+    <div class="flex items-center gap-1.5"><span id="st_ytdlp_mob" class="w-2 h-2 rounded-full bg-zinc-600" title="Checking..."></span><span>yt-dlp</span></div>
+    <div class="flex items-center gap-1.5"><span id="st_deno_mob" class="w-2 h-2 rounded-full bg-zinc-600" title="Checking..."></span><span>Deno</span></div>
+    <div class="flex items-center gap-1.5"><span id="st_ai_mob" class="w-2 h-2 rounded-full bg-zinc-600" title="Checking..."></span><span>AI</span></div>
+  </div>
+
+  
+
+  <!-- Disk Space Widget (desktop & mobile) -->
+  <div class="disk-widget border-t border-zinc-800/80">
+    <div class="disk-label"><i class="bi bi-hdd-stack text-sky-400"></i> memuat...</div>
+    <div class="disk-bar"><div class="disk-fill" style="width:0%"></div></div>
+  </div>
+
+</aside>
+
+<!-- MAIN CONTENT WRAPPER -->
+<div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+  <!-- MAIN CONTENT -->
+  <main class="max-w-5xl w-full mx-auto p-4 md:p-6 space-y-6 flex-1" id="mainContainer">
+    <div class="text-center text-zinc-400 py-12 text-sm" id="loadingState">Memuat detail klip…</div>
+    <div id="contentState" class="hidden space-y-6">
+      
+      <!-- VIDEO & METADATA -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- PLAYER -->
+        <div class="lg:col-span-6 bg-black rounded-xl border border-zinc-800 flex flex-col items-center justify-center shadow-lg relative min-h-[300px]">
+          <video id="player" class="w-full max-h-[80vh] object-contain rounded-lg" controls playsinline preload="metadata">
+        <source id="playerSource" src="" type="video/mp4" />
+      </video>
+        </div>
+
+        <!-- METADATA CARD -->
+        <div class="lg:col-span-6 space-y-4">
+          <div class="bg-surface-1 border border-zinc-800 rounded-xl p-4 shadow-sm">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="text-xs font-semibold text-zinc-400 uppercase tracking-wider"><i class="bi bi-card-list text-sky-400"></i> Informasi Klip</h2>
+              <div id="actionBtns" class="flex items-center gap-2"></div>
+            </div>
+            <table class="w-full text-xs text-zinc-300 border-collapse">
+              <tr class="border-b border-zinc-800/80"><td class="py-2 font-medium text-zinc-400 w-1/3">Judul</td><td class="py-2 text-white font-semibold" id="m_title">-</td></tr>
+              <tr class="border-b border-zinc-800/80"><td class="py-2 font-medium text-zinc-400">Waktu & Durasi</td><td class="py-2 text-white font-mono" id="m_time">-</td></tr>
+              <tr class="border-b border-zinc-800/80"><td class="py-2 font-medium text-zinc-400">Thumbnail Teks</td><td class="py-2 text-amber-600 dark:text-amber-300 font-medium" id="m_hook">-</td></tr>
+              <tr class="border-b border-zinc-800/80"><td class="py-2 font-medium text-zinc-400">Skor Viral</td><td class="py-2 text-amber-600 dark:text-amber-400 font-bold" id="m_score">-</td></tr>
+              <tr class="border-b border-zinc-800/80"><td class="py-2 font-medium text-zinc-400">Format</td><td class="py-2 text-white" id="m_aspect">-</td></tr>
+              <tr class="border-b border-zinc-800/80"><td class="py-2 font-medium text-zinc-400">Ukuran File</td><td class="py-2 text-white font-mono" id="m_size">-</td></tr>
+              <tr class="border-b border-zinc-800/80"><td class="py-2 font-medium text-zinc-400">Hashtags</td><td class="py-2 text-zinc-400 break-words" id="m_tags">-</td></tr>
+              <tr><td class="py-2 font-medium text-zinc-400">Deskripsi</td><td class="py-2 text-zinc-300" id="m_desc">-</td></tr>
+            </table>
+          </div>
+
+          <div id="sourceCard" class="text-xs bg-surface-1 border border-zinc-800 rounded-xl p-4 hidden">
+            <span class="font-medium text-zinc-400 block mb-1"><i class="bi bi-link-45deg text-sky-400"></i> Sumber Video YouTube:</span>
+            <a id="sourceUrl" class="text-accent hover:underline break-all font-mono" target="_blank" rel="noopener" href="#"></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI TRANSKRIP & FILES -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-surface-1 border border-zinc-800 rounded-xl p-4 space-y-2">
+          <label class="text-xs font-semibold text-zinc-400 uppercase tracking-wider block"><i class="bi bi-chat-quote text-sky-400"></i> Transkrip Momen</label>
+          <div id="m_transcript" class="bg-surface-2 border border-zinc-800 rounded-lg p-3 text-xs text-zinc-300 text-justify leading-relaxed max-h-48 overflow-y-auto"></div>
+        </div>
+        
+        <div class="bg-surface-1 border border-zinc-800 rounded-xl p-4 space-y-2">
+          <label class="text-xs font-semibold text-zinc-400 uppercase tracking-wider block"><i class="bi bi-robot text-fuchsia-400"></i> Analisis AI</label>
+          <div id="m_analysis" class="bg-surface-2 border border-zinc-800 rounded-lg p-3 text-xs text-zinc-300 italic leading-relaxed max-h-48 overflow-y-auto"></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+fetch('/api/me').then(r=>r.json()).then(d=>{if(d.name)document.getElementById('whoami').innerHTML='<i class="bi bi-person text-zinc-400"></i> '+esc(d.name);});
+
+const params = new URLSearchParams(window.location.search);
+const sid = params.get('session');
+const clipDir = params.get('clip');
+
+function fmtSize(b) {
+  if (!b) return '-';
+  if (b >= 1024 * 1024) return (b / 1048576).toFixed(1) + ' MB';
+  return Math.round(b / 1024) + ' KB';
+}
+
+async function loadDetail() {
+  if (!sid || !clipDir) {
+    document.getElementById('loadingState').textContent = 'Parameter sesi/klip tidak lengkap.';
+    return;
+  }
+  try {
+    const res = await fetch(`/api/sessions/${encodeURIComponent(sid)}/clip/${encodeURIComponent(clipDir)}`);
+    const data = await res.json();
+    if (!res.ok || !data.clip) {
+      document.getElementById('loadingState').textContent = data.error || 'Klip tidak ditemukan.';
+      return;
+    }
+    const s = data.session;
+    const c = data.clip;
+
+    document.getElementById('m_title').textContent = c.title || '-';
+    document.getElementById('m_time').textContent = `${c.start_time || '-'} → ${c.end_time || '-'} (${c.duration || 0}s)`;
+    document.getElementById('m_hook').textContent = c.hook_text || '-';
+    document.getElementById('m_score').textContent = c.score != null ? `${c.score} / 10` : '-';
+    document.getElementById('m_aspect').textContent = c.aspect || '-';
+    document.getElementById('m_size').textContent = `${fmtSize(c.size_bytes)} (${c.file || '-'})`;
+    document.getElementById('m_tags').textContent = c.hashtags || '-';
+    document.getElementById('m_desc').textContent = c.desc || '-';
+    document.getElementById('m_transcript').textContent = c.transcript || '-';
+    document.getElementById('m_analysis').textContent = c.analysis || '-';
+
+    const player = document.getElementById('player');
+    const srcEl = document.getElementById('playerSource');
+    srcEl.src = `/video/${encodeURIComponent(s.id)}/${encodeURIComponent(c.dir)}/${encodeURIComponent(c.file)}`;
+    srcEl.type = 'video/mp4';
+    player.poster = `/thumb/${encodeURIComponent(s.id)}/${encodeURIComponent(c.dir)}`;
+    player.load();
+    if (window.Plyr) {
+      if (window._plyrInstance) { try { window._plyrInstance.destroy(); } catch (e) {} }
+      window._plyrInstance = new Plyr(player, {
+        controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'captions', 'settings', 'pip', 'fullscreen'],
+        keyboard: { focused: true, global: true }
+      });
+    }
+
+    if (s.url) {
+      document.getElementById('sourceCard').classList.remove('hidden');
+      const uEl = document.getElementById('sourceUrl');
+      uEl.href = s.url;
+      uEl.textContent = s.url;
+    }
+
+    const dl = `/download/${encodeURIComponent(s.id)}/${encodeURIComponent(c.dir)}/${encodeURIComponent(c.file)}`;
+    const sessionUrl = `/session.html?id=${encodeURIComponent(sid)}`;
+    document.getElementById('actionBtns').innerHTML = `
+      <a href="${sessionUrl}" class="px-3 py-1.5 bg-surface-2 hover:bg-surface-3 border border-zinc-800 text-zinc-300 hover:text-white rounded text-xs font-semibold transition flex items-center gap-1">← Kembali ke Sesi</a>
+      <a href="${dl}" download class="px-3 py-1.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--accent-text)] rounded text-xs font-semibold transition flex items-center gap-1 shadow"><i class="bi bi-download"></i> Download</a>
+    `;
+
+    document.getElementById('loadingState').classList.add('hidden');
+    document.getElementById('contentState').classList.remove('hidden');
+  } catch (e) {
+    document.getElementById('loadingState').textContent = 'Gagal memuat data: ' + e;
+  }
+}
+
+loadDetail();
+</script>
+<script src="/engine_status.js"></script>
+<script src="/ui.js?v=13"></script>
+</body>
+</html>

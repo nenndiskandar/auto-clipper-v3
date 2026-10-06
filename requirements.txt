@@ -1,0 +1,22 @@
+# Auto Clipper v3 — Python deps (engine + bot) — edited from v2, leaner AI-first
+openai>=1.54.0
+opencv-python>=4.10.0
+numpy>=1.26.0
+Pillow>=11.0.0
+mediapipe>=0.10.14
+requests>=2.32.0
+yt-dlp>=2026.08.19
+curl-cffi>=0.14.0
+faster-whisper>=1.1.1
+silero-vad>=4.0.0
+onnxruntime>=1.19.0
+# uploaders
+google-api-python-client>=2.143.0
+google-auth-oauthlib>=1.2.1
+google-auth-httplib2>=0.2.0
+# telegram
+python-telegram-bot>=21.9
+telethon>=1.40.0
+# v3 new
+pydantic>=2.8.0
+python-dotenv>=1.0.1
