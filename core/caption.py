@@ -1471,19 +1471,41 @@ class CaptionMixin:
                     debug_log(f"[Metadata] normalize gagal: {e}")
 
             # Feature 9: Thumbnail generator (dari clip final, best-effort)
+            # AI thumbnail_picker pilih frame ekspresif 0-3s + overlay timed_title
             if (self.thumbnail_settings or {}).get("enabled") and final_file.exists():
                 try:
-                    from core.thumbnail import buat_thumbnail
+                    from core.thumbnail import ai_pick_frame, buat_thumbnail
                     thumb_cfg = self.thumbnail_settings or {}
-                    thumb_path = clip_dir / "thumbnail.jpg"
+                    pick = {"timestamp": 1.0, "reason": "default"}
+                    try:
+                        pick = ai_pick_frame(
+                            str(final_file),
+                            highlight.get("transcript_text") or highlight.get("description") or "",
+                            getattr(self, "brief_dict", None) or highlight.get("brief") or {},
+                            orchestrator=getattr(self, "orchestrator", None),
+                        ) or pick
+                    except Exception as e:
+                        debug_log(f"[Thumbnail] ai_pick_frame gagal: {e}")
+                    frame_ms = int(max(0.0, min(3.0, float((pick or {}).get("timestamp", 1.0)))) * 1000)
+                    thumb_text = thumb_cfg.get("text") or ""
+                    timed = highlight.get("timed_title") if isinstance(highlight.get("timed_title"), dict) else None
+                    thumb_path = clip_dir / "thumb.jpg"
                     buat_thumbnail(
                         str(final_file),
                         str(thumb_path),
-                        teks=thumb_cfg.get("text"),
-                        frame_ms=1000,
+                        teks=thumb_text or None,
+                        timed_title=timed,
+                        frame_ms=frame_ms,
                     )
+                    # compat: thumbnail.jpg alias untuk UI lama
+                    try:
+                        import shutil as _sh
+                        _sh.copy(str(thumb_path), str(clip_dir / "thumbnail.jpg"))
+                    except Exception:
+                        pass
                     metadata["thumbnail"] = thumb_path.name
-                    self.log(f"  ✓ Thumbnail: {thumb_path.name}")
+                    metadata["thumbnail_pick"] = pick
+                    self.log(f"  ✓ Thumbnail: {thumb_path.name} @{(pick or {}).get('timestamp', 1.0):.1f}s")
                 except Exception as e:
                     debug_log(f"[Thumbnail] gagal: {e}")
 
