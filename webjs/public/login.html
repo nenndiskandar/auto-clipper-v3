@@ -19,6 +19,13 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
   outline: 2px solid #facc15 !important;
   outline-offset: 2px !important;
 }
+#btn-login.btn-grad{ background: linear-gradient(90deg, #14b8a6 0%, #0ea5e9 30%, #6366f1 50%, #0ea5e9 70%, #14b8a6 100%); background-size: 300% 100%; animation: login-grad 1.2s linear infinite; color: #fff; border: 0; text-shadow: 0 1px 2px rgba(0,0,0,.35); }
+@keyframes login-grad{ 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+@media (prefers-reduced-motion: reduce){ #btn-login.btn-grad{ animation: none; } }
+#btn-login.btn-grad:hover{ filter: brightness(1.06); }
+#btn-login.btn-grad:active{ filter: brightness(0.94); }
+#btn-login.btn-grad:disabled{ opacity: .7; animation: none; }
+
 
 
 </style>
@@ -47,7 +54,7 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 </head>
 <body class="min-h-screen flex items-center justify-center p-2">
 <div class="portal-bg" aria-hidden="true"><i></i><i></i><i></i></div>
-<div class="card-panel border border-[var(--border)] rounded-xl shadow-2xl p-2 max-w-sm w-full text-center space-y-1">
+<div class="card-panel relative z-10 border border-[var(--border)] rounded-xl shadow-2xl p-2 max-w-sm w-full text-center space-y-1">
   <div>
     <h1 class="text-lg font-bold text-[var(--text-primary)] tracking-wide"><i class="bi bi-film text-fuchsia-400"></i> Iskan Clip</h1>
     <p class="text-[11px] text-[var(--text-secondary)] uppercase tracking-wider mt-1">Panel admin : akses terbatas</p>
@@ -70,9 +77,10 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
          </svg>
       </button>
     </div>
-    <button type="submit"
-      class="w-full bg-[var(--accent)] text-[var(--accent-text)] font-semibold rounded-xl py-1.5 text-sm hover:opacity-90 transition">
-      Masuk
+    <button id="btn-login" type="submit"
+      class="btn-grad w-full font-semibold rounded-xl py-1.5 text-sm flex items-center justify-center gap-2 transition">
+      <span id="btn-label">Masuk</span>
+      <svg id="btn-spinner" class="hidden h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></svg>
     </button>
   </form>
 
@@ -104,33 +112,39 @@ document.getElementById('togglePassBtn').addEventListener('click', function() {
 document.getElementById('login').addEventListener('submit', e => {
   e.preventDefault();
   const pass = document.getElementById('pass').value;
+  const btn = document.getElementById('btn-login');
+  const label = document.getElementById('btn-label');
+  const spin = document.getElementById('btn-spinner');
+  const errEl = document.getElementById('err');
+  const att = document.getElementById('attempts');
+  if(btn){ btn.disabled=true; if(label) label.textContent='Memproses...'; if(spin) spin.classList.remove('hidden'); }
+  if(errEl) errEl.classList.add('hidden');
+  if(att) att.classList.add('hidden');
   fetch('/api/auth/login', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({ password: pass }),
   }).then(r => r.json().then(d => ({ status: r.status, d }))).then(({ status, d }) => {
-    if (d.ok) location.href = '/';
-    else {
-      const el = document.getElementById('err');
-      const att = document.getElementById('attempts');
-      el.textContent = d.error || 'Login gagal';
-      el.classList.remove('hidden');
-      // tampilkan sisa percobaan yang dikirim server (kunci rate limit)
-      if (typeof d.remaining === 'number') {
-        if (d.remaining > 0) {
-          att.textContent = 'Sisa percobaan: ' + d.remaining;
-          att.classList.remove('hidden');
-        } else {
-          att.textContent = d.resetInSec
-            ? 'Terkunci. Coba lagi dalam ' + Math.ceil(d.resetInSec / 60) + ' menit.'
-            : 'Terkunci. Coba lagi nanti.';
-          att.classList.remove('hidden');
-        }
+    if (d.ok) { location.href = '/'; return; }
+    if(btn){ btn.disabled=false; if(label) label.textContent='Masuk'; if(spin) spin.classList.add('hidden'); }
+    const el = document.getElementById('err');
+    el.textContent = d.error || 'Login gagal';
+    el.classList.remove('hidden');
+    if (typeof d.remaining === 'number') {
+      if (d.remaining > 0) {
+        att.textContent = 'Sisa percobaan: ' + d.remaining;
+        att.classList.remove('hidden');
       } else {
-        att.classList.add('hidden');
+        att.textContent = d.resetInSec
+          ? 'Terkunci. Coba lagi dalam ' + Math.ceil(d.resetInSec / 60) + ' menit.'
+          : 'Terkunci. Coba lagi nanti.';
+        att.classList.remove('hidden');
       }
+    } else {
+      att.classList.add('hidden');
     }
   }).catch(() => {
+    if(btn){ btn.disabled=false; if(label) label.textContent='Masuk'; if(spin) spin.classList.add('hidden'); }
     const el = document.getElementById('err');
     el.textContent = 'Gagal terhubung ke server';
     el.classList.remove('hidden');

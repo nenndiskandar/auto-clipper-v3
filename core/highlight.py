@@ -226,7 +226,7 @@ class HighlightMixin:
 
             Return JSON Array {start_time,end_time,title,description,
             virality_score,hook_text,timed_title}. Return [] bila
-            orchestrator tak tersedia/gagal — caller pakai find_highlights()
+            orchestrator tak tersedia/gagal, caller pakai find_highlights()
             lama sebagai fallback.
             """
             brief = brief_dict or {}
@@ -280,12 +280,134 @@ class HighlightMixin:
             self._v3_log(f"  [v3] {len(scored)} highlight valid (dari {len(items)} kandidat)")
             return scored
 
+        def _v3_resolve_brief(self, session_data=None, session_dir=None) -> dict:
+            """Ambil brief_dict dari self/session_data/file (ai_brief.json, campaign_brief.json).
+
+            Prioritas: self.brief_dict > session_data ai_brief/brief/campaign >
+            <session_dir|last_session_dir>/ai_brief.json > campaign_brief.json.
+            Hasil dinormalisasi ke key find_highlights_v3 (niche, hook_style,
+            brief_text, duration_min/max, num_clips) dan dicache ke self.brief_dict.
+            """
+            cached = getattr(self, "brief_dict", None)
+            if isinstance(cached, dict) and cached:
+                return cached
+            brief = {}
+            try:
+                sd = session_data if isinstance(session_data, dict) else {}
+                for key in ("ai_brief", "brief", "campaign"):
+                    cand = sd.get(key)
+                    if isinstance(cand, dict) and cand:
+                        brief = dict(cand)
+                        break
+                dirs = []
+                for cand in (session_dir, getattr(self, "last_session_dir", None)):
+                    if not cand:
+                        continue
+                    try:
+                        d = Path(str(cand))
+                    except Exception:
+                        continue
+                    if str(d) not in [str(x) for x in dirs]:
+                        dirs.append(d)
+                if not brief:
+                    for d in dirs:
+                        try:
+                            bf = d / "ai_brief.json"
+                            if bf.exists():
+                                jb = json.loads(bf.read_text(encoding="utf-8"))
+                                if isinstance(jb, dict) and jb:
+                                    brief = jb
+                                    break
+                        except Exception:
+                            continue
+                if not brief:
+                    for d in dirs:
+                        try:
+                            bf = d / "campaign_brief.json"
+                            if bf.exists():
+                                jb = json.loads(bf.read_text(encoding="utf-8"))
+                                if isinstance(jb, dict) and jb:
+                                    brief = jb
+                                    break
+                        except Exception:
+                            continue
+                norm = {}
+                if isinstance(brief, dict) and brief:
+                    norm["niche"] = str(brief.get("niche") or "")
+                    hook = brief.get("hook_style") or brief.get("hook_wajib") or ""
+                    norm["hook_style"] = str(hook)[:120]
+                    bt = (brief.get("brief_text") or brief.get("description")
+                          or brief.get("summary") or brief.get("raw_brief") or "")
+                    if bt:
+                        norm["brief_text"] = str(bt)[:2000]
+                    for k in ("duration_min", "duration_max", "num_clips",
+                              "max_clips", "top_n"):
+                        if brief.get(k) is not None:
+                            norm[k] = brief.get(k)
+                    td = str(brief.get("target_duration") or "")
+                    if td and norm.get("duration_min") is None:
+                        m = re.match(r"\s*(\d+)\s*-\s*(\d+)", td)
+                        if m:
+                            try:
+                                norm["duration_min"] = int(m.group(1))
+                                norm["duration_max"] = int(m.group(2))
+                            except (ValueError, TypeError):
+                                pass
+                try:
+                    self.brief_dict = norm
+                except Exception:
+                    pass
+                return norm
+            except Exception:
+                return {}
+
+        def _find_highlights_v3_primary(self, transcript, video_info, num_clips,
+                                        session_data=None, session_dir=None) -> list:
+            """v3 dulu via orchestrator, kosong/gagal -> find_highlights lama."""
+            brief = self._v3_resolve_brief(session_data=session_data,
+                                           session_dir=session_dir)
+            v3 = []
+            try:
+                v3 = self.find_highlights_v3(transcript, brief_dict=brief)
+            except Exception as e:
+                self._v3_log(f"  [fallback lama] v3 error ({e}), pakai find_highlights lama")
+                v3 = []
+            if v3:
+                self._v3_log(f"  [v3 primary] pakai {len(v3)} highlight v3")
+                return v3
+            self._v3_log("  [fallback lama] v3 kosong, pakai find_highlights lama")
+            return self.find_highlights(transcript, video_info, num_clips)
+
+        def _find_highlights_legacy_primary(self, transcript, video_info, num_clips,
+                                            session_data=None, session_dir=None) -> list:
+            """Lama dulu (transcript pendek FB), kosong/gagal -> coba v3."""
+            legacy = []
+            try:
+                legacy = self.find_highlights(transcript, video_info, num_clips)
+            except Exception as e:
+                self._v3_log(f"  [v3 fallback] find_highlights lama error ({e}), coba v3")
+                legacy = []
+            if legacy:
+                self._v3_log(f"  [fallback lama] pakai {len(legacy)} highlight lama")
+                return legacy
+            brief = self._v3_resolve_brief(session_data=session_data,
+                                           session_dir=session_dir)
+            try:
+                v3 = self.find_highlights_v3(transcript, brief_dict=brief)
+            except Exception as e:
+                self._v3_log(f"  [fallback lama] v3 juga error ({e})")
+                return []
+            if v3:
+                self._v3_log(f"  [v3 fallback] lama kosong, pakai {len(v3)} highlight v3")
+                return v3
+            return []
+
         def make_clip_title_v3(self, clip_transcript: str, niche: str = "",
                                hook_style: str = "") -> dict:
             """Judul per klip via orchestrator (title_maker).
 
             Return {title, hook_text} (+hashtags bila provider memberi).
-            Return kosong bila orchestrator off — caller pakai judul AI lama.
+            Return kosong bila orchestrator off, caller pakai judul AI lama.
             """
             orch = getattr(self, "orchestrator", None)
             if orch is None or not clip_transcript:
@@ -579,9 +701,11 @@ class HighlightMixin:
                     self.log(f"  Transkrip terlalu pendek ({word_count} kata)  -  tidak cukup konten untuk AI highlight.")
                     raise ValueError("Transkrip terlalu pendek untuk AI highlight.")
 
-                # Step 2: Find highlights using the transcript
+                # Step 2: Find highlights using the transcript (v3 primary, lama fallback)
                 self.set_progress("Finding highlights with AI...", 0.6)
-                highlights = self.find_highlights(transcript, video_info, num_clips)
+                highlights = self._find_highlights_v3_primary(
+                    transcript, video_info, num_clips,
+                    session_data=session_data, session_dir=session_dir)
                 # WORKFLOW Step5: simpan highlights.json (sorted virality + overlap filtered oleh find_highlights)
                 try:
                     _hp = session_dir / "highlights.json"
@@ -1267,7 +1391,9 @@ Aturan: pilih highlight yang paling sesuai brief di atas, prioritas momen yang m
                         if not transcript or word_count < 15:
                             raise ValueError(f"Transcript too short ({word_count} words) - not enough speech")
                         self.log(f"  Transcript ready ({word_count} words), finding highlights...")
-                        highlights = self.find_highlights(transcript, video_info, num_clips)
+                        highlights = self._find_highlights_legacy_primary(
+                            transcript, video_info, num_clips,
+                            session_data=session_data, session_dir=session_dir)
                         # save transcript fallback as srt-like for debugging
                         try:
                             fallback_srt = self._srt_output_dir() / f"source.{self.subtitle_language}.srt"
@@ -1284,7 +1410,9 @@ Aturan: pilih highlight yang paling sesuai brief di atas, prioritas momen yang m
                         raise Exception(f"Fallback transcription failed: {e}") from e
                 else:
                     transcript = self.parse_srt(srt_path)
-                    highlights = self.find_highlights(transcript, video_info, num_clips)
+                    highlights = self._find_highlights_v3_primary(
+                        transcript, video_info, num_clips,
+                        session_data=session_data, session_dir=session_dir)
             
                 if self.is_cancelled():
                     session_data["status"] = "cancelled"

@@ -947,6 +947,88 @@ class CaptionMixin:
             except Exception as e:
                 self.log(f"  ⚠ Failed to save session data: {e}")
 
+        def _apply_v3_clip_meta(self, metadata: dict, highlight: dict) -> dict:
+            """Best-effort: isi title/hashtags/bgm_pick metadata dari helpers v3.
+
+            - title: ganti bila kosong/generic (clip_XX, untitled, ...).
+            - hashtags: merge required (depan) + AI + existing highlight, dedup.
+            - bgm_pick: dict dari match_clip_bgm_v3.
+            Tak pernah raise, aman bila AI off.
+            """
+            try:
+                if not isinstance(metadata, dict) or not isinstance(highlight, dict):
+                    return metadata
+                if not (highlight.get("timed_title") or highlight.get("transcript_text") or highlight.get("transcript")):
+                    return metadata
+                transcript = highlight.get("transcript_text") or highlight.get("transcript") or highlight.get("description") or ""
+                if not str(transcript).strip():
+                    return metadata
+                brief = getattr(self, "brief_dict", None) or highlight.get("brief") or {}
+                if not isinstance(brief, dict):
+                    brief = {}
+                niche = brief.get("niche") or highlight.get("niche") or ""
+                hook_style = brief.get("hook_style") or ""
+                req = brief.get("hashtags_required") or highlight.get("brief_hashtags_required") or highlight.get("hashtags_required") or []
+                sug = brief.get("hashtags_suggested") or highlight.get("brief_hashtags_suggested") or highlight.get("hashtags_suggested") or []
+
+                def _as_list(v):
+                    if not v:
+                        return []
+                    if isinstance(v, str):
+                        return v.split()
+                    if isinstance(v, (list, tuple)):
+                        return [str(x).strip() for x in v if str(x).strip()]
+                    return [str(v).strip()]
+
+                title_hashtags = []
+                try:
+                    fn_title = getattr(self, "make_clip_title_v3", None)  # type: ignore[attr-defined]
+                    if callable(fn_title):
+                        res = fn_title(transcript, niche=niche, hook_style=hook_style) or {}
+                        if not isinstance(res, dict):
+                            res = {}
+                        new_title = str(res.get("title") or "").strip()
+                        cur = str(metadata.get("title") or "").strip()
+                        low = cur.lower()
+                        generic = (not cur) or low.startswith("clip_") or low.startswith("untitled") or low in (
+                            "no title", "highlight", "tanpa judul", "judul klip menarik")
+                        if new_title and generic:
+                            metadata["title"] = new_title
+                        title_hashtags = _as_list(res.get("hashtags"))
+                except Exception:
+                    pass
+                try:
+                    fn_tags = getattr(self, "make_clip_hashtags_v3", None)  # type: ignore[attr-defined]
+                    if callable(fn_tags):
+                        got = fn_tags(
+                            transcript, niche=niche,
+                            required=list(_as_list(req)), suggested=list(_as_list(sug))) or []
+                        tags = list(got) if isinstance(got, (list, tuple)) else []
+                        seen = {str(t).lower() for t in tags}
+                        for t in _as_list(highlight.get("hashtags")) + title_hashtags:
+                            nt = t if t.startswith("#") else "#" + t.lstrip("#")
+                            if nt and nt.lower() not in seen:
+                                seen.add(nt.lower())
+                                tags.append(nt)
+                        tags = tags[:10]
+                        if tags:
+                            metadata["hashtags"] = tags
+                            metadata["hashtags_normalized"] = " ".join(tags)
+                except Exception:
+                    pass
+                try:
+                    fn_bgm = getattr(self, "match_clip_bgm_v3", None)  # type: ignore[attr-defined]
+                    if callable(fn_bgm):
+                        bgm = fn_bgm(
+                            transcript, mood_hint=highlight.get("mood") or "") or {}
+                        if isinstance(bgm, dict) and (bgm.get("sound_id") or bgm.get("mood") or bgm.get("reason")):
+                            metadata["bgm_pick"] = bgm
+                except Exception:
+                    pass
+                return metadata
+            except Exception:
+                return metadata
+
         def process_clip(self, video_path: str, highlight: dict, index: int, total_clips: int = 1, add_captions: bool = True, add_hook: bool = True, pre_cut: bool = False, clip_dir: str = None):
             """Process a single clip: cut, portrait, hook (optional), captions (optional)
         
@@ -1384,8 +1466,14 @@ class CaptionMixin:
                 "channel_name": self.channel_name,
                 "aspect_ratio": self.aspect_ratio,
             }
-        
-            # Auto generate social kit metadata if client is available (sequential overall 0→100)
+
+            # v3: isi title/hashtags/bgm_pick via orchestrator (best-effort).
+            try:
+                metadata = self._apply_v3_clip_meta(metadata, highlight) or metadata
+            except Exception:
+                pass
+
+            # Auto generate social kit metadata if client is available (sequential overall 0-100)
             if self.client:
                 try:
                     # sequential 90→100 for last clip, not langsung 100
