@@ -1,5 +1,5 @@
 """
-core/ai_orchestrator.py — v3 AI Gateway (OmniRoute / OpenAI-compatible)
+core/ai_orchestrator.py: v3 AI Gateway (OmniRoute / OpenAI-compatible)
 Satu pintu untuk semua step AI: brief_parser, highlight, title, bgm, thumbnail, qc.
 Memakai openai>=1.0 Python SDK. Tiap provider punya base_url/api_key/model sendiri.
 """
@@ -46,7 +46,7 @@ def _extract_json(text: str) -> Any:
 
 
 class AIOrchestrator:
-    """Thin wrapper — satu instance per AutoClipperCore, re-use OpenAI clients."""
+    """Thin wrapper: satu instance per AutoClipperCore, re-use OpenAI clients."""
 
     def __init__(self, ai_providers: dict | None):
         self.providers = ai_providers or {}
@@ -58,10 +58,10 @@ class AIOrchestrator:
         api_key = cfg.get("api_key") or ""
         model = cfg.get("model") or "gpt-4o-mini"
         if not api_key:
-            debug_log(f"[AI] provider {provider_key} tanpa api_key — skip")
+            debug_log(f"[AI] provider {provider_key} tanpa api_key, skip")
             return None, cfg
         if OpenAI is None:
-            debug_log(f"[AI] openai lib belum install — pip install -r requirements.txt dulu")
+            debug_log(f"[AI] openai lib belum install, pip install -r requirements.txt dulu")
             return None, cfg
         if provider_key not in self._clients:
             try:

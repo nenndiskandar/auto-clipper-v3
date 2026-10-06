@@ -61,7 +61,7 @@ class ConfigManager:
                 # Add default aspect ratio if not exists
                 if "aspect_ratio" not in config:
                     config["aspect_ratio"] = "9:16"  # "9:16", "1:1", "4:5", or "16:9"
-                # Add default MediaPipe settings if not exists — tuned for speaker-accurate (not center)
+                # Add default MediaPipe settings if not exists, tuned for speaker-accurate (not center)
                 if "mediapipe_settings" not in config:
                     config["mediapipe_settings"] = {
                         "lip_activity_threshold": 0.08,
@@ -76,10 +76,37 @@ class ConfigManager:
                     config["installation_id"] = str(uuid.uuid4())
                     self.save_config(config)
                 
-                # Ensure ai_providers structure exists
+                # Ensure ai_providers structure exists + backfill missing providers (tidak hapus yang sudah ada)
                 if "ai_providers" not in config:
                     config["ai_providers"] = self._get_default_ai_providers()
                     self.save_config(config)
+                else:
+                    # alias lama youtube_title_maker -> title_maker
+                    if "youtube_title_maker" in config["ai_providers"] and "title_maker" not in config["ai_providers"]:
+                        config["ai_providers"]["title_maker"] = dict(config["ai_providers"]["youtube_title_maker"])
+                        self.save_config(config)
+                    # backfill: tambah provider baru tanpa menimpa existing
+                    defaults = self._get_default_ai_providers()
+                    patched = False
+                    for k, v in defaults.items():
+                        if k not in config["ai_providers"]:
+                            import copy
+                            config["ai_providers"][k] = copy.deepcopy(v)
+                            patched = True
+                        else:
+                            # isi subkey yang hilang (system_message, temperature, dll) tanpa overwrite
+                            for subk, subv in v.items():
+                                if subk not in config["ai_providers"][k]:
+                                    import copy
+                                    config["ai_providers"][k][subk] = copy.deepcopy(subv) if isinstance(subv, dict) else subv
+                                    patched = True
+                                elif isinstance(subv, dict) and isinstance(config["ai_providers"][k].get(subk), dict):
+                                    for kk, vv in subv.items():
+                                        if kk not in config["ai_providers"][k][subk]:
+                                            config["ai_providers"][k][subk][kk] = vv
+                                            patched = True
+                    if patched:
+                        self.save_config(config)
                 
                 # Add default Repliz settings if not exists
                 if "repliz" not in config:
@@ -143,7 +170,7 @@ class ConfigManager:
         return config
     
     def _ensure_new_feature_defaults(self, config):
-        """Isi default untuk fitur baru (opensource-clipping adaptations) —
+        """Isi default untuk fitur baru (opensource-clipping adaptations),
         tanpa menimpa nilai yang sudah diatur user."""
         wm = config.setdefault("watermark", {})
         wm.setdefault("position", "")         # ""=pakai position_x/y, atau 0-8 / tl..br
@@ -176,7 +203,6 @@ class ConfigManager:
         })
 
         config.setdefault("face_detector_model", "mediapipe")  # locked to mediapipe
-        return config
         config.setdefault("thumbnail", {
             "enabled": False,
             "text": "",
@@ -212,64 +238,107 @@ class ConfigManager:
         return config
 
     def _get_default_ai_providers(self):
-        """Get default AI provider configuration"""
+        """Get default AI provider configuration — sinkron dengan config.example.json (7 providers + caption/hook)"""
+        base = "http://localhost:20128/v1"
         return {
-            "highlight_finder": {
-                "base_url": "https://api.openai.com/v1",
+            "brief_parser": {
+                "base_url": base,
                 "api_key": "",
-                "model": "gpt-4.1"
+                "model": "opencos",
+                "temperature": 0.5,
+                "system_message": "Parse brief kampanye jadi JSON {sources[], sound_id, niche, hook_style, target_duration}. Output JSON only."
+            },
+            "highlight_finder": {
+                "base_url": base,
+                "api_key": "",
+                "model": "opencos",
+                "temperature": 0.7,
+                "system_message": "Kamu asisten highlight viral. Pilih SEMUA momen terbaik, durasi 15-90s, hindari overlap. Output JSON Array {start_time,end_time,title,description,virality_score,hook_text,timed_title{text,start:0,end:3}}."
+            },
+            "title_maker": {
+                "base_url": base,
+                "api_key": "",
+                "model": "opencos",
+                "temperature": 0.8,
+                "system_message": "Buat judul TikTok/YouTube Shorts yang hook, max 60 char, SEO niche. Output JSON {title, hashtags[]}."
+            },
+            "hashtag_maker": {
+                "base_url": base,
+                "api_key": "",
+                "model": "opencos",
+                "temperature": 0.7,
+                "system_message": "Buat hashtag niche-aware untuk TikTok/YouTube Shorts berdasar niche dan transcript. Output JSON {hashtags[]}. Maks 10 hashtag, relevan niche."
+            },
+            "bgm_matcher": {
+                "base_url": base,
+                "api_key": "",
+                "model": "opencos",
+                "temperature": 0.7,
+                "system_message": "Pilih BGM paling cocok berdasar mood transcript (happy/sad/hype). Output JSON {sound_id, reason, mood}."
+            },
+            "thumbnail_picker": {
+                "base_url": base,
+                "api_key": "",
+                "model": "opencos",
+                "temperature": 0.5,
+                "system_message": "Pilih timestamp terbaik untuk thumbnail berdasar ekspresi/aksi paling ekspresif. Output JSON {timestamp, caption}."
+            },
+            "qc_checker": {
+                "base_url": base,
+                "api_key": "",
+                "model": "opencos",
+                "temperature": 0.3,
+                "system_message": "QC klip: cek framing (kepala terpotong?), teks terbaca, audio sinkron. Output JSON {pass, issues[]}."
             },
             "caption_maker": {
-                "base_url": "https://api.openai.com/v1",
+                "base_url": "http://localhost:20128/v1/audio/transcriptions",
                 "api_key": "",
-                "model": "whisper-1",
+                "model": "groq/whisper-large-v3",
                 "faster_whisper": {
-                    "mode": "api",
-                    "model_size": "small"
+                    "model_size": "large-v3"
                 }
             },
             "hook_maker": {
-                "base_url": "https://api.openai.com/v1",
+                "base_url": "http://localhost:20128/v1/audio/speech",
                 "api_key": "",
-                "model": "tts-1"
-            },
-            "youtube_title_maker": {
-                "base_url": "https://api.openai.com/v1",
-                "api_key": "",
-                "model": "gpt-4.1"
+                "model": "elevenlabs/eleven_flash_v2_5/pNInz6obpgDQGcFmaJgB"
             }
         }
     
     def _migrate_to_multi_provider(self, old_config):
-        """Migrate old single-provider config to new multi-provider structure"""
+        """Migrate old single-provider config to new multi-provider structure (tidak hapus providers baru)"""
         api_key = old_config.get("api_key", "")
         base_url = old_config.get("base_url", "https://api.openai.com/v1")
         model = old_config.get("model", "gpt-4.1")
         tts_model = old_config.get("tts_model", "tts-1")
-        
-        old_config["ai_providers"] = {
-            "highlight_finder": {
-                "base_url": base_url,
-                "api_key": api_key,
-                "model": model
-            },
-            "caption_maker": {
-                "base_url": base_url,
-                "api_key": api_key,
-                "model": "whisper-1"
-            },
-            "hook_maker": {
-                "base_url": base_url,
-                "api_key": api_key,
-                "model": tts_model
-            },
-            "youtube_title_maker": {
-                "base_url": base_url,
-                "api_key": api_key,
-                "model": model
-            }
-        }
-        
+        import copy
+
+        fresh = self._get_default_ai_providers()
+        existing = old_config.get("ai_providers") or {}
+        merged = copy.deepcopy(fresh)
+        # nilai lama jadi seed untuk semua chat providers + caption/hook
+        for k in ("brief_parser", "highlight_finder", "title_maker", "hashtag_maker",
+                  "bgm_matcher", "thumbnail_picker", "qc_checker"):
+            merged[k]["base_url"] = base_url
+            merged[k]["api_key"] = api_key
+            merged[k]["model"] = model
+        merged["caption_maker"]["base_url"] = base_url
+        merged["caption_maker"]["api_key"] = api_key
+        merged["caption_maker"].setdefault("model", "whisper-1")
+        merged["hook_maker"]["base_url"] = base_url
+        merged["hook_maker"]["api_key"] = api_key
+        merged["hook_maker"].setdefault("model", tts_model)
+        # preserve nilai user yang sudah ada (deep-merge)
+        for k, v in existing.items():
+            if k in merged and isinstance(v, dict):
+                merged[k].update(v)
+            else:
+                merged[k] = v
+        # alias legacy youtube_title_maker -> title_maker (keep both)
+        if "youtube_title_maker" in merged and "title_maker" not in merged:
+            merged["title_maker"] = dict(merged["youtube_title_maker"])
+        old_config["ai_providers"] = merged
+
         return old_config
 
     def save(self):

@@ -1448,14 +1448,14 @@ class CaptionMixin:
                         clip_progress("Social Kit...", current_step, 0.85)
                     self.log(f"  Warning: Failed to auto-generate Social Kit: {e}")
 
-            # Mark complete — sequential 0→100 (Social Kit is last step)
+            # Mark complete: sequential 0-100 (Social Kit is last step)
             if index == total_clips:
                 debug_log(f"[DEBUG] clip_progress: Clip {index}/{total_clips}: Social Kit done (overall: 100.0%)")
                 self.set_progress(f"Clip {index}/{total_clips}: Social Kit done (overall: 100.0%)", 1.0)
             else:
                 clip_progress("Done", current_step, 1.0)
 
-            # Feature 10 — Metadata enrichment + klasifikasi akun (best-effort)
+            # Feature 10: Metadata enrichment + klasifikasi akun (best-effort)
             if (self.metadata_settings or {}).get("save_preview", True):
                 try:
                     from core.metadata import normalize_and_validate, klasifikasikan_akun
@@ -1470,7 +1470,7 @@ class CaptionMixin:
                 except Exception as e:
                     debug_log(f"[Metadata] normalize gagal: {e}")
 
-            # Feature 9 — Thumbnail generator (dari clip final, best-effort)
+            # Feature 9: Thumbnail generator (dari clip final, best-effort)
             if (self.thumbnail_settings or {}).get("enabled") and final_file.exists():
                 try:
                     from core.thumbnail import buat_thumbnail
@@ -1490,7 +1490,13 @@ class CaptionMixin:
             with open(clip_dir / "data.json", "w", encoding="utf-8") as f:
                 json.dump(metadata, f, ensure_ascii=False, indent=2)
 
-            # WORKFLOW Step7: manifest.json QC per-clip (keep-all, re-render tanpa download)
+            # WORKFLOW Step7: manifest.json + QC AI per-clip (keep-all, re-render tanpa download)
+            # QC dijalankan SETELAH render selesai via self.ai_qc (rule + AI vision,
+            # aman bila gateway off -> pass True). Hasil ditulis ke manifest.json
+            # {clip_id, source, start-end, sound_id, resolusi, title, hashtags,
+            #  qc_pass, qc_issues} dan qc_issues di-log. KEEP-ALL: raw (landscape.mp4)
+            # + transcript (captions_audio.wav/captions.ass) + clips tetap disimpan,
+            # tidak ada penghapusan file di flow ini.
             try:
                 _bgm_cfg = getattr(self, "auto_bgm_settings", {}) or {}
                 _bgm_path = _bgm_cfg.get("path") or ""
@@ -1499,6 +1505,22 @@ class CaptionMixin:
                 except Exception:
                     _sound_id = highlight.get("sound_id") or ""
                 _res = str(getattr(self, "resolution", "auto") or "auto")
+                _social = metadata.get("social_kit") or {}
+                _qc_transcript = highlight.get("transcript_text") or ""
+                try:
+                    _qc = self.ai_qc(str(final_file), transcript=_qc_transcript)
+                except Exception as _qe:
+                    debug_log(f"[QC] ai_qc gagal: {_qe}")
+                    _qc = {"pass": True, "issues": [], "meta": {}}
+                _qc_pass = bool(_qc.get("pass", True))
+                _qc_issues = list(_qc.get("issues") or [])
+                try:
+                    if _qc_issues:
+                        self.log(f"  QC issues ({len(_qc_issues)}): " + "; ".join(_qc_issues))
+                    else:
+                        self.log("  QC: pass")
+                except Exception:
+                    pass
                 _manifest = {
                     "clip_id": f"{index:02d}_{clip_title}",
                     "clip_title": highlight.get("title", ""),
@@ -1508,6 +1530,8 @@ class CaptionMixin:
                     "duration_seconds": highlight.get("duration_seconds"),
                     "sound_id": _sound_id,
                     "resolution": _res,
+                    "title": _social.get("title", "") or highlight.get("title", ""),
+                    "hashtags": _social.get("hashtags", ""),
                     "aspect_ratio": getattr(self, "aspect_ratio", "9:16"),
                     "portrait_mode": getattr(self, "portrait_mode", None),
                     "has_captions": metadata.get("has_captions", False),
@@ -1516,6 +1540,8 @@ class CaptionMixin:
                     "has_broll": metadata.get("has_broll", False),
                     "final_file": final_file.name if "final_file" in dir() else "",
                     "virality_score": highlight.get("virality_score"),
+                    "qc_pass": _qc_pass,
+                    "qc_issues": _qc_issues,
                     "rendered_at": __import__("datetime").datetime.now().isoformat(),
                 }
                 with open(clip_dir / "manifest.json", "w", encoding="utf-8") as _mf:

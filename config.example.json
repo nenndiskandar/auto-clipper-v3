@@ -36,6 +36,12 @@
       "model": "opencos",
       "system_message": "Pilih BGM paling cocok berdasar mood transcript. Output JSON {sound_id, reason, mood}."
     },
+    "hashtag_maker": {
+      "base_url": "http://localhost:20128/v1",
+      "api_key": "YOUR_OMNIROUTE_API_KEY",
+      "model": "opencos",
+      "system_message": "Buat 5-8 hashtag niche-aware untuk TikTok/Shorts. Output JSON {hashtags[]}."
+    },
     "thumbnail_picker": {
       "base_url": "http://localhost:20128/v1",
       "api_key": "YOUR_OMNIROUTE_API_KEY",

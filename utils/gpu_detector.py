@@ -453,13 +453,13 @@ class GPUDetector:
             list of FFmpeg arguments for video encoding
         """
         if not use_gpu:
-            # CPU encoding — kualitas terbaik (medium crf 18, tanpa maxrate biar bitrate lega)
+            # CPU encoding: kualitas terbaik (medium crf 18, tanpa maxrate biar bitrate lega)
             return ['-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-profile:v', 'high', '-pix_fmt', 'yuv420p']
 
         recommendation = self.get_recommended_encoder()
         
         if not recommendation['available']:
-            # Fallback to CPU — kualitas terbaik
+            # Fallback to CPU: kualitas terbaik
             return ['-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-profile:v', 'high', '-pix_fmt', 'yuv420p']
         
         encoder = recommendation['encoder']

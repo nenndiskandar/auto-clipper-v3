@@ -126,20 +126,39 @@ class AutoClipperCore(SubtitleGeneratorMixin, DownloadMixin, TranscribeMixin, Hi
         token_callback=None,
         cancel_check=None
     ):
-        # Multi-provider support
+        # Multi-provider support via single gateway
         self.ai_providers = ai_providers or {}
-        
-        # Create separate clients for each provider
+
+        # Single gateway: AIOrchestrator
+        try:
+            from core.ai_orchestrator import AIOrchestrator
+            self.orchestrator = AIOrchestrator(self.ai_providers)
+        except Exception as e:
+            debug_log(f"[Core] AIOrchestrator init gagal: {e}")
+            self.orchestrator = None
+
+        def _orch_has_key(key: str) -> bool:
+            if self.orchestrator is None:
+                return False
+            cfg = self.orchestrator.providers.get(key) or {}
+            return bool(cfg.get("api_key"))
+
+        # Direct clients as fallback kalau orchestrator tanpa api_key
+        # Pertahankan hf/cm/hm direct clients agar pipeline tetap jalan
         if self.ai_providers:
             # Highlight Finder client
             hf_config = self.ai_providers.get("highlight_finder", {})
-            self.highlight_client = OpenAI(
-                api_key=hf_config.get("api_key", ""),
-                base_url=hf_config.get("base_url", "https://api.openai.com/v1")
-            )
+            # Selalu sediakan direct client sebagai fallback, orchestrator tetap primary jika ada key
+            try:
+                self.highlight_client = OpenAI(
+                    api_key=hf_config.get("api_key", ""),
+                    base_url=hf_config.get("base_url", "https://api.openai.com/v1")
+                )
+            except Exception:
+                self.highlight_client = client
             self.model = hf_config.get("model", model)
-            
-            # Caption Maker client (Whisper) — use longer timeout for large audio uploads
+
+            # Caption Maker client (Whisper), use longer timeout for large audio uploads
             cm_config = self.ai_providers.get("caption_maker", {})
             cm_api_key = cm_config.get("api_key", "")
             if not cm_api_key:
@@ -149,24 +168,33 @@ class AutoClipperCore(SubtitleGeneratorMixin, DownloadMixin, TranscribeMixin, Hi
                 cm_base_url = hf_config.get("base_url", "https://api.openai.com/v1")
             else:
                 cm_base_url = cm_config.get("base_url", "") or "https://api.openai.com/v1"
-            self.caption_client = OpenAI(
-                api_key=cm_api_key,
-                base_url=cm_base_url,
-                timeout=600.0  # 10 minutes for large audio files
-            )
+            try:
+                self.caption_client = OpenAI(
+                    api_key=cm_api_key,
+                    base_url=cm_base_url,
+                    timeout=600.0  # 10 minutes for large audio files
+                )
+            except Exception:
+                self.caption_client = client
             self.whisper_model = cm_config.get("model", "whisper-1")
-            
+
             # Hook Maker client (TTS)
             hm_config = self.ai_providers.get("hook_maker", {})
             hm_api_key = hm_config.get("api_key", "") or hf_config.get("api_key", "")
             hm_base_url = hm_config.get("base_url", "") or hf_config.get("base_url", "https://api.openai.com/v1")
-            self.tts_client = OpenAI(
-                api_key=hm_api_key,
-                base_url=hm_base_url,
-                timeout=120.0,  # fail fast instead of hanging forever on a dead TTS endpoint
-                max_retries=1
-            )
+            try:
+                self.tts_client = OpenAI(
+                    api_key=hm_api_key,
+                    base_url=hm_base_url,
+                    timeout=120.0,  # fail fast instead of hanging forever on a dead TTS endpoint
+                    max_retries=1
+                )
+            except Exception:
+                self.tts_client = client
             self.tts_model = hm_config.get("model", tts_model)
+            # Log gateway status
+            if self.orchestrator is not None:
+                debug_log(f"[Core] orchestrator aktif, fallback direct clients siap (hf:{_orch_has_key('highlight_finder')} cm:{_orch_has_key('caption_maker')} hm:{_orch_has_key('hook_maker')})")
         else:
             # Fallback to single client (backward compatibility)
             self.highlight_client = client
@@ -260,6 +288,24 @@ class AutoClipperCore(SubtitleGeneratorMixin, DownloadMixin, TranscribeMixin, Hi
         # Create temp directory
         self.temp_dir = self.output_dir / "_temp"
         self.temp_dir.mkdir(parents=True, exist_ok=True)
+
+    def ai_brief(self, text: str) -> dict:
+        """Parse brief bebas via orchestrator, fallback rule kalau gateway off."""
+        try:
+            from core.brief_parser import parse_brief
+        except Exception as e:
+            debug_log(f"[Core] parse_brief import gagal: {e}")
+            return {"sources": [], "sound_id": None, "raw_brief": (text or "")[:500]}
+        return parse_brief(text, orchestrator=getattr(self, "orchestrator", None))
+
+    def ai_qc(self, path: str, transcript: str = "") -> dict:
+        """QC klip via orchestrator + rule, aman kalau gateway off."""
+        try:
+            from core.qc import qc_clip
+        except Exception as e:
+            debug_log(f"[Core] qc_clip import gagal: {e}")
+            return {"pass": True, "issues": [], "meta": {}}
+        return qc_clip(path, orchestrator=getattr(self, "orchestrator", None), transcript=transcript)
     
     
     # ------------------------------------------------------------------

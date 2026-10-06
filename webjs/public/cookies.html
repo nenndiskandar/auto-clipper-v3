@@ -18,7 +18,7 @@ tailwind.config = {
 </script>
 <style>
 a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible {
-  outline: 2px solid #facc15 !important;
+  outline: 2px solid var(--focus-ring, #0f766e) !important;
   outline-offset: 2px !important;
 }
 
@@ -51,32 +51,33 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 </script>
 
 </head>
-<body class="min-h-screen flex flex-col md:flex-row antialiased ">
+<body class="min-h-screen flex flex-col md:flex-row antialiased">
+<div class="portal-bg" aria-hidden="true"><i></i><i></i><i></i></div>
 
 <!-- SIDEBAR -->
-<aside class="w-full md:w-64 border-b md:border-b-0 md:border-r border-zinc-800  flex flex-col shrink-0">
-  <div class="p-4 border-b border-zinc-800 flex items-center justify-between">
-    <div class="flex items-center gap-2">
+<aside class="w-full md:w-64 border-b md:border-b-0 md:border-r border-zinc-800 flex flex-col shrink-0">
+  <div class="p-2 border-b border-zinc-800 flex items-center justify-between">
+    <div class="flex items-center gap-1.5">
       <span class="w-7 h-7 rounded-lg logo-mark flex items-center justify-center font-black text-sm"><i class="bi bi-lightning-charge-fill text-amber-400"></i></span>
       <span class="font-bold text-sm tracking-wide text-white font-heading">AUTO<span class="text-[var(--accent)]">CLIPPER</span></span>
     </div>
-    <div class="flex items-center gap-2"><button class="darkmode-btn darkmode-compact" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button><a href="/logout" class="min-h-[32px] min-w-[44px] flex items-center justify-center text-xs text-zinc-400 hover:text-white transition md:hidden">Logout</a></div>
+    <div class="flex items-center gap-1.5"><button class="darkmode-btn darkmode-compact" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button><a href="/logout" class="min-h-[32px] min-w-[44px] flex items-center justify-center text-xs text-zinc-400 hover:text-white transition md:hidden">Logout</a></div>
   </div>
 
-  <nav aria-label="Menu Utama" class="p-2 md:p-3 flex flex-row md:flex-col gap-1.5 flex-wrap" id="sidebarLinks">
-    <a href="/" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-house-door text-sky-400"></i><span>Library Sesi</span></a>
-    <a href="/create.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-plus-square text-emerald-400"></i><span>Create Clip</span></a>
-    <a href="/tasks.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-list-task text-amber-400"></i><span>Antrean Tasks</span></a>
-    <a href="/story.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-film text-fuchsia-400"></i><span>AI Story</span></a>
-    <a href="/facebook.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-facebook text-blue-400"></i><span>FB Auto Upload</span></a>
-    <a href="/cookies.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition bg-[var(--accent)] text-[var(--accent-text)] font-bold shadow-sm"><i class="bi bi-shield-lock"></i><span>Cookies YouTube</span></a>
-    <a href="/ternaklip.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-bullseye text-teal-400"></i><span>TernakKlip</span></a>
-    <a href="/dependencies.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-box-seam text-violet-400"></i><span>Dependencies</span></a>
-    <a href="/settings.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-gear text-zinc-400"></i><span>Settings & AI</span></a>
+  <nav aria-label="Menu Utama" class="p-2 md:p-1.5 flex flex-row md:flex-col gap-1.5 flex-wrap" id="sidebarLinks">
+    <a href="/" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-house-door text-sky-400"></i><span>Library Sesi</span></a>
+    <a href="/create.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-plus-square text-emerald-400"></i><span>Create Clip</span></a>
+    <a href="/tasks.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-list-task text-amber-400"></i><span>Antrean Tasks</span></a>
+    <a href="/story.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-film text-fuchsia-400"></i><span>AI Story</span></a>
+    <a href="/facebook.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-facebook text-blue-400"></i><span>FB Auto Upload</span></a>
+    <a href="/cookies.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition bg-[var(--accent)] text-[var(--accent-text)] font-bold shadow-sm"><i class="bi bi-shield-lock"></i><span>Cookies YouTube</span></a>
+    <a href="/ternaklip.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-bullseye text-teal-400"></i><span>TernakKlip</span></a>
+    <a href="/dependencies.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-box-seam text-violet-400"></i><span>Dependencies</span></a>
+    <a href="/settings.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-gear text-zinc-400"></i><span>Settings & AI</span></a>
   </nav>
 
   <!-- Engine Status Indication -->
-  <div class="mt-auto px-4 py-3 border-t border-zinc-800/80 hidden md:flex flex-col gap-2 text-xs text-zinc-400 bg-zinc-950/40">
+  <div class="mt-auto px-2 py-1.5 border-t border-zinc-800/80 hidden md:flex flex-col gap-1.5 text-xs text-zinc-400 bg-zinc-950/40">
     <span class="font-semibold text-[10px] uppercase tracking-wider text-zinc-400"><i class="bi bi-cpu text-emerald-400"></i> Engine Status</span>
     <div class="flex items-center justify-between">
       <span>FFmpeg</span>
@@ -96,13 +97,13 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
     </div>
   </div>
 
-  <div class="p-4 border-t border-zinc-800 hidden md:flex items-center justify-between text-xs">
+  <div class="p-2 border-t border-zinc-800 hidden md:flex items-center justify-between text-xs">
     <span class="text-zinc-400 truncate max-w-[130px]" id="whoami"></span>
-    <div class="flex items-center gap-2"><button class="darkmode-btn darkmode-compact" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button><a href="/logout" class="text-zinc-400 hover:text-white transition">Logout</a></div>
+    <div class="flex items-center gap-1.5"><button class="darkmode-btn darkmode-compact" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button><a href="/logout" class="text-zinc-400 hover:text-white transition">Logout</a></div>
   </div>
 
   <!-- Engine Status Mobile -->
-  <div class="md:hidden flex items-center justify-around px-4 py-2.5 border-t border-b border-zinc-800/80 bg-zinc-950/60 text-[10px] text-zinc-300">
+  <div class="md:hidden flex items-center justify-around px-2 py-1.5 border-t border-b border-zinc-800/80 bg-zinc-950/60 text-[10px] text-zinc-300">
     <div class="flex items-center gap-1.5"><span id="st_ffmpeg_mob" class="w-2 h-2 rounded-full bg-zinc-600" title="Checking..."></span><span>FFmpeg</span></div>
     <div class="flex items-center gap-1.5"><span id="st_ytdlp_mob" class="w-2 h-2 rounded-full bg-zinc-600" title="Checking..."></span><span>yt-dlp</span></div>
     <div class="flex items-center gap-1.5"><span id="st_deno_mob" class="w-2 h-2 rounded-full bg-zinc-600" title="Checking..."></span><span>Deno</span></div>
@@ -121,43 +122,43 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 </aside>
 
 <!-- MAIN -->
-<main class="flex-1 p-4 md:p-6 max-w-3xl mx-auto w-full">
+<main class="flex-1 px-2 py-2 sm:px-3 sm:py-2 max-w-3xl mx-auto w-full">
   <h1 class="text-lg font-bold text-white mb-1"><i class="bi bi-shield-lock text-orange-400"></i> Cookies yt-dlp</h1>
-  <p class="text-xs text-zinc-400 mb-6">Kelola file cookies.txt Netscape untuk autentikasi YouTube saat download. Export dari ekstensi browser (mis. "Get cookies.txt LOCALLY") lalu upload & test.</p>
+  <p class="text-xs text-zinc-400 mb-1">Kelola file cookies.txt Netscape untuk autentikasi YouTube saat download. Export dari ekstensi browser (mis. "Get cookies.txt LOCALLY") lalu upload & test.</p>
 
   <!-- Status -->
-  <div id="statusCard" class="bg-surface-1 border border-zinc-800 rounded-2xl p-5 mb-5 flex items-center justify-between">
-    <div class="flex items-center gap-3">
+  <div id="statusCard" class="bg-surface-1 border border-zinc-800 rounded-xl p-1.5 mb-1 flex items-center justify-between">
+    <div class="flex items-center gap-1.5">
       <span id="statusDot" class="w-3 h-3 rounded-full bg-zinc-650"></span>
       <div>
         <div id="statusTitle" class="text-sm font-semibold text-white">Memuat…</div>
         <div id="statusSub" class="text-[11px] text-zinc-400 mt-0.5"></div>
       </div>
     </div>
-    <button id="btnDelete" class="hidden text-xs px-3 py-1.5 rounded-lg border border-zinc-700 text-red-400 hover:bg-red-500/10 transition">Hapus</button>
+    <button id="btnDelete" class="hidden text-xs px-2 py-1 rounded-lg border border-zinc-700 text-red-400 hover:bg-red-500/10 transition">Hapus</button>
   </div>
 
   <!-- Upload -->
-  <div class="bg-surface-1 border border-zinc-800 rounded-2xl p-5 mb-5">
-    <h2 class="text-sm font-semibold text-white mb-3">Upload cookies.txt</h2>
-    <div id="dropZone" class="border-2 border-dashed border-zinc-700 rounded-xl p-8 text-center cursor-pointer hover:border-accent transition">
-      <div class="text-3xl mb-2"><i class="bi bi-file-earmark-arrow-up text-sky-400"></i></div>
+  <div class="bg-surface-1 border border-zinc-800 rounded-xl p-1.5 mb-1">
+    <h2 class="text-sm font-semibold text-white mb-1.5">Upload cookies.txt</h2>
+    <div id="dropZone" class="border-2 border-dashed border-zinc-700 rounded-xl p-2 text-center cursor-pointer hover:border-accent transition">
+      <div class="text-3xl mb-1"><i class="bi bi-file-earmark-arrow-up text-sky-400"></i></div>
       <div class="text-sm text-zinc-300">Klik atau taruh file <code class="text-accent">cookies.txt</code> di sini</div>
       <div class="text-[11px] text-zinc-400 mt-1">Format Netscape, export dari ekstensi browser</div>
     </div>
     <input type="file" id="fileInput" accept=".txt,text/plain" class="hidden">
-    <div id="uploadMsg" class="hidden mt-3 text-xs"></div>
+    <div id="uploadMsg" class="hidden mt-1.5 text-xs"></div>
   </div>
 
   <!-- Test -->
-  <div class="bg-surface-1 border border-zinc-800 rounded-2xl p-5">
-    <h2 class="text-sm font-semibold text-white mb-3">Test cookies</h2>
-    <div class="flex flex-col md:flex-row gap-2 mb-3">
+  <div class="bg-surface-1 border border-zinc-800 rounded-xl p-1.5">
+    <h2 class="text-sm font-semibold text-white mb-1.5">Test cookies</h2>
+    <div class="flex flex-col md:flex-row gap-1.5 mb-1.5">
       <input id="testUrl" type="text" placeholder="URL video YouTube (opsional, contoh video jika kosong)"
-        class="flex-1 bg-surface-2/40 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-[var(--accent)]">
-      <button id="btnTest" class="bg-[var(--accent)] text-[var(--accent-text)] font-semibold rounded-xl px-5 py-2.5 text-sm hover:opacity-90 transition">Test</button>
+        class="flex-1 bg-surface-2/40 border border-zinc-800 rounded-xl px-2 py-1.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-[var(--accent)]">
+      <button id="btnTest" class="bg-[var(--accent)] text-[var(--accent-text)] font-semibold rounded-xl px-2 py-1.5 text-sm hover:opacity-90 transition">Test</button>
     </div>
-    <div id="testResult" class="hidden text-sm rounded-xl p-4 border"></div>
+    <div id="testResult" class="hidden text-sm rounded-xl p-2 border"></div>
   </div>
 </main>
 
@@ -202,7 +203,7 @@ fi.addEventListener('change', ()=>{ if(fi.files[0]) handleFile(fi.files[0]); });
 
 function msg(el, text, ok){
   el.textContent = text;
-  el.className = 'mt-3 text-xs rounded-xl p-3 ' + (ok ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400');
+  el.className = 'mt-1.5 text-xs rounded-xl p-1.5 ' + (ok ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400');
 }
 
 async function handleFile(file){
@@ -228,16 +229,16 @@ $('btnDelete').addEventListener('click', async ()=>{
 $('btnTest').addEventListener('click', async ()=>{
   const tr = $('testResult'); tr.classList.remove('hidden');
   const url = $('testUrl').value.trim();
-  tr.className = 'text-sm rounded-xl p-4 border border-zinc-800 bg-surface-1';
+  tr.className = 'text-sm rounded-xl p-2 border border-zinc-800 bg-surface-1';
   tr.innerHTML = '<div class="text-xs text-zinc-400">Menguji cookies ke YouTube…</div>';
   $('btnTest').disabled = true; $('btnTest').textContent = 'Test…';
   const r = await api('/api/cookies/test', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ url }) }).catch(e=>({ok:false, message:'Gagal terhubung: '+e}));
   $('btnTest').disabled = false; $('btnTest').textContent = 'Test';
   const ok = r.ok;
-  tr.className = 'text-sm rounded-xl p-4 border ' + (ok ? 'border-emerald-500/40 bg-emerald-500/5' : 'border-red-500/40 bg-red-500/5');
+  tr.className = 'text-sm rounded-xl p-2 border ' + (ok ? 'border-emerald-500/40 bg-emerald-500/5' : 'border-red-500/40 bg-red-500/5');
   let html = '<div class="font-semibold ' + (ok ? 'text-emerald-400' : 'text-red-400') + ' mb-1">' + (ok ? '✓ ' : '✗ ') + (r.message || 'Selesai') + '</div>';
   if (r.title) html += '<div class="text-xs text-zinc-300 mt-1"><i class="bi bi-film text-fuchsia-400"></i> ' + r.title + (r.channel ? ' : ' + r.channel : '') + '</div>';
-  if (r.detail && r.detail.length) html += '<pre class="log mt-3 p-2">' + r.detail.join('\n').replace(/</g,'&lt;') + '</pre>';
+  if (r.detail && r.detail.length) html += '<pre class="log mt-1.5 p-2">' + r.detail.join('\n').replace(/</g,'&lt;') + '</pre>';
   tr.innerHTML = html;
 });
 

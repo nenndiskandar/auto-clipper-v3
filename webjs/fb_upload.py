@@ -38,7 +38,7 @@ def main():
 
     fb_config = load_fb_config()
     if test_mode:
-        debug_log("[FB] test_mode aktif — hanya validasi token, tanpa upload.")
+        debug_log("[FB] test_mode aktif, hanya validasi token, tanpa upload.")
         try:
             info = validate_page_token(fb_config)
         except Exception as e:

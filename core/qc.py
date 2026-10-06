@@ -1,7 +1,7 @@
 """
-core/qc.py — v3 NEW — QC klip: rule + AI vision check.
+core/qc.py: v3 NEW, QC klip: rule + AI vision check.
 Rule: durasi, resolusi, audio ada.
-AI (opsional): framing — kepala kepotong? teks kebaca?  → {pass, issues[]}
+AI (opsional): framing: kepala kepotong? teks kebaca?  → {pass, issues[]}
 """
 import os
 import json

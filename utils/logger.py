@@ -96,7 +96,7 @@ def debug_log(*args, **kwargs):
     stripped for plain-text console/file output."""
     msg = " ".join(str(a) for a in args)
     if DEBUG_MODE:
-        # stderr only — jangan kotori stdout yang dipakai untuk JSON IPC (phase1_campaign)
+        # stderr only, jangan kotori stdout yang dipakai untuk JSON IPC (phase1_campaign)
         try:
             print(f"[DEBUG] {strip_ansi(msg)}", file=sys.stderr)
         except Exception:

@@ -1,4 +1,4 @@
-"""webjs/gen_thumbnail.py — generate thumbnail dari klip via core.thumbnail.buat_thumbnail.
+"""webjs/gen_thumbnail.py: generate thumbnail dari klip via core.thumbnail.buat_thumbnail.
 
 Usage: python gen_thumbnail.py <session> <clipDir> <outPath> [frame_ms] [alpha]
 Mencari video final di folder klip, menulis judul (meta.title) ke frame.

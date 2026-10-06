@@ -1,5 +1,5 @@
 """
-Facebook Reels Uploader — upload clips ke Facebook Page via Meta Graph API.
+Facebook Reels Uploader: upload clips ke Facebook Page via Meta Graph API.
 
 Mengikuti pola manifest-based seperti youtube_uploader.py dan tiktok_uploader.py.
 API Flow per clip:
@@ -104,7 +104,7 @@ def _auth_headers(config: dict) -> dict:
 # ==============================================================================
 
 def validate_page_token(config: dict) -> dict:
-    """GET /me?fields=id,name — validasi Page Access Token."""
+    """GET /me?fields=id,name: validasi Page Access Token."""
     resp = requests.get(
         f"{config['base_url']}/me",
         headers=_auth_headers(config),
@@ -186,7 +186,7 @@ def create_reel_session(config: dict) -> dict:
 
 
 def upload_reel_binary(upload_url: str, file_path: str, token: str) -> bool:
-    """POST binary ke upload_url (header OAuth — bukan Bearer)."""
+    """POST binary ke upload_url (header OAuth, bukan Bearer)."""
     file_size = os.path.getsize(file_path)
     headers = {
         "Authorization": f"OAuth {token}",
@@ -487,7 +487,7 @@ def upload_manifest_to_facebook(
     pending_items = []
     for item in candidates:
         if item.get("fb_video_id"):
-            debug_log(f"⏭️ Skip Rank {item.get('rank')} — sudah punya Facebook Video ID "
+            debug_log(f"⏭️ Skip Rank {item.get('rank')}: sudah punya Facebook Video ID "
                       f"(status={item.get('fb_upload_status') or 'unknown'})")
             continue
         pending_items.append(item)
@@ -555,7 +555,7 @@ def upload_manifest_to_facebook(
             last_assigned_time = scheduled_at
             mode_label = f"SCHEDULED → {scheduled_at.strftime('%Y-%m-%d %H:%M %Z')}"
 
-        debug_log(f"\n{'=' * 60}\n=== Clip {idx + 1}/{len(pending_items)} — Rank {rank} ===\n"
+        debug_log(f"\n{'=' * 60}\n=== Clip {idx + 1}/{len(pending_items)}, Rank {rank} ===\n"
                   f"Judul  : {title}\nMode   : {mode_label}\n{'=' * 60}")
 
         video_id = None

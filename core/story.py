@@ -1,5 +1,5 @@
 """
-core/story.py — Story Clip Mode (multi-source narrative assembly).
+core/story.py: Story Clip Mode (multi-source narrative assembly).
 
 Loads a ``sources.json`` (source registry) and a ``story_recipe.json``
 (hook + highlight scenes per clip), downloads/caches all source videos,
@@ -459,7 +459,7 @@ def run_story_pipeline(
         Manifest (list of dicts) with hook/highlight output paths.
     """
     debug_log("=" * 60)
-    debug_log("[Story] Story Clip — Multi-Source Narrative Assembly")
+    debug_log("[Story] Story Clip: Multi-Source Narrative Assembly")
     debug_log("=" * 60)
 
     source_registry = load_sources(sources_json_path)

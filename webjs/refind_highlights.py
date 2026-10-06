@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Regenerate highlights untuk sesi yang sudah ada.
 Usage: refind_highlights.py <session_id> <num_clips|0> <result_file>
-Result JSON: {ok, count?, error?} — highlights ditulis ulang ke session_data.json sesi tsb."""
+Result JSON: {ok, count?, error?}: highlights ditulis ulang ke session_data.json sesi tsb."""
 import sys
 import json
 import traceback

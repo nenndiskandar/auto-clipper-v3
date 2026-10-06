@@ -40,28 +40,29 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body class="min-h-screen flex flex-col md:flex-row antialiased">
+<div class="portal-bg" aria-hidden="true"><i></i><i></i><i></i></div>
 
 <aside class="w-full md:w-64 border-b md:border-b-0 md:border-r border-zinc-800 flex flex-col shrink-0">
-  <div class="p-4 border-b border-zinc-800 flex items-center justify-between">
-    <div class="flex items-center gap-2">
+  <div class="p-2 border-b border-zinc-800 flex items-center justify-between">
+    <div class="flex items-center gap-1.5">
       <span class="w-7 h-7 rounded-lg logo-mark flex items-center justify-center font-black text-sm"><i class="bi bi-lightning-charge-fill text-amber-400"></i></span>
       <span class="font-bold text-sm tracking-wide text-white font-heading">AUTO<span class="text-[var(--accent)]">CLIPPER</span></span>
     </div>
-    <div class="flex items-center gap-2"><button class="darkmode-btn darkmode-compact" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button><a href="/logout" class="min-h-[32px] min-w-[44px] flex items-center justify-center text-xs text-zinc-400 hover:text-white transition md:hidden">Logout</a></div>
+    <div class="flex items-center gap-1.5"><button class="darkmode-btn darkmode-compact" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button><a href="/logout" class="min-h-[32px] min-w-[44px] flex items-center justify-center text-xs text-zinc-400 hover:text-white transition md:hidden">Logout</a></div>
   </div>
-  <nav aria-label="Menu Utama" class="p-2 md:p-3 flex flex-row md:flex-col gap-1.5 flex-wrap" id="sidebarLinks">
-    <a href="/" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-house-door text-sky-400"></i><span>Library Sesi</span></a>
-    <a href="/create.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-plus-square text-emerald-400"></i><span>Create Clip</span></a>
-    <a href="/tasks.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-list-task text-amber-400"></i><span>Antrean Tasks</span></a>
-    <a href="/story.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-film text-fuchsia-400"></i><span>AI Story</span></a>
-    <a href="/facebook.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-facebook text-blue-400"></i><span>FB Auto Upload</span></a>
-    <a href="/cookies.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-shield-lock text-orange-400"></i><span>Cookies YouTube</span></a>
-    <a href="/ternaklip.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition bg-[var(--accent)] text-[var(--accent-text)] font-bold shadow-sm"><i class="bi bi-bullseye"></i><span>TernakKlip</span></a>
-    <a href="/dependencies.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-box-seam text-violet-400"></i><span>Dependencies</span></a>
-    <a href="/settings.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-gear text-zinc-400"></i><span>Settings & AI</span></a>
+  <nav aria-label="Menu Utama" class="p-2 md:p-1.5 flex flex-row md:flex-col gap-1.5 flex-wrap" id="sidebarLinks">
+    <a href="/" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-house-door text-sky-400"></i><span>Library Sesi</span></a>
+    <a href="/create.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-plus-square text-emerald-400"></i><span>Create Clip</span></a>
+    <a href="/tasks.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-list-task text-amber-400"></i><span>Antrean Tasks</span></a>
+    <a href="/story.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-film text-fuchsia-400"></i><span>AI Story</span></a>
+    <a href="/facebook.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-facebook text-blue-400"></i><span>FB Auto Upload</span></a>
+    <a href="/cookies.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-shield-lock text-orange-400"></i><span>Cookies YouTube</span></a>
+    <a href="/ternaklip.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition bg-[var(--accent)] text-[var(--accent-text)] font-bold shadow-sm"><i class="bi bi-bullseye"></i><span>TernakKlip</span></a>
+    <a href="/dependencies.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-box-seam text-violet-400"></i><span>Dependencies</span></a>
+    <a href="/settings.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-gear text-zinc-400"></i><span>Settings & AI</span></a>
   </nav>
 
-  <div class="mt-auto px-4 py-3 border-t border-zinc-800/80 hidden md:flex flex-col gap-2 text-xs text-zinc-400 bg-zinc-950/40">
+  <div class="mt-auto px-2 py-1.5 border-t border-zinc-800/80 hidden md:flex flex-col gap-1.5 text-xs text-zinc-400 bg-zinc-950/40">
     <span class="font-semibold text-[10px] uppercase tracking-wider text-zinc-400"><i class="bi bi-cpu text-emerald-400"></i> Engine Status</span>
     <div class="flex items-center justify-between"><span>FFmpeg</span><span id="st_ffmpeg" class="w-2.5 h-2.5 rounded-full bg-zinc-600" title="Checking..."></span></div>
     <div class="flex items-center justify-between"><span>yt-dlp</span><span id="st_ytdlp" class="w-2.5 h-2.5 rounded-full bg-zinc-600" title="Checking..."></span></div>
@@ -69,12 +70,12 @@
     <div class="flex items-center justify-between"><span>AI Proxy</span><span id="st_ai" class="w-2.5 h-2.5 rounded-full bg-zinc-600" title="Checking..."></span></div>
   </div>
 
-  <div class="p-4 border-t border-zinc-800 hidden md:flex items-center justify-between text-xs">
+  <div class="p-2 border-t border-zinc-800 hidden md:flex items-center justify-between text-xs">
     <span class="text-zinc-400 truncate max-w-[130px]" id="whoami"></span>
-    <div class="flex items-center gap-2"><button class="darkmode-btn darkmode-compact" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button><a href="/logout" class="text-zinc-400 hover:text-white transition">Logout</a></div>
+    <div class="flex items-center gap-1.5"><button class="darkmode-btn darkmode-compact" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button><a href="/logout" class="text-zinc-400 hover:text-white transition">Logout</a></div>
   </div>
 
-  <div class="md:hidden flex items-center justify-around px-4 py-2.5 border-t border-b border-zinc-800/80 bg-zinc-950/60 text-[10px] text-zinc-300">
+  <div class="md:hidden flex items-center justify-around px-2 py-1.5 border-t border-b border-zinc-800/80 bg-zinc-950/60 text-[10px] text-zinc-300">
     <div class="flex items-center gap-1.5"><span id="st_ffmpeg_mob" class="w-2 h-2 rounded-full bg-zinc-600" title="Checking..."></span><span>FFmpeg</span></div>
     <div class="flex items-center gap-1.5"><span id="st_ytdlp_mob" class="w-2 h-2 rounded-full bg-zinc-600" title="Checking..."></span><span>yt-dlp</span></div>
     <div class="flex items-center gap-1.5"><span id="st_deno_mob" class="w-2 h-2 rounded-full bg-zinc-600" title="Checking..."></span><span>Deno</span></div>
@@ -90,35 +91,35 @@
 <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
   <div class="max-w-[1480px] w-full mx-auto">
     <!-- Page header: one focal point -->
-    <div class="px-4 pt-4 pb-3">
-      <div class="flex flex-wrap items-start justify-between gap-3">
+    <div class="px-2 pt-2 pb-1.5">
+      <div class="flex flex-wrap items-start justify-between gap-1.5">
         <div class="min-w-0">
-          <div class="flex items-center gap-2 mb-1">
+          <div class="flex items-center gap-1.5 mb-1">
             <span class="w-1 h-5 rounded-full bg-[var(--accent)]"></span>
             <h1 class="text-[15px] md:text-[18px] font-extrabold tracking-tight text-[var(--text-primary)] font-heading">TernakKlip Campaigns</h1>
-            <span id="tkLiveDot" class="hidden items-center gap-1.5 text-[10px] font-bold px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-600 border border-emerald-500/20"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>Live 174</span>
+            <span id="tkLiveDot" class="hidden items-center gap-1.5 text-[10px] font-bold px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 border border-emerald-500/20"><span class="w-1.5 h-1 rounded-full bg-emerald-500 animate-pulse"></span>Live 174</span>
           </div>
           <p class="text-xs text-[var(--text-muted)] leading-relaxed max-w-[640px]">Pilih campaign, ambil sumber video, langsung jadi sesi clip. Hadiah dan peserta update real time dari TernakKlip. Search sinkron ke server, filter dan sort lokal instan.</p>
         </div>
         <div class="flex items-center gap-1.5 shrink-0">
-          <a href="https://app.ternakklip.com" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 min-h-[36px] px-3 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] transition"><i class="bi bi-box-arrow-up-right"></i>Buka TernakKlip</a>
-          <button onclick="loadTernakKlip(TERNK_META.page||1)" class="inline-flex items-center gap-1.5 min-h-[36px] px-3 rounded-lg bg-[var(--bg-surface-2)] border border-[var(--border)] text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition" title="Refresh"><i class="bi bi-arrow-clockwise"></i><span class="hidden sm:inline">Refresh</span></button>
+          <a href="https://app.ternakklip.com" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 min-h-[36px] px-2 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] transition"><i class="bi bi-box-arrow-up-right"></i>Buka TernakKlip</a>
+          <button onclick="loadTernakKlip(TERNK_META.page||1)" class="inline-flex items-center gap-1.5 min-h-[36px] px-2 rounded-lg bg-[var(--bg-surface-2)] border border-[var(--border)] text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition" title="Refresh"><i class="bi bi-arrow-clockwise"></i><span class="hidden sm:inline">Refresh</span></button>
         </div>
       </div>
     </div>
 
-    <div class="flex flex-col xl:flex-row gap-4 px-4 pb-4">
-      <main class="flex-1 min-w-0 space-y-3">
+    <div class="flex flex-col xl:flex-row gap-1.5 px-2 pb-2">
+      <main class="flex-1 min-w-0 space-y-1">
         <!-- Filter bar -->
-        <div class="card-panel p-3 space-y-3">
-          <div class="flex flex-col sm:flex-row gap-2">
+        <div class="card-panel p-1.5 space-y-1">
+          <div class="flex flex-col sm:flex-row gap-1.5">
             <div class="relative flex-1 min-w-0">
               <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] text-xs"></i>
-              <input id="tkSearch" type="text" placeholder="Cari judul atau client, mis. Labore, DBS, Glow FX..." class="w-full pl-9 pr-9 py-2 rounded-lg border text-xs bg-[var(--bg-surface)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)]" autocomplete="off">
+              <input id="tkSearch" type="text" placeholder="Cari judul atau client, mis. Labore, DBS, Glow FX..." class="w-full pl-9 pr-9 py-1 rounded-lg border text-xs bg-[var(--bg-surface)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)]" autocomplete="off">
               <button id="tkClearSearch" class="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 hidden items-center justify-center rounded-full bg-[var(--bg-surface-2)] text-[var(--text-muted)] hover:text-[var(--text-primary)] text-[10px]" aria-label="Hapus pencarian"><i class="bi bi-x-lg"></i></button>
             </div>
-            <div class="flex items-center gap-2 shrink-0">
-              <select id="tkSort" class="min-h-[36px] rounded-lg border px-2.5 text-xs bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]">
+            <div class="flex items-center gap-1.5 shrink-0">
+              <select id="tkSort" class="min-h-[36px] rounded-lg border px-1.5 text-xs bg-[var(--bg-surface)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]">
                 <option value="newest">Terbaru</option>
                 <option value="prize_high">Hadiah tertinggi</option>
                 <option value="prize_low">Hadiah terendah</option>
@@ -134,7 +135,7 @@
 
           <div class="flex flex-wrap items-center gap-1.5">
             <span class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)] mr-1">Filter:</span>
-            <button data-filter="all" class="chip active" onclick="setChip('all')"><i class="bi bi-stars"></i>Semua</button>
+            <button data-filter="all" class="chip active" onclick="setChip('all')"><i class="bi bi-grid"></i>Semua</button>
             <button data-filter="accumulation" class="chip" onclick="setChip('accumulation')"><i class="bi bi-graph-up-arrow"></i>Akumulasi</button>
             <button data-filter="single" class="chip" onclick="setChip('single')"><i class="bi bi-trophy"></i>Single Prize</button>
             <button data-filter="umkm" class="chip" onclick="setChip('umkm')"><i class="bi bi-shop"></i>UMKM</button>
@@ -145,106 +146,106 @@
             <button id="btnClearChip" onclick="clearFilters()" class="hidden text-[11px] font-semibold text-[var(--accent)] hover:underline ml-auto">Reset filter</button>
           </div>
 
-          <div class="flex flex-wrap items-center gap-2 text-[11px] text-[var(--text-muted)]">
+          <div class="flex flex-wrap items-center gap-1.5 text-[11px] text-[var(--text-muted)]">
             <span id="tkPageInfo" class="font-medium"></span>
             <span class="hidden sm:inline text-[var(--border)]">|</span>
             <span id="tkCountInfo" class=""></span>
-            <span id="tkSearchBadge" class="hidden inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[var(--accent-bg-subtle)] border border-[var(--accent)]/20 text-[var(--accent)] font-semibold"><i class="bi bi-search"></i><span></span><button onclick="clearSearch()" class="ml-1 w-4 h-4 rounded-full bg-[var(--accent)] text-[var(--accent-text)] flex items-center justify-center text-[9px]"><i class="bi bi-x"></i></button></span>
+            <span id="tkSearchBadge" class="hidden inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[var(--accent-bg-subtle)] border border-[var(--accent)]/20 text-[var(--accent)] font-semibold"><i class="bi bi-search"></i><span></span><button onclick="clearSearch()" class="ml-1 w-4 h-4 rounded-full bg-[var(--accent)] text-[var(--accent-text)] flex items-center justify-center text-[9px]"><i class="bi bi-x"></i></button></span>
           </div>
         </div>
 
-        <div id="tkStatus" class="space-y-2"></div>
-        <div id="tkGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+        <div id="tkStatus" class="space-y-1"></div>
+        <div id="tkGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5"></div>
         <div id="tkPagination" class="flex flex-wrap items-center justify-center gap-1.5"></div>
-        <div id="tkEmpty" class="hidden card-panel p-8 text-center">
-          <div class="w-12 h-12 rounded-full bg-[var(--bg-surface-2)] flex items-center justify-center mx-auto mb-3 text-[var(--text-muted)]"><i class="bi bi-inbox text-xl"></i></div>
+        <div id="tkEmpty" class="hidden card-panel p-2 text-center">
+          <div class="w-12 h-12 rounded-full bg-[var(--bg-surface-2)] flex items-center justify-center mx-auto mb-1.5 text-[var(--text-muted)]"><i class="bi bi-inbox text-base"></i></div>
           <div class="text-sm font-bold text-[var(--text-primary)]">Tidak ada campaign</div>
           <div class="text-xs text-[var(--text-muted)] mt-1 max-w-[420px] mx-auto">Coba ubah kata kunci atau reset filter. Pencarian kosong akan menampilkan semua campaign terbaru.</div>
-          <button onclick="clearFilters(); clearSearch(); loadTernakKlip(1)" class="mt-3 min-h-[36px] px-4 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] text-xs font-bold">Tampilkan semua</button>
+          <button onclick="clearFilters(); clearSearch(); loadTernakKlip(1)" class="mt-1.5 min-h-[36px] px-2 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] text-xs font-bold">Tampilkan semua</button>
         </div>
       </main>
 
-      <aside class="w-full xl:w-[340px] xl:shrink-0 space-y-3 xl:sticky xl:top-4 xl:self-start xl:max-h-[calc(100vh-1rem)] xl:overflow-y-auto">
-        <div class="card-panel p-3">
-          <div class="flex items-center justify-between mb-2.5">
+      <aside class="w-full xl:w-[340px] xl:shrink-0 space-y-1 xl:sticky xl:top-4 xl:self-start xl:max-h-[calc(100vh-1rem)] xl:overflow-y-auto">
+        <div class="card-panel p-1.5">
+          <div class="flex items-center justify-between mb-1">
             <span class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)]"><i class="bi bi-bar-chart-line text-[var(--accent)]"></i> Ringkasan</span>
-            <span id="tkMetaBadge" class="text-[10px] px-2 py-1 rounded-full bg-[var(--bg-surface-2)] border border-[var(--border)] text-[var(--text-muted)] font-medium">page 1 dari 5</span>
+            <span id="tkMetaBadge" class="text-[10px] px-2 py-1 rounded-lg bg-[var(--bg-surface-2)] border border-[var(--border)] text-[var(--text-muted)] font-medium">page 1 dari 5</span>
           </div>
-          <div class="grid grid-cols-2 gap-2" id="tkStats">
-            <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] p-3">
+          <div class="grid grid-cols-2 gap-1.5" id="tkStats">
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] p-1.5">
               <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Total di server</div>
               <div id="statTotal" class="text-[22px] font-extrabold leading-none mt-1 text-[var(--text-primary)]">0</div>
               <div class="text-[11px] text-[var(--text-muted)] mt-1">campaign live</div>
             </div>
-            <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] p-3">
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] p-1.5">
               <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Di halaman ini</div>
               <div id="statVisible" class="text-[22px] font-extrabold leading-none mt-1 text-[var(--accent)]">0</div>
               <div id="statVisibleSub" class="text-[11px] text-[var(--text-muted)] mt-1">terfilter</div>
             </div>
-            <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-3">
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-1.5">
               <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Total hadiah (halaman)</div>
               <div id="statTotalPrize" class="text-[15px] font-extrabold leading-none mt-1 text-emerald-600">Rp 0</div>
               <div class="text-[11px] text-[var(--text-muted)] mt-1">akumulasi prize</div>
             </div>
-            <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-3">
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-1.5">
               <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Total peserta (halaman)</div>
               <div id="statParticipants" class="text-[15px] font-extrabold leading-none mt-1 text-amber-600">0</div>
               <div class="text-[11px] text-[var(--text-muted)] mt-1">creator ikut</div>
             </div>
           </div>
-          <div class="mt-3 flex items-center gap-2 text-[11px] text-[var(--text-muted)]">
+          <div class="mt-1.5 flex items-center gap-1.5 text-[11px] text-[var(--text-muted)]">
             <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Akumulasi
             <span class="w-2 h-2 rounded-full bg-sky-500"></span> Single Prize
             <span class="w-2 h-2 rounded-full bg-violet-500 ml-2"></span> UMKM / Special
           </div>
         </div>
 
-                <div class="card-panel p-3" id="tkRecoPanel">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)]"><i class="bi bi-stars text-amber-500"></i> Rekomendasi Clip</span>
-            <span class="text-[10px] px-2 py-1 rounded-full bg-amber-500/10 text-amber-600 border border-amber-500/20 font-bold">AI Pilihan</span>
+                <div class="card-panel p-1.5" id="tkRecoPanel">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)]"><i class="bi bi-award text-amber-500"></i> Rekomendasi Clip</span>
+            <span class="text-[10px] px-2 py-1 rounded-lg bg-amber-500/10 text-amber-600 border border-amber-500/20 font-bold">AI Pilihan</span>
           </div>
-          <p class="text-[11px] leading-relaxed text-[var(--text-muted)] mb-2.5">Dipilih dari halaman ini berdasarkan hadiah, kompetisi, dan model akumulasi. Klik untuk buka detail.</p>
-          <div class="flex gap-1.5 mb-2.5 flex-wrap">
+          <p class="text-[11px] leading-relaxed text-[var(--text-muted)] mb-1">Dipilih dari halaman ini berdasarkan hadiah, kompetisi, dan model akumulasi. Klik untuk buka detail.</p>
+          <div class="flex gap-1.5 mb-1 flex-wrap">
             <button data-reco="cuan" onclick="setRecoTab('cuan')" class="chip active text-[11px]" id="recoTab_cuan">Paling Cuan</button>
             <button data-reco="sepi" onclick="setRecoTab('sepi')" class="chip text-[11px]" id="recoTab_sepi">Paling Sepi</button>
             <button data-reco="akumulasi" onclick="setRecoTab('akumulasi')" class="chip text-[11px]" id="recoTab_akumulasi">Akumulasi</button>
           </div>
-          <div id="tkRecoList" class="space-y-2"></div>
-          <div id="tkRecoEmpty" class="hidden text-xs text-[var(--text-muted)] py-3 text-center">Belum ada rekomendasi untuk filter ini.</div>
+          <div id="tkRecoList" class="space-y-1"></div>
+          <div id="tkRecoEmpty" class="hidden text-xs text-[var(--text-muted)] py-1.5 text-center">Belum ada rekomendasi untuk filter ini.</div>
           <button onclick="scanGlobalReco()" id="tkRecoScanBtn" class="w-full mt-2.5 min-h-[36px] rounded-lg border border-[var(--border)] bg-[var(--bg-surface-2)] text-xs font-semibold hover:border-[var(--accent)] hover:text-[var(--accent)] transition flex items-center justify-center gap-1.5"><i class="bi bi-radar"></i>Scan semua 174 campaign</button>
           <div id="tkRecoStatus" class="text-[11px] text-[var(--text-muted)] mt-1.5 hidden"></div>
         </div>
 
-        <div class="card-panel p-3">
-          <div class="flex items-center justify-between mb-2">
+        <div class="card-panel p-1.5">
+          <div class="flex items-center justify-between mb-1">
             <span class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)]"><i class="bi bi-fire text-orange-500"></i> Top Hadiah (halaman ini)</span>
             <span class="text-[10px] text-[var(--text-muted)]">sort hadiah</span>
           </div>
-          <div id="tkTopList" class="space-y-2"></div>
-          <div id="tkTopEmpty" class="hidden text-xs text-[var(--text-muted)] py-4 text-center">Belum ada data.</div>
+          <div id="tkTopList" class="space-y-1"></div>
+          <div id="tkTopEmpty" class="hidden text-xs text-[var(--text-muted)] py-1 text-center">Belum ada data.</div>
         </div>
 
-        <div class="card-panel p-3">
-          <div class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)] mb-2"><i class="bi bi-lightbulb text-amber-500"></i> Tips cepat</div>
-          <ul class="space-y-2 text-xs leading-relaxed text-[var(--text-secondary)] list-disc pl-4">
+        <div class="card-panel p-1.5">
+          <div class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)] mb-1"><i class="bi bi-lightbulb text-amber-500"></i> Tips cepat</div>
+          <ul class="space-y-1 text-xs leading-relaxed text-[var(--text-secondary)] list-disc pl-4">
             <li><b>Pencarian</b> langsung ke server (pakai <code class="px-1 py-0.5 rounded bg-[var(--bg-surface-2)] border border-[var(--border)] text-[11px]">search</code>), jadi total dan halaman ikut berubah.</li>
             <li><b>Filter chip</b> lokal di halaman ini saja, instan tanpa reload.</li>
             <li>Klik <b>Detail</b> lalu <b>Bikin Konten AI</b> - AI baca brief.pdf, cari highlight sesuai brief, render 9:16 langsung jadi sesi clip.</li>
             <li>Simpan dengan <i class="bi bi-bookmark"></i> untuk kumpulin campaign favorit, filter <b>Tersimpan</b> untuk fokus.</li>
           </ul>
-          <div class="mt-3 grid grid-cols-2 gap-2">
+          <div class="mt-1.5 grid grid-cols-2 gap-1.5">
             <button onclick="document.getElementById('tkSearch')?.focus()" class="min-h-[36px] rounded-lg border border-[var(--border)] bg-[var(--bg-surface-2)] text-xs font-semibold">Fokus cari</button>
             <button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="min-h-[36px] rounded-lg bg-[var(--accent)] text-[var(--accent-text)] text-xs font-bold">Ke atas</button>
           </div>
         </div>
 
-        <div id="tkHistoryBox" class="card-panel p-3 hidden">
-          <div class="flex items-center justify-between mb-2">
+        <div id="tkHistoryBox" class="card-panel p-1.5 hidden">
+          <div class="flex items-center justify-between mb-1">
             <span class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)]"><i class="bi bi-clock-history"></i> Terakhir dilihat</span>
             <button onclick="clearHistory()" class="text-[11px] text-[var(--text-muted)] hover:text-[var(--text-primary)]">Hapus</button>
           </div>
-          <div id="tkHistoryList" class="space-y-1.5"></div>
+          <div id="tkHistoryList" class="space-y-1"></div>
         </div>
       </aside>
     </div>
@@ -252,9 +253,9 @@
 </div>
 
 <!-- Detail Modal -->
-<div id="tkDetailModal" role="dialog" aria-modal="true" aria-hidden="true" class="fixed inset-0 z-50 hidden items-center justify-center p-3 md:p-4 bg-black/60 backdrop-blur-sm">
-  <div class="bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl max-w-[760px] w-full max-h-[92vh] flex flex-col shadow-[0_20px_60px_rgba(0,0,0,.35)] overflow-hidden">
-    <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--border)] shrink-0">
+<div id="tkDetailModal" role="dialog" aria-modal="true" aria-hidden="true" class="fixed inset-0 z-50 hidden items-center justify-center p-1.5 md:p-2 bg-black/60 backdrop-blur-sm -sm">
+  <div class="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl max-w-[760px] w-full max-h-[92vh] flex flex-col shadow-[0_20px_60px_rgba(0,0,0,.35)] overflow-hidden">
+    <div class="flex items-center justify-between px-2 py-1.5 border-b border-[var(--border)] shrink-0">
       <div class="min-w-0">
         <div id="tkModalKicker" class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Campaign Detail</div>
         <h3 id="tkModalTitle" class="text-[13px] md:text-sm font-extrabold text-[var(--text-primary)] truncate max-w-[42ch]">Memuat...</h3>
@@ -262,7 +263,7 @@
       <button onclick="closeTkModal()" class="w-9 h-9 rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center justify-center shrink-0" aria-label="Tutup"><i class="bi bi-x-lg"></i></button>
     </div>
     <div class="overflow-y-auto flex-1 p-0" id="tkModalBody">
-      <div class="p-6 text-center text-sm text-[var(--text-muted)]"><i class="bi bi-hourglass-split animate-pulse"></i> Memuat detail...</div>
+      <div class="p-1.5 text-center text-sm text-[var(--text-muted)]"><i class="bi bi-hourglass-split animate-pulse"></i> Memuat detail...</div>
     </div>
   </div>
 </div>
@@ -351,15 +352,15 @@ function getFilteredSorted(){
 function renderSkeleton(){
   const grid=$('#tkGrid');
   const count=6;
-  grid.className = CURRENT_FILTER.view==='list' ? 'grid grid-cols-1 gap-3' : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3';
+  grid.className = CURRENT_FILTER.view==='list' ? 'grid grid-cols-1 gap-1.5' : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5';
   grid.innerHTML = Array.from({length:count}).map(()=>`
     <div class="tk-card p-0 overflow-hidden">
       <div class="aspect-video tk-skeleton"></div>
-      <div class="p-3 space-y-2">
+      <div class="p-1.5 space-y-1">
         <div class="h-3 rounded tk-skeleton w-2/3"></div>
         <div class="h-4 rounded tk-skeleton w-full"></div>
         <div class="h-3 rounded tk-skeleton w-1/2"></div>
-        <div class="flex gap-2 pt-2"><div class="h-8 rounded tk-skeleton flex-1"></div><div class="h-8 rounded tk-skeleton flex-1"></div></div>
+        <div class="flex gap-1.5 pt-2"><div class="h-8 rounded tk-skeleton flex-1"></div><div class="h-8 rounded tk-skeleton flex-1"></div></div>
       </div>
     </div>
   `).join('');
@@ -395,7 +396,7 @@ async function loadTernakKlip(page=1){
 
     // update header live
     const liveDot=$('#tkLiveDot');
-    if(liveDot){ liveDot.classList.remove('hidden'); liveDot.classList.add('inline-flex'); liveDot.innerHTML=`<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>Live ${TERNK_META.total}`; }
+    if(liveDot){ liveDot.classList.remove('hidden'); liveDot.classList.add('inline-flex'); liveDot.innerHTML=`<span class="w-1.5 h-1 rounded-full bg-emerald-500 animate-pulse"></span>Live ${TERNK_META.total}`; }
     $('#tkMetaBadge').textContent=`page ${TERNK_META.page} dari ${TERNK_META.total_pages} • ${TERNK_META.total} total`;
 
     const filtered=getFilteredSorted();
@@ -421,7 +422,7 @@ async function loadTernakKlip(page=1){
     pagination.innerHTML='';
     pageInfo.textContent='';
     countInfo.textContent='';
-    status.innerHTML=`<div class="rounded-xl border border-rose-200 bg-rose-50 text-rose-700 px-3 py-2.5 text-xs flex items-start justify-between gap-3"><span class="flex gap-2"><i class="bi bi-exclamation-triangle mt-0.5"></i><span>${esc(e.message)}</span></span><button onclick="loadTernakKlip(${page})" class="shrink-0 min-h-[32px] px-3 rounded-lg bg-rose-600 text-white font-bold text-xs">Coba lagi</button></div>`;
+    status.innerHTML=`<div class="rounded-xl border border-rose-200 bg-rose-50 text-rose-700 px-2 py-1 text-xs flex items-start justify-between gap-1.5"><span class="flex gap-1.5"><i class="bi bi-exclamation-triangle mt-0.5"></i><span>${esc(e.message)}</span></span><button onclick="loadTernakKlip(${page})" class="shrink-0 min-h-[32px] px-2 rounded-lg bg-rose-600 text-white font-bold text-xs">Coba lagi</button></div>`;
     updateStats([]);
     renderReco();
   }
@@ -431,19 +432,19 @@ function rewardBadges(c){
   const rewards=c.platform_rewards||[];
   const paid=rewards.filter(p=> p.reward_per_item!=null || p.reward_rate!=null);
   if(paid.length){
-    return paid.slice(0,3).map(p=>`<span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[var(--accent)] text-[var(--accent-text)] text-[10px] font-bold leading-none"><i class="bi bi-coin"></i>${esc(p.provider)} ${p.reward_per_item!=null?fmtCompact(p.reward_per_item):''}</span>`).join('');
+    return paid.slice(0,3).map(p=>`<span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] text-[10px] font-bold leading-none"><i class="bi bi-coin"></i>${esc(p.provider)} ${p.reward_per_item!=null?fmtCompact(p.reward_per_item):''}</span>`).join('');
   }
   // fallback: show generic platform hint if any reward exists empty (server returns 6 with null) - hide to avoid noise
   return '';
 }
 function modelBadge(c){
-  if(c.is_accumulation) return `<span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-500 text-white text-[10px] font-bold"><i class="bi bi-graph-up-arrow"></i>Akumulasi</span>`;
-  return `<span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-sky-500 text-white text-[10px] font-bold"><i class="bi bi-trophy"></i>Single</span>`;
+  if(c.is_accumulation) return `<span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-500 text-white text-[10px] font-bold"><i class="bi bi-graph-up-arrow"></i>Akumulasi</span>`;
+  return `<span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-sky-500 text-white text-[10px] font-bold"><i class="bi bi-trophy"></i>Single</span>`;
 }
 function extraBadges(c){
   let s='';
-  if(c.is_umkm) s+=`<span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-violet-600 text-white text-[10px] font-bold"><i class="bi bi-shop"></i>UMKM</span>`;
-  if(c.is_special_collab) s+=`<span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-500 text-white text-[10px] font-bold"><i class="bi bi-patch-check"></i>Special</span>`;
+  if(c.is_umkm) s+=`<span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-violet-600 text-white text-[10px] font-bold"><i class="bi bi-shop"></i>UMKM</span>`;
+  if(c.is_special_collab) s+=`<span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-amber-500 text-white text-[10px] font-bold"><i class="bi bi-patch-check"></i>Special</span>`;
   return s;
 }
 function prizePerView(c){
@@ -457,7 +458,7 @@ function prizePerView(c){
 function renderTK(items){
   const grid=$('#tkGrid');
   const isList=CURRENT_FILTER.view==='list';
-  grid.className = isList ? 'grid grid-cols-1 gap-3' : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3';
+  grid.className = isList ? 'grid grid-cols-1 gap-1.5' : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5';
   if(!items.length){
     grid.innerHTML='';
     return;
@@ -474,26 +475,26 @@ function renderTK(items){
         <div class="w-[200px] sm:w-[240px] shrink-0 relative bg-[var(--bg-surface-2)]">
           <div class="aspect-video w-full overflow-hidden"><img src="${esc(c.thumbnail_url||'')}" class="w-full h-full object-cover" loading="lazy" alt=""></div>
           <div class="absolute top-2 left-2 flex flex-wrap gap-1">${modelBadge(c)}</div>
-          <button onclick="event.stopPropagation(); toggleBookmark('${c.public_id}')" class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 backdrop-blur border border-black/10 flex items-center justify-center shadow-sm" title="Simpan"><i class="bi ${bookmarkIcon} text-xs"></i></button>
+          <button onclick="event.stopPropagation(); toggleBookmark('${c.public_id}')" class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white border border-black/10 flex items-center justify-center shadow-sm" title="Simpan"><i class="bi ${bookmarkIcon} text-xs"></i></button>
         </div>
-        <div class="flex-1 min-w-0 p-3 flex flex-col">
-          <div class="flex items-center gap-2 mb-1">
+        <div class="flex-1 min-w-0 p-1.5 flex flex-col">
+          <div class="flex items-center gap-1.5 mb-1">
             <span class="w-6 h-6 rounded-full overflow-hidden bg-[var(--bg-surface-2)] flex items-center justify-center shrink-0">${c.client_avatar_url?`<img src="${esc(c.client_avatar_url)}" class="w-full h-full object-cover">`:`<i class="bi bi-person text-[var(--text-muted)]"></i>`}</span>
             <span class="text-[11px] font-semibold text-[var(--text-secondary)] truncate">${esc(c.client_name||'Client')}</span>
             <span class="text-[10px] text-[var(--text-muted)]">• ${new Date(c.created_at).toLocaleDateString('id-ID',{day:'2-digit',month:'short'})}</span>
             <span class="ml-auto hidden sm:inline-flex items-center gap-1 text-[10px] text-[var(--text-muted)]"><i class="bi bi-people"></i>${c.total_participants||0}</span>
           </div>
           <h3 class="text-[13px] font-extrabold leading-tight text-[var(--text-primary)] line-clamp-2">${esc(c.title||'')}</h3>
-          <div class="mt-2 flex flex-wrap gap-1">${rewardBadges(c)} ${extraBadges(c)}</div>
-          <div class="mt-auto pt-2 flex items-center justify-between gap-2">
+          <div class="mt-1 flex flex-wrap gap-1">${rewardBadges(c)} ${extraBadges(c)}</div>
+          <div class="mt-auto pt-2 flex items-center justify-between gap-1.5">
             <div>
               <div class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Hadiah</div>
               <div class="text-[14px] font-extrabodd text-emerald-600 font-mono">${fmtRp(c.current_prize||0)}</div>
               <div class="text-[10px] text-[var(--text-muted)]">${esc(prizePerView(c))}</div>
             </div>
             <div class="flex items-center gap-1.5">
-              <button onclick="showDetail('${c.public_id}')" class="min-h-[36px] px-3 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] text-xs font-semibold hover:border-[var(--border-hover)]">Detail</button>
-              <button title="AI baca brief.pdf (durasi/hashtag/hook), cari highlight sesuai brief, ambil bahan video, download backsound TikTok/YouTube jika ada di brief, render 9:16" onclick="createFromTK('${c.public_id}', this)" class="min-h-[36px] px-3 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] text-xs font-bold inline-flex items-center gap-1.5"><i class="bi bi-magic"></i>Bikin Konten AI</button>
+              <button onclick="showDetail('${c.public_id}')" class="min-h-[36px] px-2 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] text-xs font-semibold hover:border-[var(--border-hover)]">Detail</button>
+              <button title="AI baca brief.pdf (durasi/hashtag/hook), cari highlight sesuai brief, ambil bahan video, download backsound TikTok/YouTube jika ada di brief, render 9:16" onclick="createFromTK('${c.public_id}', this)" class="min-h-[36px] px-2 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] text-xs font-bold inline-flex items-center gap-1.5"><i class="bi bi-camera-reels"></i>Bikin Konten AI</button>
             </div>
           </div>
         </div>
@@ -507,34 +508,34 @@ function renderTK(items){
         </div>
         <div class="absolute top-2 left-2 flex flex-wrap gap-1">${modelBadge(c)}</div>
         <div class="absolute top-2 right-2 flex items-center gap-1">
-          <button onclick="event.stopPropagation(); toggleBookmark('${c.public_id}')" class="w-7 h-7 rounded-full bg-white/90 backdrop-blur border border-black/10 flex items-center justify-center shadow-sm" title="Simpan"><i class="bi ${bookmarkIcon} text-xs"></i></button>
+          <button onclick="event.stopPropagation(); toggleBookmark('${c.public_id}')" class="w-7 h-7 rounded-full bg-white border border-black/10 flex items-center justify-center shadow-sm" title="Simpan"><i class="bi ${bookmarkIcon} text-xs"></i></button>
         </div>
-        ${isMax?`<div class="absolute bottom-2 left-2 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-500 text-white text-[10px] font-extrabold shadow"><i class="bi bi-fire"></i>Top Hadiah</div>`:''}
+        ${isMax?`<div class="absolute bottom-2 left-2 inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-amber-500 text-white text-[10px] font-extrabold shadow"><i class="bi bi-fire"></i>Top Hadiah</div>`:''}
         <div class="absolute bottom-2 right-2 flex flex-wrap gap-1 justify-end max-w-[60%]">${rewardBadges(c)}</div>
       </div>
-      <div class="p-3 flex-1 flex flex-col">
-        <div class="flex items-center gap-2 mb-1.5">
+      <div class="p-1.5 flex-1 flex flex-col">
+        <div class="flex items-center gap-1.5 mb-1.5">
           <span class="w-6 h-6 rounded-full overflow-hidden bg-[var(--bg-surface-2)] flex items-center justify-center shrink-0">${c.client_avatar_url?`<img src="${esc(c.client_avatar_url)}" class="w-full h-full object-cover">`:`<i class="bi bi-person text-[var(--text-muted)]"></i>`}</span>
           <span class="text-[11px] font-semibold text-[var(--text-secondary)] truncate flex-1">${esc(c.client_name||'Client')}</span>
           <span class="text-[10px] text-[var(--text-muted)] shrink-0">${new Date(c.created_at).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'})}</span>
         </div>
         <h3 class="text-[13px] font-extrabold leading-tight text-[var(--text-primary)] line-clamp-2 min-h-[36px]">${esc(c.title||'')}</h3>
         <div class="mt-1 flex flex-wrap gap-1 min-h-[22px]">${extraBadges(c)}</div>
-        <div class="mt-2 grid grid-cols-2 gap-2">
-          <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] px-2.5 py-2">
+        <div class="mt-1 grid grid-cols-2 gap-1.5">
+          <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] px-1.5 py-1">
             <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Hadiah</div>
             <div class="text-[13px] font-extrabold text-emerald-600 leading-none mt-1">${fmtRp(c.current_prize||0)}</div>
             <div class="text-[10px] text-[var(--text-muted)] mt-1 truncate">${esc(prizePerView(c))||'&nbsp;'}</div>
           </div>
-          <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] px-2.5 py-2">
+          <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] px-1.5 py-1">
             <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Peserta</div>
             <div class="text-[13px] font-extrabold text-[var(--text-primary)] leading-none mt-1">${Number(c.total_participants||0).toLocaleString('id-ID')}</div>
             <div class="text-[10px] text-[var(--text-muted)] mt-1">creator</div>
           </div>
         </div>
-        <div class="mt-3 flex gap-1.5">
+        <div class="mt-1.5 flex gap-1.5">
           <button onclick="event.stopPropagation(); showDetail('${c.public_id}')" class="flex-1 min-h-[36px] rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] text-xs font-semibold hover:bg-[var(--bg-surface-2)] transition">Detail</button>
-          <button title="AI baca brief.pdf (durasi/hashtag/hook), cari highlight sesuai brief, ambil bahan video, download backsound TikTok/YouTube jika ada di brief, render 9:16" onclick="event.stopPropagation(); createFromTK('${c.public_id}', this)" class="flex-1 min-h-[36px] rounded-lg bg-[var(--accent)] text-[var(--accent-text)] text-xs font-extrabold inline-flex items-center justify-center gap-1.5 hover:opacity-95 transition"><i class="bi bi-magic"></i>Bikin Konten AI</button>
+          <button title="AI baca brief.pdf (durasi/hashtag/hook), cari highlight sesuai brief, ambil bahan video, download backsound TikTok/YouTube jika ada di brief, render 9:16" onclick="event.stopPropagation(); createFromTK('${c.public_id}', this)" class="flex-1 min-h-[36px] rounded-lg bg-[var(--accent)] text-[var(--accent-text)] text-xs font-extrabold inline-flex items-center justify-center gap-1.5 hover:opacity-95 transition"><i class="bi bi-camera-reels"></i>Bikin Konten AI</button>
         </div>
       </div>
     </div>`;
@@ -551,7 +552,7 @@ function renderPagination(){
     const b=document.createElement('button');
     b.textContent=label;
     b.disabled=!!disabled;
-    b.className = active ? 'min-w-[36px] min-h-[36px] px-3 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] text-xs font-extrabold' : 'min-w-[36px] min-h-[36px] px-3 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] disabled:opacity-40 disabled:cursor-not-allowed';
+    b.className = active ? 'min-w-[36px] min-h-[36px] px-2 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] text-xs font-extrabold' : 'min-w-[36px] min-h-[36px] px-2 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] disabled:opacity-40 disabled:cursor-not-allowed';
     if(!disabled) b.onclick=()=>{ window.scrollTo({top:0,behavior:'smooth'}); loadTernakKlip(page); };
     return b;
   };
@@ -601,7 +602,7 @@ function renderTop(){
   if(!sorted.length){ list.innerHTML=''; empty.classList.remove('hidden'); return; }
   empty.classList.add('hidden');
   list.innerHTML=sorted.map((c,i)=>`
-    <button onclick="showDetail('${c.public_id}')" class="w-full text-left flex gap-2.5 p-2.5 rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] hover:border-[var(--accent)]/30 hover:bg-[var(--accent-bg-subtle)] transition">
+    <button onclick="showDetail('${c.public_id}')" class="w-full text-left flex gap-1.5 p-1.5 rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] hover:border-[var(--accent)]/30 hover:bg-[var(--accent-bg-subtle)] transition">
       <span class="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-extrabold shrink-0 ${i===0?'bg-amber-500 text-white':i===1?'bg-zinc-500 text-white':'bg-amber-700/70 text-white'}">${i+1}</span>
       <span class="w-10 h-10 rounded-lg overflow-hidden bg-[var(--bg-surface)] border border-[var(--border)] shrink-0"><img src="${esc(c.thumbnail_url||'')}" class="w-full h-full object-cover" loading="lazy"></span>
       <span class="min-w-0 flex-1">
@@ -665,8 +666,8 @@ function renderReco(){
   if(!items.length){ list.innerHTML=''; empty.classList.remove('hidden'); return; }
   empty.classList.add('hidden');
   list.innerHTML=items.map((c,i)=>{
-    const badge = RECO_TAB==='sepi' ? `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-sky-500 text-white">${c.total_participants} peserta</span>` : RECO_TAB==='akumulasi' ? `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-500 text-white">${fmtRp(c.current_prize)}</span>` : `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-amber-500 text-white">#${i+1} skor</span>`;
-    return `<button onclick="showDetail('${c.public_id}')" class="w-full text-left flex gap-2.5 p-2.5 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] hover:border-[var(--accent)]/30 hover:bg-[var(--accent-bg-subtle)] transition">
+    const badge = RECO_TAB==='sepi' ? `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-lg bg-sky-500 text-white">${c.total_participants} peserta</span>` : RECO_TAB==='akumulasi' ? `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-lg bg-emerald-500 text-white">${fmtRp(c.current_prize)}</span>` : `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-lg bg-amber-500 text-white">#${i+1} skor</span>`;
+    return `<button onclick="showDetail('${c.public_id}')" class="w-full text-left flex gap-1.5 p-1.5 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] hover:border-[var(--accent)]/30 hover:bg-[var(--accent-bg-subtle)] transition">
       <span class="w-10 h-10 rounded-lg overflow-hidden bg-[var(--bg-surface-2)] border border-[var(--border)] shrink-0"><img src="${esc(c.thumbnail_url||'')}" class="w-full h-full object-cover" loading="lazy"></span>
       <span class="min-w-0 flex-1">
         <span class="block text-xs font-bold leading-tight text-[var(--text-primary)] line-clamp-2">${esc(c.title||'')}</span>
@@ -720,7 +721,7 @@ function renderHistory(){
     const box=$('#tkHistoryBox'), list=$('#tkHistoryList');
     if(!h.length){ box.classList.add('hidden'); return; }
     box.classList.remove('hidden');
-    list.innerHTML=h.map(x=>`<button onclick="showDetail('${x.id}')" class="w-full text-left flex items-center gap-2 p-2 rounded-lg hover:bg-[var(--bg-surface-2)] transition"><span class="w-8 h-8 rounded-lg overflow-hidden bg-[var(--bg-surface-2)] shrink-0"><img src="${esc(x.thumb||'')}" class="w-full h-full object-cover"></span><span class="min-w-0 flex-1"><span class="block text-xs font-semibold truncate text-[var(--text-primary)]">${esc(x.title||'')}</span><span class="block text-[11px] text-[var(--text-muted)] truncate">${esc(x.client||'')}</span></span></button>`).join('');
+    list.innerHTML=h.map(x=>`<button onclick="showDetail('${x.id}')" class="w-full text-left flex items-center gap-1.5 p-2 rounded-lg hover:bg-[var(--bg-surface-2)] transition"><span class="w-8 h-8 rounded-lg overflow-hidden bg-[var(--bg-surface-2)] shrink-0"><img src="${esc(x.thumb||'')}" class="w-full h-full object-cover"></span><span class="min-w-0 flex-1"><span class="block text-xs font-semibold truncate text-[var(--text-primary)]">${esc(x.title||'')}</span><span class="block text-[11px] text-[var(--text-muted)] truncate">${esc(x.client||'')}</span></span></button>`).join('');
   }catch{}
 }
 function clearHistory(){ localStorage.removeItem('tk_history'); renderHistory(); }
@@ -728,7 +729,7 @@ function clearHistory(){ localStorage.removeItem('tk_history'); renderHistory();
 async function showDetail(publicId){
   const modal=$('#tkDetailModal'), body=$('#tkModalBody'), title=$('#tkModalTitle'), kicker=$('#tkModalKicker');
   title.textContent='Memuat...'; kicker.textContent='Campaign Detail';
-  body.innerHTML='<div class="p-6 text-center text-sm text-[var(--text-muted)]"><i class="bi bi-hourglass-split animate-pulse"></i> Memuat detail campaign...</div>';
+  body.innerHTML='<div class="p-1.5 text-center text-sm text-[var(--text-muted)]"><i class="bi bi-hourglass-split animate-pulse"></i> Memuat detail campaign...</div>';
   modal.classList.remove('hidden'); modal.classList.add('flex');
   modal.setAttribute('aria-hidden','false');
   document.body.classList.add('overflow-hidden');
@@ -746,11 +747,11 @@ async function showDetail(publicId){
 
     const rewards=(c.platform_rewards||[]).map(p=>{
       const hasVal=p.reward_per_item!=null || p.reward_rate!=null;
-      return `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border text-[11px] font-bold ${hasVal?'bg-[var(--accent)] text-[var(--accent-text)] border-[var(--accent)]':'bg-[var(--bg-surface-2)] text-[var(--text-muted)] border-[var(--border)]'}"><i class="bi ${p.provider==='tiktok'?'bi-music-note-beamed':p.provider==='instagram'?'bi-instagram':p.provider==='youtube'?'bi-youtube':p.provider==='facebook'?'bi-facebook':'bi-hash'}"></i>${esc(p.provider)} ${p.reward_per_item!=null?`• ${fmtRp(p.reward_per_item)}/view`:p.reward_rate!=null?`• ${p.reward_rate}%`:''}</span>`;
+      return `<span class="inline-flex items-center gap-1 px-1.5 py-1 rounded-lg border text-[11px] font-bold ${hasVal?'bg-[var(--accent)] text-[var(--accent-text)] border-[var(--accent)]':'bg-[var(--bg-surface-2)] text-[var(--text-muted)] border-[var(--border)]'}"><i class="bi ${p.provider==='tiktok'?'bi-music-note-beamed':p.provider==='instagram'?'bi-instagram':p.provider==='youtube'?'bi-youtube':p.provider==='facebook'?'bi-facebook':'bi-hash'}"></i>${esc(p.provider)} ${p.reward_per_item!=null?`• ${fmtRp(p.reward_per_item)}/view`:p.reward_rate!=null?`• ${p.reward_rate}%`:''}</span>`;
     }).join('');
 
-    const tags=(c.tags||[]).map(t=>`<button onclick="navigator.clipboard.writeText('${esc(t.label)}'); showToast('Tag disalin: ${esc(t.label)}','success')" class="px-2.5 py-1 rounded-full bg-[var(--bg-surface-2)] border border-[var(--border)] text-[11px] font-medium text-[var(--text-secondary)] hover:border-[var(--accent)] hover:text-[var(--text-primary)] transition">${esc(t.label)}</button>`).join('');
-    const sources=(c.source_links||[]).map(s=>`<div class="flex items-center gap-2 p-2.5 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] hover:border-[var(--border-hover)] transition"><i class="bi bi-link-45deg text-[var(--text-muted)]"></i><a href="${esc(s.url)}" target="_blank" rel="noopener" class="flex-1 min-w-0 text-xs font-medium text-[var(--accent)] hover:underline truncate">${esc(s.label||'Sumber')} - ${esc(s.url)}</a><button onclick="navigator.clipboard.writeText('${esc(s.url)}'); showToast('Link disalin','success')" class="shrink-0 w-8 h-8 rounded-lg border border-[var(--border)] bg-[var(--bg-surface-2)] flex items-center justify-center hover:bg-[var(--bg-surface)]" title="Salin link"><i class="bi bi-copy text-xs"></i></button><a href="${esc(s.url)}" target="_blank" class="shrink-0 w-8 h-8 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] flex items-center justify-center" title="Buka"><i class="bi bi-box-arrow-up-right text-xs"></i></a></div>`).join('') || '<div class="text-xs text-[var(--text-muted)]">Tidak ada link sumber.</div>';
+    const tags=(c.tags||[]).map(t=>`<button onclick="navigator.clipboard.writeText('${esc(t.label)}'); showToast('Tag disalin: ${esc(t.label)}','success')" class="px-1.5 py-1 rounded-lg bg-[var(--bg-surface-2)] border border-[var(--border)] text-[11px] font-medium text-[var(--text-secondary)] hover:border-[var(--accent)] hover:text-[var(--text-primary)] transition">${esc(t.label)}</button>`).join('');
+    const sources=(c.source_links||[]).map(s=>`<div class="flex items-center gap-1.5 p-1.5 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] hover:border-[var(--border-hover)] transition"><i class="bi bi-link-45deg text-[var(--text-muted)]"></i><a href="${esc(s.url)}" target="_blank" rel="noopener" class="flex-1 min-w-0 text-xs font-medium text-[var(--accent)] hover:underline truncate">${esc(s.label||'Sumber')} - ${esc(s.url)}</a><button onclick="navigator.clipboard.writeText('${esc(s.url)}'); showToast('Link disalin','success')" class="shrink-0 w-8 h-8 rounded-lg border border-[var(--border)] bg-[var(--bg-surface-2)] flex items-center justify-center hover:bg-[var(--bg-surface)]" title="Salin link"><i class="bi bi-copy text-xs"></i></button><a href="${esc(s.url)}" target="_blank" class="shrink-0 w-8 h-8 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] flex items-center justify-center" title="Buka"><i class="bi bi-box-arrow-up-right text-xs"></i></a></div>`).join('') || '<div class="text-xs text-[var(--text-muted)]">Tidak ada link sumber.</div>';
 
     // preset options
     const presetOpts = window.UNIFIED_TEMPLATES ? Object.entries(window.UNIFIED_TEMPLATES).map(([k,v])=> `<option value="${esc(k)}">${esc(v.label||k)}</option>`).join('') : '<option value="tiktok_viral">TikTok Viral Thumbnail</option>';
@@ -760,31 +761,31 @@ async function showDetail(publicId){
       <div class="relative h-[180px] md:h-[220px] overflow-hidden bg-[var(--bg-surface-2)] border-b border-[var(--border)]">
         <img src="${esc(c.thumbnail_url||'')}" class="w-full h-full object-cover" alt="">
         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
-        <div class="absolute bottom-0 left-0 right-0 p-4 flex items-end justify-between gap-3">
-          <div class="flex items-center gap-2.5 min-w-0">
+        <div class="absolute bottom-0 left-0 right-0 p-2 flex items-end justify-between gap-1.5">
+          <div class="flex items-center gap-1.5 min-w-0">
             <span class="w-10 h-10 rounded-full overflow-hidden bg-white border border-white/30 shrink-0">${c.client_avatar_url?`<img src="${esc(c.client_avatar_url)}" class="w-full h-full object-cover">`:`<span class="w-full h-full flex items-center justify-center bg-zinc-900 text-white"><i class="bi bi-person"></i></span>`}</span>
             <div class="min-w-0">
               <div class="text-white font-extrabold text-sm leading-tight drop-shadow">${esc(c.client_name||'Client')}</div>
               <div class="text-white/80 text-xs">${(c.platform||[]).join(' • ')||'Platform tidak tercatat'} • ${new Date(c.created_at).toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})}</div>
             </div>
           </div>
-          <div class="hidden sm:flex items-center gap-1.5">${c.is_accumulation?`<span class="px-2.5 py-1 rounded-full bg-emerald-500 text-white text-[11px] font-bold">Akumulasi</span>`:`<span class="px-2.5 py-1 rounded-full bg-sky-500 text-white text-[11px] font-bold">Single</span>`}${c.is_umkm?`<span class="px-2.5 py-1 rounded-full bg-violet-600 text-white text-[11px] font-bold">UMKM</span>`:''}</div>
+          <div class="hidden sm:flex items-center gap-1.5">${c.is_accumulation?`<span class="px-1.5 py-1 rounded-lg bg-emerald-500 text-white text-[11px] font-bold">Akumulasi</span>`:`<span class="px-1.5 py-1 rounded-lg bg-sky-500 text-white text-[11px] font-bold">Single</span>`}${c.is_umkm?`<span class="px-1.5 py-1 rounded-lg bg-violet-600 text-white text-[11px] font-bold">UMKM</span>`:''}</div>
         </div>
       </div>
 
-      <div class="p-4 space-y-4">
-        <div class="grid grid-cols-3 gap-2">
-          <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] p-3 text-center">
+      <div class="p-2 space-y-1">
+        <div class="grid grid-cols-3 gap-1.5">
+          <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] p-1.5 text-center">
             <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Hadiah</div>
             <div class="text-sm font-extrabold text-emerald-600 mt-1">${fmtRp(c.current_prize)}</div>
             <div class="text-[10px] text-[var(--text-muted)]">dari ${fmtRp(c.total_prize)}</div>
           </div>
-          <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-3 text-center">
+          <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-1.5 text-center">
             <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Peserta</div>
             <div class="text-sm font-extrabold text-[var(--text-primary)] mt-1">${Number(c.total_participants||0).toLocaleString('id-ID')}</div>
             <div class="text-[10px] text-[var(--text-muted)]">creator</div>
           </div>
-          <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-3 text-center">
+          <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-1.5 text-center">
             <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Model</div>
             <div class="text-xs font-bold mt-1 ${c.is_accumulation?'text-emerald-600':'text-sky-600'}">${c.is_accumulation?'Akumulasi':'Single Prize'}</div>
             <div class="text-[10px] text-[var(--text-muted)]">${c.is_show_budget?'Budget terbuka':'Budget tertutup'}</div>
@@ -792,25 +793,25 @@ async function showDetail(publicId){
         </div>
 
         <div>
-          <div class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)] mb-2">Reward per platform</div>
+          <div class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)] mb-1">Reward per platform</div>
           <div class="flex flex-wrap gap-1.5">${rewards||'<span class="text-xs text-[var(--text-muted)]">Tidak ada detail reward.</span>'}</div>
         </div>
 
-        ${c.description?`<div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] p-3">
-          <details class="cfg-group" open><summary class="text-xs font-bold text-[var(--text-primary)]">Deskripsi dan brief campaign</summary><p class="text-xs leading-relaxed text-[var(--text-secondary)] mt-2 whitespace-pre-line">${esc(c.description)}</p></details>
+        ${c.description?`<div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] p-1.5">
+          <details class="cfg-group" open><summary class="text-xs font-bold text-[var(--text-primary)]">Deskripsi dan brief campaign</summary><p class="text-xs leading-relaxed text-[var(--text-secondary)] mt-1 whitespace-pre-line">${esc(c.description)}</p></details>
         </div>`:''}
 
         ${(c.tags||[]).length?`<div>
-          <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center justify-between mb-1">
             <div class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Tags</div>
             <button onclick="navigator.clipboard.writeText('${esc((c.tags||[]).map(t=>t.label).join(' '))}'); showToast('Semua tag disalin','success')" class="text-[11px] font-semibold text-[var(--accent)] hover:underline">Salin semua</button>
           </div>
           <div class="flex flex-wrap gap-1.5">${tags}</div>
         </div>`:''}
 
-        <div class="grid sm:grid-cols-2 gap-2">
-          ${c.file_brief_url?`<a href="${esc(c.file_brief_url)}" target="_blank" rel="noopener" class="flex items-center gap-2.5 p-3 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] hover:border-[var(--accent)]/30 hover:bg-[var(--accent-bg-subtle)] transition"><span class="w-9 h-9 rounded-xl bg-rose-500 text-white flex items-center justify-center shrink-0"><i class="bi bi-file-earmark-pdf"></i></span><span class="min-w-0 flex-1"><span class="block text-xs font-bold text-[var(--text-primary)]">Brief PDF</span><span class="block text-[11px] text-[var(--text-muted)] truncate">Buka brief resmi campaign</span></span><i class="bi bi-box-arrow-up-right text-[var(--text-muted)]"></i></a>`:''}
-          <div class="flex items-center gap-2 p-3 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)]">
+        <div class="grid sm:grid-cols-2 gap-1.5">
+          ${c.file_brief_url?`<a href="${esc(c.file_brief_url)}" target="_blank" rel="noopener" class="flex items-center gap-1.5 p-1.5 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] hover:border-[var(--accent)]/30 hover:bg-[var(--accent-bg-subtle)] transition"><span class="w-9 h-9 rounded-xl bg-rose-500 text-white flex items-center justify-center shrink-0"><i class="bi bi-file-earmark-pdf"></i></span><span class="min-w-0 flex-1"><span class="block text-xs font-bold text-[var(--text-primary)]">Brief PDF</span><span class="block text-[11px] text-[var(--text-muted)] truncate">Buka brief resmi campaign</span></span><i class="bi bi-box-arrow-up-right text-[var(--text-muted)]"></i></a>`:''}
+          <div class="flex items-center gap-1.5 p-1.5 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)]">
             <span class="w-9 h-9 rounded-xl bg-[var(--accent)] text-[var(--accent-text)] flex items-center justify-center shrink-0"><i class="bi bi-share"></i></span>
             <span class="min-w-0 flex-1"><span class="block text-xs font-bold text-[var(--text-primary)]">Share link</span><span class="block text-[11px] text-[var(--text-muted)] truncate">${esc(shareUrl)}</span></span>
             <button onclick="navigator.clipboard.writeText('${esc(shareUrl)}'); showToast('Link share disalin','success')" class="w-8 h-8 rounded-lg border border-[var(--border)] bg-[var(--bg-surface-2)] flex items-center justify-center"><i class="bi bi-copy text-xs"></i></button>
@@ -818,27 +819,27 @@ async function showDetail(publicId){
         </div>
 
         <div>
-          <div class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)] mb-2">Sumber video</div>
-          <div class="space-y-1.5">${sources}</div>
-          <div class="text-[11px] text-[var(--text-muted)] mt-2">Sumber dipakai untuk membuat sesi clip. Satu campaign bisa punya beberapa asset, yang dipakai adalah sumber pertama.</div>
+          <div class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)] mb-1">Sumber video</div>
+          <div class="space-y-1">${sources}</div>
+          <div class="text-[11px] text-[var(--text-muted)] mt-1">Sumber dipakai untuk membuat sesi clip. Satu campaign bisa punya beberapa asset, yang dipakai adalah sumber pertama.</div>
         </div>
 
-        <div class="rounded-2xl border border-[var(--accent)]/30 bg-[var(--accent-bg-subtle)] p-3 space-y-3">
-          <div class="flex items-center gap-2">
+        <div class="rounded-xl border border-[var(--accent)]/30 bg-[var(--accent-bg-subtle)] p-1.5 space-y-1">
+          <div class="flex items-center gap-1.5">
             <span class="w-7 h-7 rounded-full bg-[var(--accent)] text-[var(--accent-text)] flex items-center justify-center"><i class="bi bi-lightning-charge-fill text-xs"></i></span>
             <div>
               <div class="text-xs font-extrabold text-[var(--text-primary)]">Bikin konten AI sesuai brief</div>
               <div class="text-[11px] text-[var(--text-muted)]">AI baca brief.pdf (durasi/hashtag/hook) + backsound jika ada di brief.</div>
             </div>
           </div>
-          <div class="grid sm:grid-cols-[1.2fr_.8fr] gap-2">
+          <div class="grid sm:grid-cols-[1.2fr_.8fr] gap-1.5">
             <label class="space-y-1">
               <span class="text-[11px] font-semibold text-[var(--text-secondary)]">Template</span>
-              <select id="tkCreatePreset" class="w-full min-h-[40px] rounded-xl border px-3 text-xs bg-[var(--bg-surface)] focus:outline-none focus:border-[var(--accent)]">${presetOpts}</select>
+              <select id="tkCreatePreset" class="w-full min-h-[40px] rounded-xl border px-2 text-xs bg-[var(--bg-surface)] focus:outline-none focus:border-[var(--accent)]">${presetOpts}</select>
             </label>
             <label class="space-y-1">
               <span class="text-[11px] font-semibold text-[var(--text-secondary)]">Jumlah clip</span>
-              <select id="tkCreateNum" class="w-full min-h-[40px] rounded-xl border px-3 text-xs bg-[var(--bg-surface)] focus:outline-none focus:border-[var(--accent)]">
+              <select id="tkCreateNum" class="w-full min-h-[40px] rounded-xl border px-2 text-xs bg-[var(--bg-surface)] focus:outline-none focus:border-[var(--accent)]">
                 <option value="auto">Auto (AI tentukan)</option>
                 <option value="3">3 clip</option>
                 <option value="5">5 clip</option>
@@ -847,9 +848,9 @@ async function showDetail(publicId){
               </select>
             </label>
           </div>
-          <div class="flex gap-2">
-            <button id="tkCreateBtn" title="AI baca brief.pdf (durasi/hashtag/hook), cari highlight sesuai brief, ambil bahan video, download backsound TikTok/YouTube jika ada di brief, render 9:16" onclick="createFromTK('${c.public_id}', this)" class="flex-1 min-h-[44px] rounded-xl bg-[var(--accent)] text-[var(--accent-text)] text-sm font-extrabold inline-flex items-center justify-center gap-2"><i class="bi bi-magic"></i>Bikin Konten AI Sekarang</button>
-            <button onclick="closeTkModal()" class="min-h-[44px] px-4 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] text-sm font-semibold">Nanti</button>
+          <div class="flex gap-1.5">
+            <button id="tkCreateBtn" title="AI baca brief.pdf (durasi/hashtag/hook), cari highlight sesuai brief, ambil bahan video, download backsound TikTok/YouTube jika ada di brief, render 9:16" onclick="createFromTK('${c.public_id}', this)" class="flex-1 min-h-[44px] rounded-xl bg-[var(--accent)] text-[var(--accent-text)] text-sm font-extrabold inline-flex items-center justify-center gap-1.5"><i class="bi bi-camera-reels"></i>Bikin Konten AI Sekarang</button>
+            <button onclick="closeTkModal()" class="min-h-[44px] px-2 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] text-sm font-semibold">Nanti</button>
           </div>
           <div id="tkCreateStatus" class="text-xs text-[var(--text-muted)]"></div>
         </div>
@@ -862,7 +863,7 @@ async function showDetail(publicId){
     }catch{}
   }catch(e){
     title.textContent='Gagal memuat';
-    body.innerHTML=`<div class="p-6 text-center"><div class="w-10 h-10 rounded-full bg-rose-500/10 text-rose-600 flex items-center justify-center mx-auto mb-2"><i class="bi bi-x-circle"></i></div><div class="text-sm font-bold text-[var(--text-primary)]">Gagal memuat detail</div><div class="text-xs text-[var(--text-muted)] mt-1">${esc(e.message)}</div><button onclick="showDetail('${publicId}')" class="mt-3 min-h-[36px] px-4 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] text-xs font-bold">Coba lagi</button></div>`;
+    body.innerHTML=`<div class="p-1.5 text-center"><div class="w-10 h-10 rounded-full bg-rose-500/10 text-rose-600 flex items-center justify-center mx-auto mb-1"><i class="bi bi-x-circle"></i></div><div class="text-sm font-bold text-[var(--text-primary)]">Gagal memuat detail</div><div class="text-xs text-[var(--text-muted)] mt-1">${esc(e.message)}</div><button onclick="showDetail('${publicId}')" class="mt-1.5 min-h-[36px] px-2 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] text-xs font-bold">Coba lagi</button></div>`;
   }
 }
 
@@ -887,18 +888,18 @@ async function createFromTK(publicId, btn){
     const barColor = job.stage==='failed' ? 'bg-red-500' : job.stage==='done' ? 'bg-emerald-500' : 'bg-[var(--accent)]';
     if(statusEl){
       statusEl.innerHTML = `
-        <div class="space-y-2">
+        <div class="space-y-1">
           <div class="flex items-center justify-between text-[11px]">
             <span class="font-bold text-[var(--text-primary)]"><i class="bi bi-hourglass-split animate-pulse"></i> ${esc(stageLabel(stage))} ${isRunning?'<span class="font-normal text-[var(--text-muted)]">- '+elapsed+'s</span>':''}</span>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${job.stage==='failed'?'bg-red-500/10 text-red-600 border border-red-500/20': job.stage==='done'?'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20':'bg-zinc-800 text-zinc-300 border border-zinc-700'}">${isRunning?'Proses':'Selesai'}</span>
+            <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold ${job.stage==='failed'?'bg-red-500/10 text-red-600 border border-red-500/20': job.stage==='done'?'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20':'bg-zinc-800 text-zinc-300 border border-zinc-700'}">${isRunning?'Proses':'Selesai'}</span>
           </div>
           <div class="h-2 rounded-full bg-zinc-800 overflow-hidden border border-zinc-700">
             <div class="h-full ${barColor} transition-all duration-700" style="width:${Math.min(100,Math.max(4,pct))}%"></div>
           </div>
           <div class="flex items-center justify-between text-[10px] text-[var(--text-muted)]"><span>${pct}%${count? ' - '+count+' highlight':''}</span><span>${elapsed}s</span></div>
           ${logTail? `<pre class="max-h-[96px] overflow-auto bg-black/40 border border-zinc-800 rounded-lg p-2 text-[10px] leading-tight text-zinc-300 whitespace-pre-wrap break-words">${esc(logTail)}</pre>`:''}
-          <div class="flex gap-2">
-            ${job.stage==='done' && job.result && job.result.ok ? `<a href="/session.html?id=${encodeURIComponent(job.session_id||publicId)}" class="flex-1 min-h-[40px] rounded-xl bg-emerald-600 text-white text-xs font-extrabold inline-flex items-center justify-center gap-2"><i class="bi bi-play-circle"></i>Lihat Sesi & Clip</a><a href="/tasks.html" class="min-h-[40px] px-3 rounded-xl border border-zinc-700 bg-zinc-900 text-xs font-semibold inline-flex items-center gap-1.5"><i class="bi bi-list-task"></i>Antrean</a>` : ''}
+          <div class="flex gap-1.5">
+            ${job.stage==='done' && job.result && job.result.ok ? `<a href="/session.html?id=${encodeURIComponent(job.session_id||publicId)}" class="flex-1 min-h-[40px] rounded-xl bg-emerald-600 text-white text-xs font-extrabold inline-flex items-center justify-center gap-1.5"><i class="bi bi-play-circle"></i>Lihat Sesi & Clip</a><a href="/tasks.html" class="min-h-[40px] px-2 rounded-xl border border-zinc-700 bg-zinc-900 text-xs font-semibold inline-flex items-center gap-1.5"><i class="bi bi-list-task"></i>Antrean</a>` : ''}
             ${job.stage==='failed' ? `<button onclick="location.reload()" class="flex-1 min-h-[40px] rounded-xl bg-zinc-900 border border-zinc-700 text-xs font-bold">Tutup</button><button title="AI baca brief.pdf (durasi/hashtag/hook), cari highlight sesuai brief, ambil bahan video, download backsound TikTok/YouTube jika ada di brief, render 9:16" onclick="createFromTK('${publicId}', document.getElementById('tkCreateBtn'))" class="flex-1 min-h-[40px] rounded-xl bg-[var(--accent)] text-[var(--accent-text)] text-xs font-extrabold">Coba Lagi</button>` : ''}
             ${isRunning ? `<button id="tkCancelBtn" class="w-full min-h-[36px] rounded-xl border border-red-500/30 bg-red-500/10 text-red-600 text-xs font-bold">Batalkan</button>` : ''}
           </div>
@@ -913,10 +914,10 @@ async function createFromTK(publicId, btn){
     }
   }
   function hardFail(msg){
-    if(statusEl) statusEl.innerHTML=`<div class="rounded-xl border border-red-500/20 bg-red-500/10 p-3 flex items-start gap-2 text-xs text-red-700"><i class="bi bi-exclamation-triangle mt-0.5"></i><span>${esc(msg)}</span></div>`;
+    if(statusEl) statusEl.innerHTML=`<div class="rounded-xl border border-red-500/20 bg-red-500/10 p-1.5 flex items-start gap-1.5 text-xs text-red-700"><i class="bi bi-exclamation-triangle mt-0.5"></i><span>${esc(msg)}</span></div>`;
     if(tkBtn){ tkBtn.disabled=false; tkBtn.innerHTML=origHtml; }
   }
-  if(statusEl) statusEl.innerHTML='<div class="rounded-xl border border-[var(--accent)]/30 bg-[var(--accent-bg-subtle)] p-3 text-xs text-[var(--text-muted)]"><i class="bi bi-lightning-charge-fill"></i> Mengirim 1-click auto (brief + highlight + render 3 teratas)...</div>';
+  if(statusEl) statusEl.innerHTML='<div class="rounded-xl border border-[var(--accent)]/30 bg-[var(--accent-bg-subtle)] p-1.5 text-xs text-[var(--text-muted)]"><i class="bi bi-lightning-charge-fill"></i> Mengirim 1-click auto (brief + highlight + render 3 teratas)...</div>';
   tkBtn.disabled=true; tkBtn.innerHTML='<i class="bi bi-hourglass-split animate-pulse"></i> Mengirim...';
   try{
     const r=await fetch(`/api/campaign/ai-create/${encodeURIComponent(publicId)}`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({preset, num_clips: numClips, auto_render: true, top_n: 3})});

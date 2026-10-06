@@ -18,7 +18,7 @@ tailwind.config = {
 </script>
 <style>
 a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible {
-  outline: 2px solid #facc15 !important;
+  outline: 2px solid var(--focus-ring, #0f766e) !important;
   outline-offset: 2px !important;
 }
 
@@ -30,7 +30,7 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 
 .card-head{cursor:pointer;user-select:none}
 .chev{transition:transform .15s}
-.subhead{font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:#71717a;border-top:1px dashed #3f3f46;padding-top:.5rem;margin-top:.75rem}
+.subhead{font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);border-top:1px dashed #3f3f46;padding-top:.5rem;margin-top:.75rem}
 
 @keyframes subKaraoke { from { background-size: 0% 100%; } to { background-size: 100% 100%; } }
 @keyframes subBounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
@@ -44,7 +44,7 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 .save-float .save-msg.show{opacity:1}
 @media(max-width:640px){.save-float{bottom:12px;right:12px;left:12px;justify:center;border-radius:12px}}
 /* Card section label */
-.section-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#71717a;padding:0 4px}
+.section-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);padding:0 4px}
 </style>
 <link rel="stylesheet" href="/app.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -69,33 +69,34 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 </script>
 
 </head>
-<body class="min-h-screen flex flex-col md:flex-row antialiased ">
-<div id="toast" class="fixed top-4 right-4 z-50 hidden px-4 py-2 bg-emerald-600 text-white text-xs font-bold rounded shadow-lg"></div>
+<body class="min-h-screen flex flex-col md:flex-row antialiased">
+<div class="portal-bg" aria-hidden="true"><i></i><i></i><i></i></div>
+<div id="toast" class="fixed top-4 right-4 z-50 hidden px-2 py-1 bg-emerald-600 text-white text-xs font-bold rounded shadow-lg"></div>
 
 <!-- SIDEBAR -->
-<aside class="w-full md:w-64 border-b md:border-b-0 md:border-r border-zinc-800  flex flex-col shrink-0">
-  <div class="p-4 border-b border-zinc-800 flex items-center justify-between">
-    <div class="flex items-center gap-2">
+<aside class="w-full md:w-64 border-b md:border-b-0 md:border-r border-zinc-800 flex flex-col shrink-0">
+  <div class="p-2 border-b border-zinc-800 flex items-center justify-between">
+    <div class="flex items-center gap-1.5">
       <span class="w-7 h-7 rounded-lg logo-mark flex items-center justify-center font-black text-sm"><i class="bi bi-lightning-charge-fill text-amber-400"></i></span>
       <span class="font-bold text-sm tracking-wide text-white font-heading">AUTO<span class="text-[var(--accent)]">CLIPPER</span></span>
     </div>
-    <div class="flex items-center gap-2"><button class="darkmode-btn darkmode-compact" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button><a href="/logout" class="min-h-[32px] min-w-[44px] flex items-center justify-center text-xs text-zinc-400 hover:text-white transition md:hidden">Logout</a></div>
+    <div class="flex items-center gap-1.5"><button class="darkmode-btn darkmode-compact" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button><a href="/logout" class="min-h-[32px] min-w-[44px] flex items-center justify-center text-xs text-zinc-400 hover:text-white transition md:hidden">Logout</a></div>
   </div>
 
-  <nav aria-label="Menu Utama" class="p-2 md:p-3 flex flex-row md:flex-col gap-1.5 flex-wrap" id="sidebarLinks">
-    <a href="/" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-house-door text-sky-400"></i><span>Library Sesi</span></a>
-    <a href="/create.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-plus-square text-emerald-400"></i><span>Create Clip</span></a>
-    <a href="/tasks.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-list-task text-amber-400"></i><span>Antrean Tasks</span></a>
-    <a href="/story.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-film text-fuchsia-400"></i><span>AI Story</span></a>
-    <a href="/facebook.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-facebook text-blue-400"></i><span>FB Auto Upload</span></a>
-    <a href="/cookies.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-shield-lock text-orange-400"></i><span>Cookies YouTube</span></a>
-    <a href="/ternaklip.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-bullseye text-teal-400"></i><span>TernakKlip</span></a>
-    <a href="/dependencies.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-box-seam text-violet-400"></i><span>Dependencies</span></a>
-    <a href="/settings.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition bg-[var(--accent)] text-[var(--accent-text)] font-bold shadow-sm"><i class="bi bi-gear"></i><span>Settings & AI</span></a>
+  <nav aria-label="Menu Utama" class="p-2 md:p-1.5 flex flex-row md:flex-col gap-1.5 flex-wrap" id="sidebarLinks">
+    <a href="/" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-house-door text-sky-400"></i><span>Library Sesi</span></a>
+    <a href="/create.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-plus-square text-emerald-400"></i><span>Create Clip</span></a>
+    <a href="/tasks.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-list-task text-amber-400"></i><span>Antrean Tasks</span></a>
+    <a href="/story.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-film text-fuchsia-400"></i><span>AI Story</span></a>
+    <a href="/facebook.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-facebook text-blue-400"></i><span>FB Auto Upload</span></a>
+    <a href="/cookies.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-shield-lock text-orange-400"></i><span>Cookies YouTube</span></a>
+    <a href="/ternaklip.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-bullseye text-teal-400"></i><span>TernakKlip</span></a>
+    <a href="/dependencies.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-box-seam text-violet-400"></i><span>Dependencies</span></a>
+    <a href="/settings.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition bg-[var(--accent)] text-[var(--accent-text)] font-bold shadow-sm"><i class="bi bi-gear"></i><span>Settings & AI</span></a>
   </nav>
 
   <!-- Engine Status Indication -->
-  <div class="mt-auto px-4 py-3 border-t border-zinc-800/80 hidden md:flex flex-col gap-2 text-xs text-zinc-400 bg-zinc-950/40">
+  <div class="mt-auto px-2 py-1.5 border-t border-zinc-800/80 hidden md:flex flex-col gap-1.5 text-xs text-zinc-400 bg-zinc-950/40">
     <span class="font-semibold text-[10px] uppercase tracking-wider text-zinc-400"><i class="bi bi-cpu text-emerald-400"></i> Engine Status</span>
     <div class="flex items-center justify-between">
       <span>FFmpeg</span>
@@ -115,13 +116,13 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
     </div>
   </div>
 
-  <div class="p-4 border-t border-zinc-800 hidden md:flex items-center justify-between text-xs">
+  <div class="p-2 border-t border-zinc-800 hidden md:flex items-center justify-between text-xs">
     <span class="text-zinc-400 truncate max-w-[130px]" id="whoami"></span>
-    <div class="flex items-center gap-2"><button class="darkmode-btn darkmode-compact" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button><a href="/logout" class="text-zinc-400 hover:text-white transition">Logout</a></div>
+    <div class="flex items-center gap-1.5"><button class="darkmode-btn darkmode-compact" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button><a href="/logout" class="text-zinc-400 hover:text-white transition">Logout</a></div>
   </div>
 
   <!-- Engine Status Mobile -->
-  <div class="md:hidden flex items-center justify-around px-4 py-2.5 border-t border-b border-zinc-800/80 bg-zinc-950/60 text-[10px] text-zinc-300">
+  <div class="md:hidden flex items-center justify-around px-2 py-1.5 border-t border-b border-zinc-800/80 bg-zinc-950/60 text-[10px] text-zinc-300">
     <div class="flex items-center gap-1.5"><span id="st_ffmpeg_mob" class="w-2 h-2 rounded-full bg-zinc-600" title="Checking..."></span><span>FFmpeg</span></div>
     <div class="flex items-center gap-1.5"><span id="st_ytdlp_mob" class="w-2 h-2 rounded-full bg-zinc-600" title="Checking..."></span><span>yt-dlp</span></div>
     <div class="flex items-center gap-1.5"><span id="st_deno_mob" class="w-2 h-2 rounded-full bg-zinc-600" title="Checking..."></span><span>Deno</span></div>
@@ -141,55 +142,55 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 
 <!-- MAIN CONTENT WRAPPER -->
 <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
-  <main class="max-w-6xl w-full mx-auto p-4 md:p-6 space-y-6 flex-1 pb-28" id="main">
+  <main class="max-w-6xl w-full mx-auto px-2 py-2 sm:px-3 sm:py-2 space-y-1 flex-1 pb-16" id="main">
 
     <!-- TEMPLATES -->
-    <div class="bg-surface-1 border border-zinc-800 rounded-xl shadow-md p-4 space-y-3">
-      <div class="flex justify-between items-center flex-wrap gap-2">
+    <div class="bg-surface-1 border border-zinc-800 rounded-xl shadow-md p-2 space-y-1">
+      <div class="flex justify-between items-center flex-wrap gap-1.5">
         <div>
           <h2 class="text-xs font-semibold text-zinc-400 uppercase tracking-wider"><i class="bi bi-lightning-charge text-amber-400"></i> Template</h2>
           <p class="text-[10px] text-zinc-400">Pilih template bawaan</p>
         </div>
       </div>
-      <div class="flex flex-wrap gap-2" id="tplBar"></div>
+      <div class="flex flex-wrap gap-1.5" id="tplBar"></div>
       <div id="tplMsg" class="text-xs text-emerald-400 hidden"></div>
     </div>
 
     <!-- ── AI & ENGINE (3-col) ── -->
     <div class="section-label"><i class="bi bi-lightning-charge"></i> AI &amp; Engine</div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1.5">
 
       <!-- 1️⃣ SERVER AI -->
       <div class="bg-surface-1 border border-zinc-800 rounded-xl shadow-md">
-        <div class="card-head flex items-center gap-2 p-4" onclick="toggleCard(this)">
+        <div class="card-head flex items-center gap-1.5 p-2" onclick="toggleCard(this)">
           <span class="chev text-zinc-400">▾</span>
           <h3 class="text-xs font-semibold text-zinc-300 uppercase tracking-wider"><i class="bi bi-display"></i> Server AI</h3>
-          <span id="hfStatus" class="ml-auto text-[10px] px-2 py-0.5 rounded-full border border-zinc-700 text-zinc-400">● checking…</span>
+          <span id="hfStatus" class="ml-auto text-[10px] px-2 py-0.5 rounded-lg border border-zinc-700 text-zinc-400">● checking…</span>
         </div>
-        <div class="card-body p-4 pt-0 space-y-3">
-          <div class="grid grid-cols-1 gap-3">
+        <div class="card-body p-2 pt-0 space-y-1">
+          <div class="grid grid-cols-1 gap-1.5">
             <div>
               <label class="text-[10px] text-zinc-400 block mb-0.5">Base URL</label>
-              <input id="s_server_url" placeholder="http://localhost:20128/v1" class="w-full bg-surface-2 border border-zinc-700 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[var(--accent)]" oninput="debounceHfCheck()">
+              <input id="s_server_url" placeholder="http://localhost:20128/v1" class="w-full bg-surface-2 border border-zinc-700 rounded px-1.5 py-1 text-xs text-white focus:outline-none focus:border-[var(--accent)]" oninput="debounceHfCheck()">
             </div>
             <div>
               <label class="text-[10px] text-zinc-400 block mb-0.5">API Key</label>
-              <div class="flex items-stretch gap-2">
-                <input type="password" id="s_hf_api_key" placeholder="(tidak diubah)" autocomplete="off" class="flex-1 min-w-0 bg-surface-2 border border-zinc-700 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[var(--accent)] focus-visible:ring-2 focus-visible:ring-teal-500" oninput="debounceHfCheck()">
+              <div class="flex items-stretch gap-1.5">
+                <input type="password" id="s_hf_api_key" placeholder="(tidak diubah)" autocomplete="off" class="flex-1 min-w-0 bg-surface-2 border border-zinc-700 rounded px-1.5 py-1 text-xs text-white focus:outline-none focus:border-[var(--accent)] focus-visible:ring-2 focus-visible:ring-teal-500" oninput="debounceHfCheck()">
                 <button type="button" onclick="toggleApiKey()" class="shrink-0 min-h-[36px] md:min-h-[44px] min-w-[44px] flex items-center justify-center text-sm bg-surface-2 hover:bg-surface-3 border border-zinc-700 rounded text-zinc-300 hover:text-white transition focus-visible:ring-2 focus-visible:ring-teal-500" title="Tampilkan / sembunyikan API key" aria-label="Tampilkan atau sembunyikan API key" aria-pressed="false"><i class="bi bi-eye"></i></button>
               </div>
             </div>
             <div>
               <label class="text-[10px] text-zinc-400 block mb-0.5">Model <button onclick="fetchModels()" class="ml-1 text-[9px] px-1 py-0.5 border border-zinc-700 rounded hover:border-accent">↻ Fetch</button> <span id="modelCount" class="ml-1 text-[9px] px-1.5 py-0.5 rounded bg-zinc-800 border border-zinc-700 text-zinc-400"></span></label>
               <div class="relative" id="modelCombobox">
-                <input type="text" id="s_hf_model_filter" placeholder="Ketik untuk mencari model…" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="s_hf_model_list" aria-autocomplete="list" class="w-full bg-surface-2 border border-zinc-700 rounded px-2.5 py-1.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-[var(--accent)] focus-visible:ring-2 focus-visible:ring-teal-500 min-h-[36px] md:min-h-[44px]">
+                <input type="text" id="s_hf_model_filter" placeholder="Ketik untuk mencari model…" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="s_hf_model_list" aria-autocomplete="list" class="w-full bg-surface-2 border border-zinc-700 rounded px-1.5 py-1 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-[var(--accent)] focus-visible:ring-2 focus-visible:ring-teal-500 min-h-[36px] md:min-h-[44px]">
                 <div id="s_hf_model_list" role="listbox" class="hidden absolute z-20 mt-1 w-full max-h-64 overflow-y-auto bg-surface-2 border border-zinc-700 rounded shadow-lg"></div>
               </div>
               <!-- select tersembunyi: nilai model tetap dibaca collectFormData -->
               <select id="s_hf_model" class="hidden"><option value="AUTO">AUTO</option></select>
             </div>
-            <div class="flex items-center gap-2">
-              <button onclick="testConnection()" class="px-2.5 py-1 bg-surface-2 hover:bg-surface-3 border border-zinc-700 text-zinc-200 text-xs rounded transition"><i class="bi bi-plugin"></i> Tes Koneksi</button>
+            <div class="flex items-center gap-1.5">
+              <button onclick="testConnection()" class="px-1.5 py-1 bg-surface-2 hover:bg-surface-3 border border-zinc-700 text-zinc-200 text-xs rounded transition"><i class="bi bi-plugin"></i> Tes Koneksi</button>
               <span id="connMsg" class="text-[11px]"></span>
             </div>
           </div>
@@ -198,23 +199,23 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 
       <!-- 2️⃣ PENCARI MOMEN -->
       <div class="bg-surface-1 border border-zinc-800 rounded-xl shadow-md">
-        <div class="card-head flex items-center gap-2 p-4" onclick="toggleCard(this)">
+        <div class="card-head flex items-center gap-1.5 p-2" onclick="toggleCard(this)">
           <span class="chev text-zinc-400">▾</span>
           <h3 class="text-xs font-semibold text-zinc-300 uppercase tracking-wider"><i class="bi bi-search text-sky-400"></i> Pencari Momen</h3>
         </div>
-        <div class="card-body p-4 pt-0 space-y-3">
-          <div class="grid grid-cols-2 gap-3">
+        <div class="card-body p-2 pt-0 space-y-1">
+          <div class="grid grid-cols-2 gap-1.5">
             <div>
               <label class="text-[10px] text-zinc-400 block mb-0.5">Temperature</label>
-              <input type="number" step="0.05" min="0" max="2" id="s_temperature" class="w-full bg-surface-2 border border-zinc-700 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[var(--accent)]">
+              <input type="number" step="0.05" min="0" max="2" id="s_temperature" class="w-full bg-surface-2 border border-zinc-700 rounded px-1.5 py-1 text-xs text-white focus:outline-none focus:border-[var(--accent)]">
             </div>
             <div>
               <label class="text-[10px] text-zinc-400 block mb-0.5">Bahasa Subtitle</label>
-              <input id="s_subtitle_language" placeholder="id" class="w-full bg-surface-2 border border-zinc-700 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[var(--accent)]">
+              <input id="s_subtitle_language" placeholder="id" class="w-full bg-surface-2 border border-zinc-700 rounded px-1.5 py-1 text-xs text-white focus:outline-none focus:border-[var(--accent)]">
             </div>
             <div class="md:col-span-2">
               <label class="text-[10px] text-zinc-400 block mb-0.5">Prompt</label>
-              <textarea rows="3" id="s_hf_system_message" class="w-full bg-surface-2 border border-zinc-700 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[var(--accent)]"></textarea>
+              <textarea rows="3" id="s_hf_system_message" class="w-full bg-surface-2 border border-zinc-700 rounded px-1.5 py-1 text-xs text-white focus:outline-none focus:border-[var(--accent)]"></textarea>
             </div>
           </div>
         </div>
@@ -222,19 +223,19 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 
       <!-- 3️⃣ SUBTITLE ENGINE (Faster-Whisper) -->
       <div class="bg-surface-1 border border-zinc-800 rounded-xl shadow-md">
-        <div class="card-head flex items-center gap-2 p-4" onclick="toggleCard(this)">
+        <div class="card-head flex items-center gap-1.5 p-2" onclick="toggleCard(this)">
           <span class="chev text-zinc-400">▾</span>
           <h3 class="text-xs font-semibold text-zinc-300 uppercase tracking-wider"><i class="bi bi-chat-quote text-sky-400"></i> Subtitle Engine</h3>
         </div>
-        <div class="card-body p-4 pt-0 space-y-3">
-          <div class="grid grid-cols-1 gap-3">
+        <div class="card-body p-2 pt-0 space-y-1">
+          <div class="grid grid-cols-1 gap-1.5">
             <div>
               <label class="text-[10px] text-zinc-400 block mb-0.5">Bahasa Subtitle</label>
-              <input id="s_subtitle_language" placeholder="id" class="w-full bg-surface-2 border border-zinc-700 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[var(--accent)]">
+              <input id="s_subtitle_language" placeholder="id" class="w-full bg-surface-2 border border-zinc-700 rounded px-1.5 py-1 text-xs text-white focus:outline-none focus:border-[var(--accent)]">
             </div>
             <div>
               <label class="text-[10px] text-zinc-400 block mb-0.5"><i class="bi bi-mic"></i> Model Size <span id="fwBadge" class="text-[9px] px-1 py-0.5 rounded font-mono ml-1"></span></label>
-              <select id="s_fw_model" onchange="checkFwModels()" class="w-full bg-surface-2 border border-zinc-700 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[var(--accent)]"><option value="tiny">tiny</option><option value="base">base</option><option value="small">small</option><option value="medium">medium</option><option value="large-v3">large-v3</option></select>
+              <select id="s_fw_model" onchange="checkFwModels()" class="w-full bg-surface-2 border border-zinc-700 rounded px-1.5 py-1 text-xs text-white focus:outline-none focus:border-[var(--accent)]"><option value="tiny">tiny</option><option value="base">base</option><option value="small">small</option><option value="medium">medium</option><option value="large-v3">large-v3</option></select>
               <div id="fwCheck" class="mt-1 text-[10px]"></div>
             </div>
           </div>
@@ -244,39 +245,39 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
     </div>
 
     <!-- ── VIDEO & TRACKING (2-col) ── -->
-    <div class="mt-6 section-label"><i class="bi bi-film text-fuchsia-400"></i> Video &amp; Tracking</div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="mt-2 section-label"><i class="bi bi-film text-fuchsia-400"></i> Video &amp; Tracking</div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-1.5">
 
       <!-- 1. RENDER & VIDEO CONFIG -->
       <div class="bg-surface-1 border border-zinc-800 rounded-xl shadow-md">
-        <div class="card-head flex items-center justify-between p-4 cursor-pointer" onclick="toggleCard(this)">
-          <div class="flex items-center gap-2">
+        <div class="card-head flex items-center justify-between p-2 cursor-pointer" onclick="toggleCard(this)">
+          <div class="flex items-center gap-1.5">
             <span class="chev text-zinc-400">▾</span>
             <h3 class="text-xs font-semibold text-zinc-400 uppercase tracking-wider"><i class="bi bi-film"></i> Render Config</h3>
           </div>
           <span class="text-[10px] text-zinc-400">Kualitas &amp; Format</span>
         </div>
-        <div class="card-body p-4 pt-0 space-y-3">
-          <div class="grid grid-cols-2 gap-3">
+        <div class="card-body p-2 pt-0 space-y-1">
+          <div class="grid grid-cols-2 gap-1.5">
             <div>
               <label class="text-[10px] text-zinc-400 block mb-0.5">Resolusi</label>
-              <select id="s_resolution" class="w-full bg-surface-2 border border-zinc-700 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[var(--accent)]"><option>1080p</option><option>720p</option><option>480p</option><option>360p</option><option>auto</option></select>
+              <select id="s_resolution" class="w-full bg-surface-2 border border-zinc-700 rounded px-1.5 py-1 text-xs text-white focus:outline-none focus:border-[var(--accent)]"><option>1080p</option><option>720p</option><option>480p</option><option>360p</option><option>auto</option></select>
             </div>
             <div>
               <label class="text-[10px] text-zinc-400 block mb-0.5">Rasio Video</label>
-              <select id="s_aspect_ratio" onchange="updateAspectPreview()" class="w-full bg-surface-2 border border-zinc-700 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[var(--accent)]"><option>9:16</option><option>4:5</option><option>3:4</option><option>1:1</option><option>16:9</option></select>
+              <select id="s_aspect_ratio" onchange="updateAspectPreview()" class="w-full bg-surface-2 border border-zinc-700 rounded px-1.5 py-1 text-xs text-white focus:outline-none focus:border-[var(--accent)]"><option>9:16</option><option>4:5</option><option>3:4</option><option>1:1</option><option>16:9</option></select>
             </div>
             <div>
               <label class="text-[10px] text-zinc-400 block mb-0.5">Portrait Mode</label>
-              <select id="s_portrait_mode" class="w-full bg-surface-2 border border-zinc-700 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[var(--accent)]">
+              <select id="s_portrait_mode" class="w-full bg-surface-2 border border-zinc-700 rounded px-1.5 py-1 text-xs text-white focus:outline-none focus:border-[var(--accent)]">
                 <option value="crop">crop</option>
                 <option value="blur">blur</option>
               </select>
             </div>
             <input type="hidden" id="s_num_clips" value="auto">
             <input type="checkbox" id="s_smooth_follow" class="hidden">
-            <div class="col-span-2 flex flex-wrap gap-4 pt-1">
-              <label class="flex items-center gap-2 text-xs text-zinc-300 cursor-pointer"><input type="checkbox" id="s_gpu" class="w-3.5 h-3.5 accent-[#facc15]"> <i class="bi bi-lightning-charge"></i> GPU</label>
+            <div class="col-span-2 flex flex-wrap gap-1.5 pt-1">
+              <label class="flex items-center gap-1.5 text-xs text-zinc-300 cursor-pointer"><input type="checkbox" id="s_gpu" class="w-3.5 h-3.5 accent-[#0f766e]"> <i class="bi bi-lightning-charge"></i> GPU</label>
             </div>
           </div>
         </div>
@@ -284,18 +285,18 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 
       <!-- 2. TRACKING & SMART FOLLOW -->
       <div class="bg-surface-1 border border-zinc-800 rounded-xl shadow-md">
-        <div class="card-head flex items-center justify-between p-4 cursor-pointer" onclick="toggleCard(this)">
-          <div class="flex items-center gap-2">
+        <div class="card-head flex items-center justify-between p-2 cursor-pointer" onclick="toggleCard(this)">
+          <div class="flex items-center gap-1.5">
             <span class="chev text-zinc-400">▾</span>
             <h3 class="text-xs font-semibold text-zinc-400 uppercase tracking-wider"><i class="bi bi-bullseye text-teal-400"></i> Tracking</h3>
           </div>
           <span class="text-[10px] text-zinc-400">Face Follow</span>
         </div>
-        <div class="card-body p-4 pt-0 space-y-3">
-          <div class="grid grid-cols-1 gap-3">
+        <div class="card-body p-2 pt-0 space-y-1">
+          <div class="grid grid-cols-1 gap-1.5">
             <div>
               <label class="text-[10px] text-zinc-400 block mb-0.5">Deteksi Wajah</label>
-              <select id="s_face_tracking_mode" class="w-full bg-surface-2 border border-zinc-700 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[var(--accent)]"><option>mediapipe</option></select>
+              <select id="s_face_tracking_mode" class="w-full bg-surface-2 border border-zinc-700 rounded px-1.5 py-1 text-xs text-white focus:outline-none focus:border-[var(--accent)]"><option>mediapipe</option></select>
             </div>
             <div class="hidden"><input type="hidden" id="s_pan_speed_limit" value="1.8"></div>
             <div class="hidden"><input type="hidden" id="s_center_weight" value="0.15"></div>
@@ -309,28 +310,28 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
     </div>
 
     <!-- ── STYLE & PREVIEW (2-col) ── -->
-    <div class="mt-6 section-label"><i class="bi bi-palette text-fuchsia-400"></i> Style &amp; Preview</div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="mt-2 section-label"><i class="bi bi-palette text-fuchsia-400"></i> Style &amp; Preview</div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-1.5">
 
       <!-- 3. SUBTITLE STYLE : FIXED -->
       <div class="bg-surface-1 border border-zinc-800 rounded-xl shadow-md">
-        <div class="card-head flex items-center justify-between p-4 cursor-pointer" onclick="toggleCard(this)">
+        <div class="card-head flex items-center justify-between p-2 cursor-pointer" onclick="toggleCard(this)">
           <span class="chev text-zinc-400">▾</span>
           <h3 class="text-xs font-semibold text-zinc-400 uppercase tracking-wider"><i class="bi bi-chat-quote text-sky-400"></i> Subtitle Style</h3>
-          <label class="flex items-center gap-1.5 text-xs text-zinc-300 cursor-pointer" onclick="event.stopPropagation()"><input type="checkbox" id="s_captions" class="w-3.5 h-3.5 accent-[#facc15]"> Bakar Sub</label>
+          <label class="flex items-center gap-1.5 text-xs text-zinc-300 cursor-pointer" onclick="event.stopPropagation()"><input type="checkbox" id="s_captions" class="w-3.5 h-3.5 accent-[#0f766e]"> Bakar Sub</label>
         </div>
-        <div class="card-body p-4 pt-0 space-y-3">
-          <div class="grid grid-cols-2 gap-3">
+        <div class="card-body p-2 pt-0 space-y-1">
+          <div class="grid grid-cols-2 gap-1.5">
             <div>
               <label class="text-[10px] text-zinc-400 block mb-0.5">Animasi Subtitle</label>
-              <select id="s_subtitle_style" onchange="updateSubPreview()" class="w-full bg-surface-2 border border-zinc-700 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[var(--accent)]">
+              <select id="s_subtitle_style" onchange="updateSubPreview()" class="w-full bg-surface-2 border border-zinc-700 rounded px-1.5 py-1 text-xs text-white focus:outline-none focus:border-[var(--accent)]">
                 <option value="pop">Pop</option>
                 <option value="karaoke">Karaoke</option>
               </select>
             </div>
             <div>
               <label class="text-[10px] text-zinc-400 block mb-0.5">Font Preset (Typography)</label>
-              <select id="s_font_preset" class="w-full bg-surface-2 border border-zinc-700 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[var(--accent)]">
+              <select id="s_font_preset" class="w-full bg-surface-2 border border-zinc-700 rounded px-1.5 py-1 text-xs text-white focus:outline-none focus:border-[var(--accent)]">
                 <option value="default">default</option>
                 <option value="bold">bold</option>
                 <option value="pop">pop</option>
@@ -339,7 +340,7 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
             </div>
             <div class="col-span-2">
               <label class="text-[10px] text-zinc-400 block mb-0.5">Sync Offset (detik)</label>
-              <input type="number" step="0.1" id="s_sync_offset" class="w-full bg-surface-2 border border-zinc-700 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[var(--accent)]">
+              <input type="number" step="0.1" id="s_sync_offset" class="w-full bg-surface-2 border border-zinc-700 rounded px-1.5 py-1 text-xs text-white focus:outline-none focus:border-[var(--accent)]">
             </div>
             <div class="col-span-2">
               <label class="text-[10px] text-zinc-400 block mb-1">Preview Subtitle</label>
@@ -355,15 +356,15 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 
       <!-- 4. HOOK STYLE & PREVIEW -->
       <div class="bg-surface-1 border border-zinc-800 rounded-xl shadow-md">
-        <div class="card-head flex items-center justify-between p-4 cursor-pointer" onclick="toggleCard(this)">
-          <div class="flex items-center gap-2">
+        <div class="card-head flex items-center justify-between p-2 cursor-pointer" onclick="toggleCard(this)">
+          <div class="flex items-center gap-1.5">
             <span class="chev text-zinc-400">▾</span>
             <h3 class="text-xs font-semibold text-zinc-400 uppercase tracking-wider"><i class="bi bi-film"></i> Intro Hook Style</h3>
           </div>
-          <label class="flex items-center gap-1.5 text-xs text-zinc-300 cursor-pointer" onclick="event.stopPropagation()"><input type="checkbox" id="s_hook" class="w-3.5 h-3.5 accent-[#facc15]"> Tampilkan Intro</label>
+          <label class="flex items-center gap-1.5 text-xs text-zinc-300 cursor-pointer" onclick="event.stopPropagation()"><input type="checkbox" id="s_hook" class="w-3.5 h-3.5 accent-[#0f766e]"> Tampilkan Intro</label>
         </div>
-        <div class="card-body p-4 pt-0 space-y-3">
-          <div class="grid grid-cols-4 gap-2">
+        <div class="card-body p-2 pt-0 space-y-1">
+          <div class="grid grid-cols-4 gap-1.5">
             <div>
               <label class="text-[9px] text-zinc-400 block mb-0.5">Box Mode</label>
               <select id="s_hs_box_mode" onchange="updateThumbnailPreview()" class="w-full bg-surface-2 border border-zinc-700 rounded px-1.5 py-1 text-xs text-white focus:outline-none focus:border-[var(--accent)]">
@@ -390,7 +391,7 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
             </div>
             <div>
               <label class="text-[9px] text-zinc-400 block mb-0.5">Glitch</label>
-              <label class="flex items-center h-7 cursor-pointer"><input type="checkbox" id="s_hs_glitch" onchange="updateThumbnailPreview()" class="w-3.5 h-3.5 accent-[#facc15]"></label>
+              <label class="flex items-center h-7 cursor-pointer"><input type="checkbox" id="s_hs_glitch" onchange="updateThumbnailPreview()" class="w-3.5 h-3.5 accent-[#0f766e]"></label>
             </div>
             <div>
               <label class="text-[9px] text-zinc-400 block mb-0.5">Font Color</label>
@@ -407,7 +408,7 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
             <div class="col-span-4 pt-1">
               <label class="text-[9px] text-zinc-400 block mb-1">Preview</label>
               <div id="thumbnailPreviewContainer" class="h-20 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center justify-center overflow-hidden relative">
-                <div id="thumbnailPreview" class="px-3 py-1.5 text-xs font-black tracking-wide uppercase transition-all shadow-md text-center"><i class="bi bi-fire text-orange-400"></i> INI THUMBNAIL VIRAL!</div>
+                <div id="thumbnailPreview" class="px-2 py-1 text-xs font-black tracking-wide uppercase transition-all shadow-md text-center"><i class="bi bi-fire text-orange-400"></i> INI THUMBNAIL VIRAL!</div>
               </div>
             </div>
           </div>
@@ -416,21 +417,21 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 
       <!-- 5. WATERMARK -->
       <div class="bg-surface-1 border border-zinc-800 rounded-xl shadow-md">
-        <div class="card-head flex items-center justify-between p-4 cursor-pointer" onclick="toggleCard(this)">
-          <div class="flex items-center gap-2">
+        <div class="card-head flex items-center justify-between p-2 cursor-pointer" onclick="toggleCard(this)">
+          <div class="flex items-center gap-1.5">
             <span class="chev text-zinc-400">▾</span>
             <h3 class="text-xs font-semibold text-zinc-400 uppercase tracking-wider"><i class="bi bi-image"></i> Image Watermark</h3>
             <span class="text-[9px] px-1.5 py-0.5 bg-zinc-800 border border-zinc-700 rounded text-zinc-400">posisi fix kanan atas</span>
           </div>
-          <label class="flex items-center gap-1.5 text-xs text-zinc-300 cursor-pointer" onclick="event.stopPropagation()"><input type="checkbox" id="s_wm_on" onchange="updateWmPreview()" class="w-3.5 h-3.5 accent-[#facc15]"> Aktif</label>
+          <label class="flex items-center gap-1.5 text-xs text-zinc-300 cursor-pointer" onclick="event.stopPropagation()"><input type="checkbox" id="s_wm_on" onchange="updateWmPreview()" class="w-3.5 h-3.5 accent-[#0f766e]"> Aktif</label>
         </div>
-        <div class="card-body p-4 pt-0 space-y-3">
-          <div class="flex items-center gap-2">
+        <div class="card-body p-2 pt-0 space-y-1">
+          <div class="flex items-center gap-1.5">
             <input type="file" accept=".png,.jpg,.jpeg" id="wmFile" class="text-xs text-zinc-400 bg-surface-2 border border-zinc-700 rounded px-2 py-1 flex-1">
-            <button onclick="uploadWm()" class="px-2.5 py-1 bg-[var(--accent)] text-[var(--accent-text)] text-xs font-medium rounded hover:bg-[var(--accent-hover)] transition">Upload</button>
+            <button onclick="uploadWm()" class="px-1.5 py-1 bg-[var(--accent)] text-[var(--accent-text)] text-xs font-medium rounded hover:bg-[var(--accent-hover)] transition">Upload</button>
           </div>
           <div id="wmMsg" class="text-[10px] text-zinc-400 font-mono italic"></div>
-          <div class="grid grid-cols-2 gap-3">
+          <div class="grid grid-cols-2 gap-1.5">
             <div>
               <label class="text-[9px] text-zinc-400 block mb-0.5">Scale (0.01–1)</label>
               <input type="number" step="0.01" min="0.01" max="1" id="s_wm_scale" oninput="updateWmPreview()" class="w-full bg-surface-2 border border-zinc-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-[var(--accent)]">
@@ -457,8 +458,8 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 
 <!-- FLOATING SAVE BAR -->
 <div class="save-float" id="saveFloatBar">
-  <button onclick="loadConfig()" class="px-3 py-1.5 bg-surface-2 hover:bg-surface-3 text-zinc-300 text-xs font-medium rounded border border-zinc-700 transition">↺ Reset</button>
-  <button onclick="saveAll()" class="px-4 py-1.5 bg-accent hover:bg-[var(--accent-hover)] text-black text-xs font-bold rounded shadow transition"><i class="bi bi-floppy"></i> Simpan</button>
+  <button onclick="loadConfig()" class="px-2 py-1 bg-surface-2 hover:bg-surface-3 text-zinc-300 text-xs font-medium rounded border border-zinc-700 transition">↺ Reset</button>
+  <button onclick="saveAll()" class="px-2 py-1 bg-accent hover:bg-[var(--accent-hover)] text-black text-xs font-bold rounded shadow transition"><i class="bi bi-floppy"></i> Simpan</button>
   <span id="saveMsg" class="save-msg"></span>
 </div>
 
@@ -762,14 +763,14 @@ async function saveAll() {
 
 let _hfTimer=null; function debounceHfCheck(){ clearTimeout(_hfTimer); _hfTimer=setTimeout(checkHfStatus,800); }
 async function checkHfStatus(){
-  const badge=$('#hfStatus'); badge.textContent='● checking…'; badge.className='ml-auto text-[10px] px-2 py-0.5 rounded-full border border-zinc-700 text-zinc-400';
+  const badge=$('#hfStatus'); badge.textContent='● checking…'; badge.className='ml-auto text-[10px] px-2 py-0.5 rounded-lg border border-zinc-700 text-zinc-400';
   try{
     const r=await fetch('/api/test-llm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({server_url:$('#s_server_url').value,hf_api_key:$('#s_hf_api_key').value})});
     const d=await r.json();
-    if(d.ok){ badge.textContent='● connected ('+d.count+' models)'; badge.className='ml-auto text-[10px] px-2 py-0.5 rounded-full border border-emerald-700 bg-emerald-950 text-emerald-400'; }
-    else{ badge.textContent='● disconnected'; badge.className='ml-auto text-[10px] px-2 py-0.5 rounded-full border border-red-800 bg-red-950 text-red-400'; }
+    if(d.ok){ badge.textContent='● connected ('+d.count+' models)'; badge.className='ml-auto text-[10px] px-2 py-0.5 rounded-lg border border-emerald-700 bg-emerald-950 text-emerald-400'; }
+    else{ badge.textContent='● disconnected'; badge.className='ml-auto text-[10px] px-2 py-0.5 rounded-lg border border-red-800 bg-red-950 text-red-400'; }
     return d;
-  }catch{ badge.textContent='● offline'; badge.className='ml-auto text-[10px] px-2 py-0.5 rounded-full border border-red-800 bg-red-950 text-red-400'; return null; }
+  }catch{ badge.textContent='● offline'; badge.className='ml-auto text-[10px] px-2 py-0.5 rounded-lg border border-red-800 bg-red-950 text-red-400'; return null; }
 }
 // ── Model combobox: input filter + dropdown list + select tersembunyi ──
 let MODEL_LIST = [];           // semua model hasil fetch
@@ -792,12 +793,12 @@ function renderModelList() {
     : MODEL_LIST.slice();
   if (MODEL_SEL_IDX >= items.length) MODEL_SEL_IDX = items.length - 1;
   if (!items.length) {
-    box.innerHTML = '<div class="px-3 py-2 text-[11px] text-zinc-500">Tidak ada model cocok</div>';
+    box.innerHTML = '<div class="px-2 py-1 text-[11px] text-zinc-500">Tidak ada model cocok</div>';
     box.classList.remove('hidden');
     return;
   }
   box.innerHTML = items.map((m, i) =>
-    `<div role="option" id="mo_${i}" aria-selected="${i === MODEL_SEL_IDX}" class="px-3 py-2 text-xs cursor-pointer transition ${i === MODEL_SEL_IDX ? 'bg-yellow-400 text-black font-semibold' : 'text-zinc-300 hover:bg-surface-3 hover:text-white'}" onclick="pickModel('${esc(m)}')" onmouseenter="MODEL_SEL_IDX=${i}; markModelRow()">${esc(m)}</div>`
+    `<div role="option" id="mo_${i}" aria-selected="${i === MODEL_SEL_IDX}" class="px-2 py-1 text-xs cursor-pointer transition ${i === MODEL_SEL_IDX ? 'bg-yellow-400 text-black font-semibold' : 'text-zinc-300 hover:bg-surface-3 hover:text-white'}" onclick="pickModel('${esc(m)}')" onmouseenter="MODEL_SEL_IDX=${i}; markModelRow()">${esc(m)}</div>`
   ).join('');
   box.classList.remove('hidden');
   markModelRow();

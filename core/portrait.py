@@ -353,7 +353,7 @@ class PortraitMixin:
                     raise Exception(f"Failed to initialize MediaPipe Face Landmarker: {e}")
 
         def _init_face_detector(self):
-            """Haar fallback ringan — dipakai untuk mode detector (tanpa landmark)."""
+            """Haar fallback ringan, dipakai untuk mode detector (tanpa landmark)."""
             if getattr(self, 'mp_face_detector', None) is None:
                 try:
                     # mediapipe.solutions dihapus di 1.0, pakai Haar yang sudah proven
@@ -379,7 +379,7 @@ class PortraitMixin:
             return self.convert_to_portrait_detector_with_progress(input_path, output_path, None)
 
         def convert_to_portrait_detector_with_progress(self, input_path: str, output_path: str, progress_callback):
-            """BlazeFace detector — wajah di tengah, tanpa lip, paling stabil (fallback ringan)."""
+            """BlazeFace detector: wajah di tengah, tanpa lip, paling stabil (fallback ringan)."""
             self._init_face_detector()
             import mediapipe as mp
             cap = cv2.VideoCapture(input_path)
@@ -569,7 +569,7 @@ class PortraitMixin:
                     if faces_data:
                         active = [f for f in faces_data if f['activity'] > lip_threshold]
                         if active:
-                            # most active speaker — ignore center bias when someone is talking
+                            # most active speaker, ignore center bias when someone is talking
                             best_face = max(active, key=lambda f: f['activity'])
                         else:
                             # silence → HOLD posisi terakhir (jangan drift ke tengah kosong / area kosong).
@@ -725,7 +725,7 @@ class PortraitMixin:
             return final
 
         def _smooth_follow_positions(self, positions: list, pan_speed_limit: float = 1.8, fps: float = 30.0):
-            """Smooth continuous camera pan — cinematic camera tracking.
+            """Smooth continuous camera pan: cinematic camera tracking.
 
             1. Hanning window low-pass filter eliminates face tracking jitter.
             2. Proportional ease-in/ease-out glides smoothly without staircases or overshoot.
@@ -1352,7 +1352,7 @@ class PortraitMixin:
             if self.gpu_enabled and self.gpu_encoder_args:
                 return self.gpu_encoder_args
             else:
-                # CPU encoding — ultrafast utk render maks. cepat (720p sosial).
+                # CPU encoding: ultrafast utk render maks. cepat (720p sosial).
                 # ponytail: kualitas cukup utk TikTok/Reels; naikkan preset/crf kalau mau HQ.
                 return ['-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '26', '-maxrate', '3M', '-bufsize', '6M', '-threads', '0']
 

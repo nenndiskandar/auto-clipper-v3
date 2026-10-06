@@ -45,18 +45,19 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
 </script>
 
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
-<div class="card-panel border border-[var(--border)] rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center space-y-6">
+<body class="min-h-screen flex items-center justify-center p-2">
+<div class="portal-bg" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="card-panel border border-[var(--border)] rounded-xl shadow-2xl p-2 max-w-sm w-full text-center space-y-1">
   <div>
     <h1 class="text-lg font-bold text-[var(--text-primary)] tracking-wide"><i class="bi bi-film text-fuchsia-400"></i> Iskan Clip</h1>
     <p class="text-[11px] text-[var(--text-secondary)] uppercase tracking-wider mt-1">Panel admin : akses terbatas</p>
   </div>
 
   <div class="absolute top-4 right-4"><button class="darkmode-btn rounded-full bg-[var(--bg-surface-2)] border-[var(--border)] w-8 h-8 text-xs flex items-center justify-center shadow-lg" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button></div>
-      <form id="login" class="space-y-4">
+      <form id="login" class="space-y-1">
     <div class="relative w-full">
       <input id="pass" type="password" autocomplete="current-password" placeholder="Password"
-        class="w-full bg-[var(--bg-surface-2)] border border-[var(--border)] rounded-xl px-4 py-3 pr-10 text-sm text-[var(--text-primary)] placeholder-zinc-500 focus:outline-none focus:border-[var(--accent)]">
+        class="w-full bg-[var(--bg-surface-2)] border border-[var(--border)] rounded-xl px-2 py-1.5 pr-10 text-sm text-[var(--text-primary)] placeholder-zinc-500 focus:outline-none focus:border-[var(--accent)]">
       <button type="button" id="togglePassBtn" class="absolute inset-y-0 right-3 flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] focus:outline-none" aria-label="Tampilkan password">
          <svg id="eyeShow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
@@ -70,14 +71,14 @@ a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible
       </button>
     </div>
     <button type="submit"
-      class="w-full bg-[var(--accent)] text-[var(--accent-text)] font-semibold rounded-xl py-3 text-sm hover:opacity-90 transition">
+      class="w-full bg-[var(--accent)] text-[var(--accent-text)] font-semibold rounded-xl py-1.5 text-sm hover:opacity-90 transition">
       Masuk
     </button>
   </form>
 
   <div class="space-y-1">
     <p class="text-[11px] text-[var(--text-secondary)]">Masukkan password admin.</p>
-    <p id="err" class="text-xs text-red-400 hidden mt-2"></p>
+    <p id="err" class="text-xs text-red-400 hidden mt-1"></p>
     <p id="attempts" class="text-[11px] text-yellow-400 hidden mt-1"></p>
   </div>
 </div>

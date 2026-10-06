@@ -531,7 +531,7 @@ class TranscribeMixin:
                     if lang and lang != "none":
                         form_data.append(("language", lang))
                 else:
-                    # Both attempts failed — raise
+                    # Both attempts failed, raise
                     raise Exception(
                         f"Whisper API returned HTTP {resp.status_code}: "
                         f"{resp.text[:300]}"

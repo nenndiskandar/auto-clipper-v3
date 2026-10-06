@@ -123,6 +123,8 @@ def main():
     sd = json.loads(sd_path.read_text(encoding="utf-8"))
     info = sd.get("video_info") or {}
     core.channel_name = info.get("channel") or info.get("uploader") or ""
+    # WORKFLOW Step7 manifest source: simpan URL sesi agar manifest.json terisi
+    core._last_source_url = sd.get("url", "")
 
     debug_log(f"[progress] Render start (overall: 0.0%)", flush=True)
     meta_path = Path(CLIP_DIR) / "data.json"

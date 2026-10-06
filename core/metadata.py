@@ -1,5 +1,5 @@
 """
-core/metadata.py — Metadata Normalization, Enrichment & Account Classification.
+core/metadata.py: Metadata Normalization, Enrichment & Account Classification.
 
 Normalizes highlight metadata produced by the LLM (many providers return
 slightly different field names) and enriches it with cross-platform fields:
@@ -153,7 +153,7 @@ def klasifikasikan_akun(hasil: list[dict]) -> dict:
         return {
             "akun_tujuan": "TikTok",
             "tipe_akun": "Creator",
-            "alasan": "Tidak ada keyword yang cukup — default Creator/TikTok.",
+            "alasan": "Tidak ada keyword yang cukup, default Creator/TikTok.",
         }
 
     best = max(scores, key=scores.get)

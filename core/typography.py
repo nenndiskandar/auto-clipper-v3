@@ -1,5 +1,5 @@
 """
-core/typography.py — Font Preset System & Google Fonts Downloader.
+core/typography.py: Font Preset System & Google Fonts Downloader.
 
 Provides predefined caption/hook font presets (similar to CapCut "typography"
 styles) plus a robust Google Fonts downloader with retry & integrity checks.
@@ -196,7 +196,7 @@ def siapkan_font_tipografi(style: str = None, font_dir: str = None) -> tuple[str
         font_dir: Destination directory. Defaults to ``assets/fonts``.
 
     Returns:
-        Tuple ``(path_utama, path_khusus)`` — absolute paths to the two TTF files.
+        Tuple ``(path_utama, path_khusus)``: absolute paths to the two TTF files.
         Raises RuntimeError if the primary font cannot be obtained.
     """
     style = style or "HORMOZI"

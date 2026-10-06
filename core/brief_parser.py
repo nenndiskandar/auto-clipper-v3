@@ -1,5 +1,5 @@
 """
-core/brief_parser.py — v3 NEW — Parse brief bebas jadi structured campaign via LLM.
+core/brief_parser.py: v3 NEW, Parse brief bebas jadi structured campaign via LLM.
 Input: teks bebas user ("TernakKlip X + backsound TikTok Y untuk niche parenting")
 Output: { sources:[{url,type}], sound_id, niche, hook_style, target_duration, tone }
 Fallback rule-based kalau LLM off.

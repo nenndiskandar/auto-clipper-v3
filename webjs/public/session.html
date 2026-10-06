@@ -30,38 +30,39 @@ details.cfg-group[open] summary::before{transform:rotate(90deg)}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body class="min-h-screen flex flex-col md:flex-row antialiased">
+<div class="portal-bg" aria-hidden="true"><i></i><i></i><i></i></div>
 
 <aside class="w-full md:w-64 border-b md:border-b-0 md:border-r border-zinc-800 flex flex-col shrink-0">
-  <div class="p-4 border-b border-zinc-800 flex items-center justify-between">
-    <div class="flex items-center gap-2">
+  <div class="p-2 border-b border-zinc-800 flex items-center justify-between">
+    <div class="flex items-center gap-1.5">
       <span class="w-7 h-7 rounded-lg logo-mark flex items-center justify-center font-black text-sm"><i class="bi bi-lightning-charge-fill text-amber-400"></i></span>
       <span class="font-bold text-sm tracking-wide text-white font-heading">AUTO<span class="text-[var(--accent)]">CLIPPER</span></span>
     </div>
-    <div class="flex items-center gap-2"><button class="darkmode-btn darkmode-compact" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button><a href="/logout" class="min-h-[32px] min-w-[44px] flex items-center justify-center text-xs text-zinc-400 hover:text-white transition md:hidden">Logout</a></div>
+    <div class="flex items-center gap-1.5"><button class="darkmode-btn darkmode-compact" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button><a href="/logout" class="min-h-[32px] min-w-[44px] flex items-center justify-center text-xs text-zinc-400 hover:text-white transition md:hidden">Logout</a></div>
   </div>
-  <nav aria-label="Menu Utama" class="p-2 md:p-3 flex flex-row md:flex-col gap-1.5 flex-wrap" id="sidebarLinks">
-    <a href="/" class="flex items-center gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition bg-[var(--accent)] text-[var(--accent-text)] font-bold shadow-sm"><i class="bi bi-house-door"></i><span>Library Sesi</span></a>
-    <a href="/create.html" class="flex items-center gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-plus-square text-emerald-400"></i><span>Create Clip</span></a>
-    <a href="/tasks.html" class="flex items-center gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-list-task text-amber-400"></i><span>Antrean Tasks</span></a>
-    <a href="/story.html" class="flex items-center gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-film text-fuchsia-400"></i><span>AI Story</span></a>
-    <a href="/facebook.html" class="flex items-center gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-facebook text-blue-400"></i><span>FB Auto Upload</span></a>
-    <a href="/cookies.html" class="flex items-center gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-shield-lock text-orange-400"></i><span>Cookies YouTube</span></a>
-    <a href="/ternaklip.html" class="flex items-center gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-bullseye text-teal-400"></i><span>TernakKlip</span></a>
-    <a href="/dependencies.html" class="flex items-center gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-box-seam text-violet-400"></i><span>Dependencies</span></a>
-    <a href="/settings.html" class="flex items-center gap-1.5 md:gap-2.5 min-h-[28px] md:min-h-[40px] px-2 md:px-3.5 py-1 md:py-2.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-gear text-zinc-400"></i><span>Settings & AI</span></a>
+  <nav aria-label="Menu Utama" class="p-2 md:p-1.5 flex flex-row md:flex-col gap-1.5 flex-wrap" id="sidebarLinks">
+    <a href="/" class="flex items-center gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition bg-[var(--accent)] text-[var(--accent-text)] font-bold shadow-sm"><i class="bi bi-house-door"></i><span>Library Sesi</span></a>
+    <a href="/create.html" class="flex items-center gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-plus-square text-emerald-400"></i><span>Create Clip</span></a>
+    <a href="/tasks.html" class="flex items-center gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-list-task text-amber-400"></i><span>Antrean Tasks</span></a>
+    <a href="/story.html" class="flex items-center gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-film text-fuchsia-400"></i><span>AI Story</span></a>
+    <a href="/facebook.html" class="flex items-center gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-facebook text-blue-400"></i><span>FB Auto Upload</span></a>
+    <a href="/cookies.html" class="flex items-center gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-shield-lock text-orange-400"></i><span>Cookies YouTube</span></a>
+    <a href="/ternaklip.html" class="flex items-center gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-bullseye text-teal-400"></i><span>TernakKlip</span></a>
+    <a href="/dependencies.html" class="flex items-center gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-box-seam text-violet-400"></i><span>Dependencies</span></a>
+    <a href="/settings.html" class="flex items-center gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-gear text-zinc-400"></i><span>Settings & AI</span></a>
   </nav>
-  <div class="mt-auto px-4 py-3 border-t border-zinc-800/80 hidden md:flex flex-col gap-2 text-xs text-zinc-400 bg-zinc-950/40">
+  <div class="mt-auto px-2 py-1.5 border-t border-zinc-800/80 hidden md:flex flex-col gap-1.5 text-xs text-zinc-400 bg-zinc-950/40">
     <span class="font-semibold text-[10px] uppercase tracking-wider text-zinc-400"><i class="bi bi-cpu text-emerald-400"></i> Engine Status</span>
     <div class="flex items-center justify-between"><span>FFmpeg</span><span id="st_ffmpeg" class="w-2.5 h-2.5 rounded-full bg-zinc-600"></span></div>
     <div class="flex items-center justify-between"><span>yt-dlp</span><span id="st_ytdlp" class="w-2.5 h-2.5 rounded-full bg-zinc-600"></span></div>
     <div class="flex items-center justify-between"><span>Deno</span><span id="st_deno" class="w-2.5 h-2.5 rounded-full bg-zinc-600"></span></div>
     <div class="flex items-center justify-between"><span>AI Proxy</span><span id="st_ai" class="w-2.5 h-2.5 rounded-full bg-zinc-600"></span></div>
   </div>
-  <div class="p-4 border-t border-zinc-800 hidden md:flex items-center justify-between text-xs">
+  <div class="p-2 border-t border-zinc-800 hidden md:flex items-center justify-between text-xs">
     <span class="text-zinc-400 truncate max-w-[130px]" id="whoami"></span>
-    <div class="flex items-center gap-2"><button class="darkmode-btn darkmode-compact" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button><a href="/logout" class="text-zinc-400 hover:text-white transition">Logout</a></div>
+    <div class="flex items-center gap-1.5"><button class="darkmode-btn darkmode-compact" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button><a href="/logout" class="text-zinc-400 hover:text-white transition">Logout</a></div>
   </div>
-  <div class="md:hidden flex items-center justify-around px-4 py-2.5 border-t border-b border-zinc-800/80 bg-zinc-950/60 text-[10px] text-zinc-300">
+  <div class="md:hidden flex items-center justify-around px-2 py-1.5 border-t border-b border-zinc-800/80 bg-zinc-950/60 text-[10px] text-zinc-300">
     <div class="flex items-center gap-1.5"><span id="st_ffmpeg_mob" class="w-2 h-2 rounded-full bg-zinc-600"></span><span>FFmpeg</span></div>
     <div class="flex items-center gap-1.5"><span id="st_ytdlp_mob" class="w-2 h-2 rounded-full bg-zinc-600"></span><span>yt-dlp</span></div>
     <div class="flex items-center gap-1.5"><span id="st_deno_mob" class="w-2 h-2 rounded-full bg-zinc-600"></span><span>Deno</span></div>
@@ -76,50 +77,50 @@ details.cfg-group[open] summary::before{transform:rotate(90deg)}
 <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
   <div class="max-w-[1480px] w-full mx-auto">
     <!-- header focal -->
-    <div class="px-4 pt-4 pb-3">
-      <div class="flex items-center gap-2 text-[11px] text-[var(--text-muted)] mb-2">
+    <div class="px-2 pt-2 pb-1.5">
+      <div class="flex items-center gap-1.5 text-[11px] text-[var(--text-muted)] mb-1">
         <a href="/" class="hover:text-[var(--text-primary)] hover:underline"><i class="bi bi-house-door"></i> Library</a>
         <span class="opacity-40">/</span>
         <span class="font-semibold text-[var(--text-primary)] truncate" id="crumbTitle">Detail Sesi</span>
-        <span class="ml-auto hidden sm:inline-flex items-center gap-1.5 text-[10px] px-2 py-1 rounded-full border" id="statusBadge"><span class="w-1.5 h-1.5 rounded-full bg-zinc-400"></span><span>-</span></span>
+        <span class="ml-auto hidden sm:inline-flex items-center gap-1.5 text-[10px] px-2 py-1 rounded-lg border" id="statusBadge"><span class="w-1.5 h-1 rounded-full bg-zinc-400"></span><span>-</span></span>
       </div>
-      <div class="flex flex-wrap items-start justify-between gap-3">
+      <div class="flex flex-wrap items-start justify-between gap-1.5">
         <div class="min-w-0">
-          <div class="flex items-center gap-2 mb-1">
+          <div class="flex items-center gap-1.5 mb-1">
             <span class="w-1 h-5 rounded-full bg-[var(--accent)] shrink-0"></span>
             <h1 id="s_title" class="text-[15px] md:text-[17px] font-extrabold tracking-tight text-[var(--text-primary)] font-heading truncate">Memuat sesi…</h1>
-            <span id="campaignPill" class="hidden items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full bg-violet-600 text-white"><i class="bi bi-bullseye"></i>TernakKlip</span>
+            <span id="campaignPill" class="hidden items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-lg bg-violet-600 text-white"><i class="bi bi-bullseye"></i>TernakKlip</span>
           </div>
           <p id="s_meta" class="text-xs text-[var(--text-muted)] leading-relaxed max-w-[720px]">Menyiapkan data campaign, highlight, dan clip…</p>
         </div>
         <div class="flex items-center gap-1.5 shrink-0 flex-wrap">
-          <a id="btnOpenTernak" href="/ternaklip.html" class="hidden min-h-[36px] px-3 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] transition inline-flex items-center gap-1.5"><i class="bi bi-bullseye text-teal-500"></i>Kampanye</a>
-          <button onclick="goCreate()" class="min-h-[36px] px-3 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] text-xs font-bold inline-flex items-center gap-1.5"><i class="bi bi-plus-square"></i>Create</button>
-          <a id="btnTasks" href="/tasks.html" class="min-h-[36px] px-3 rounded-lg bg-[var(--bg-surface-2)] border border-[var(--border)] text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] inline-flex items-center gap-1.5"><i class="bi bi-list-task"></i>Tasks</a>
+          <a id="btnOpenTernak" href="/ternaklip.html" class="hidden min-h-[36px] px-2 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] transition inline-flex items-center gap-1.5"><i class="bi bi-bullseye text-teal-500"></i>Kampanye</a>
+          <button onclick="goCreate()" class="min-h-[36px] px-2 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] text-xs font-bold inline-flex items-center gap-1.5"><i class="bi bi-plus-square"></i>Create</button>
+          <a id="btnTasks" href="/tasks.html" class="min-h-[36px] px-2 rounded-lg bg-[var(--bg-surface-2)] border border-[var(--border)] text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] inline-flex items-center gap-1.5"><i class="bi bi-list-task"></i>Tasks</a>
         </div>
       </div>
     </div>
 
-    <div id="loadingState" class="px-4 pb-6">
-      <div class="card-panel p-4 space-y-3">
+    <div id="loadingState" class="px-2 pb-2">
+      <div class="card-panel p-2 space-y-1">
         <div class="h-5 rounded tk-skeleton w-2/3"></div>
         <div class="h-3 rounded tk-skeleton w-full"></div>
         <div class="h-3 rounded tk-skeleton w-1/2"></div>
-        <div class="grid grid-cols-2 gap-2 pt-2"><div class="h-16 rounded tk-skeleton"></div><div class="h-16 rounded tk-skeleton"></div></div>
+        <div class="grid grid-cols-2 gap-1.5 pt-2"><div class="h-16 rounded tk-skeleton"></div><div class="h-16 rounded tk-skeleton"></div></div>
       </div>
     </div>
 
-    <div id="contentState" class="hidden px-4 pb-6">
-      <div class="flex flex-col xl:flex-row gap-4">
-        <main class="flex-1 min-w-0 space-y-3">
+    <div id="contentState" class="hidden px-2 pb-2">
+      <div class="flex flex-col xl:flex-row gap-1.5">
+        <main class="flex-1 min-w-0 space-y-1">
 
           <!-- Campaign sync card  -  sinkron ternakklip full info -->
           <div id="campaignCard" class="hidden card-panel overflow-hidden">
             <div class="relative h-[132px] md:h-[156px] bg-[var(--bg-surface-2)] border-b border-[var(--border)] overflow-hidden">
               <img id="campThumb" src="" alt="" class="w-full h-full object-cover" loading="lazy">
               <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent"></div>
-              <div class="absolute bottom-0 left-0 right-0 p-3 md:p-4 flex items-end justify-between gap-3">
-                <div class="flex items-center gap-2.5 min-w-0">
+              <div class="absolute bottom-0 left-0 right-0 p-1.5 md:p-2 flex items-end justify-between gap-1.5">
+                <div class="flex items-center gap-1.5 min-w-0">
                   <span id="campAvatar" class="w-9 h-9 md:w-10 md:h-10 rounded-full overflow-hidden bg-white border border-white/30 shrink-0 flex items-center justify-center"></span>
                   <div class="min-w-0">
                     <div id="campClient" class="text-white font-extrabold text-sm leading-tight drop-shadow truncate">-</div>
@@ -130,11 +131,11 @@ details.cfg-group[open] summary::before{transform:rotate(90deg)}
               </div>
               <div class="absolute top-2 left-2 flex flex-wrap gap-1" id="campTopBadges"></div>
             </div>
-            <div class="p-3 space-y-3">
-              <div class="flex flex-wrap items-start justify-between gap-2">
+            <div class="p-1.5 space-y-1">
+              <div class="flex flex-wrap items-start justify-between gap-1.5">
                 <div class="min-w-0">
                   <h2 id="campTitle" class="text-[13px] md:text-sm font-extrabold leading-tight text-[var(--text-primary)] line-clamp-2">-</h2>
-                  <div class="text-[11px] text-[var(--text-muted)] mt-1 flex flex-wrap items-center gap-2">
+                  <div class="text-[11px] text-[var(--text-muted)] mt-1 flex flex-wrap items-center gap-1.5">
                     <span id="campDate" class="inline-flex items-center gap-1"><i class="bi bi-calendar3"></i>-</span>
                     <span class="hidden sm:inline opacity-30">•</span>
                     <span id="campIdPill" class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-[var(--bg-surface-2)] border border-[var(--border)]">-</span>
@@ -145,18 +146,18 @@ details.cfg-group[open] summary::before{transform:rotate(90deg)}
                   <a id="btnShareOpen" href="#" target="_blank" rel="noopener" class="w-8 h-8 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] flex items-center justify-center" title="Buka share"><i class="bi bi-box-arrow-up-right text-xs"></i></a>
                 </div>
               </div>
-              <div class="grid grid-cols-3 gap-2">
-                <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] p-3 text-center">
+              <div class="grid grid-cols-3 gap-1.5">
+                <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] p-1.5 text-center">
                   <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Hadiah</div>
                   <div id="campPrize" class="text-[13px] font-extrabold text-emerald-600 mt-1 leading-none">-</div>
                   <div id="campPrizeSub" class="text-[10px] text-[var(--text-muted)] mt-1 truncate">-</div>
                 </div>
-                <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-3 text-center">
+                <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-1.5 text-center">
                   <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Peserta</div>
                   <div id="campParticipants" class="text-[13px] font-extrabold text-[var(--text-primary)] mt-1 leading-none">-</div>
                   <div id="campThreshold" class="text-[10px] text-[var(--text-muted)] mt-1">-</div>
                 </div>
-                <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-3 text-center">
+                <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-1.5 text-center">
                   <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Rasio</div>
                   <div id="campRatio" class="text-xs font-bold mt-1">-</div>
                   <div id="campRatioSub" class="text-[10px] text-[var(--text-muted)] mt-1">-</div>
@@ -166,8 +167,8 @@ details.cfg-group[open] summary::before{transform:rotate(90deg)}
                 <div class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)] mb-1.5">Reward per platform</div>
                 <div id="campRewards" class="flex flex-wrap gap-1.5"></div>
               </div>
-              <div id="campDescWrap" class="hidden rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] p-3">
-                <details class="cfg-group" open><summary class="text-xs font-bold text-[var(--text-primary)]">Deskripsi dan brief campaign</summary><p id="campDesc" class="text-xs leading-relaxed text-[var(--text-secondary)] mt-2 whitespace-pre-line"></p></details>
+              <div id="campDescWrap" class="hidden rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] p-1.5">
+                <details class="cfg-group" open><summary class="text-xs font-bold text-[var(--text-primary)]">Deskripsi dan brief campaign</summary><p id="campDesc" class="text-xs leading-relaxed text-[var(--text-secondary)] mt-1 whitespace-pre-line"></p></details>
               </div>
               <div id="campTagsWrap" class="hidden">
                 <div class="flex items-center justify-between mb-1.5">
@@ -176,62 +177,62 @@ details.cfg-group[open] summary::before{transform:rotate(90deg)}
                 </div>
                 <div id="campTags" class="flex flex-wrap gap-1.5"></div>
               </div>
-              <div class="grid sm:grid-cols-2 gap-2" id="campLinksGrid"></div>
+              <div class="grid sm:grid-cols-2 gap-1.5" id="campLinksGrid"></div>
               <div>
                 <div class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)] mb-1.5">Sumber video</div>
-                <div id="campSources" class="space-y-1.5"></div>
+                <div id="campSources" class="space-y-1"></div>
                 <div class="text-[11px] text-[var(--text-muted)] mt-1.5">Sumber dari campaign_brief.json  -  sinkron dengan TernakKlip. Sumber pertama dipakai untuk highlight dan render.</div>
               </div>
             </div>
           </div>
 
           <!-- Session info  -  durasi, status, srt, file -->
-          <div class="card-panel p-3 space-y-3">
+          <div class="card-panel p-1.5 space-y-1">
             <div class="flex items-center justify-between">
               <span class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)]"><i class="bi bi-info-circle text-sky-500"></i> Info Sesi</span>
-              <span id="s_id" class="font-mono text-[10px] px-2 py-1 rounded-full bg-[var(--bg-surface-2)] border border-[var(--border)] text-[var(--text-muted)]">-</span>
+              <span id="s_id" class="font-mono text-[10px] px-2 py-1 rounded-lg bg-[var(--bg-surface-2)] border border-[var(--border)] text-[var(--text-muted)]">-</span>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
-              <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] p-3">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-1.5">
+              <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] p-1.5">
                 <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Status</div>
                 <div id="infoStatus" class="text-xs font-bold mt-1">-</div>
                 <div id="infoStatusSub" class="text-[10px] text-[var(--text-muted)] mt-1">-</div>
               </div>
-              <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-3">
+              <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-1.5">
                 <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Durasi sumber</div>
                 <div id="infoDuration" class="text-[13px] font-extrabold text-[var(--text-primary)] mt-1">-</div>
                 <div id="infoDurationSub" class="text-[10px] text-[var(--text-muted)] mt-1">-</div>
               </div>
-              <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-3">
+              <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-1.5">
                 <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Highlight / Clip</div>
                 <div class="text-[13px] font-extrabold mt-1"><span id="infoHlCount">0</span> <span class="text-[var(--text-muted)] font-normal">/</span> <span id="infoClipCount">0</span></div>
                 <div id="infoClipSub" class="text-[10px] text-[var(--text-muted)] mt-1">-</div>
               </div>
-              <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-3">
+              <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-1.5">
                 <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">File</div>
                 <div id="infoFiles" class="text-[11px] font-semibold mt-1">-</div>
                 <div id="infoFilesSub" class="text-[10px] text-[var(--text-muted)] mt-1">-</div>
               </div>
             </div>
-            <div class="grid md:grid-cols-2 gap-2 text-xs">
-              <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-3">
+            <div class="grid md:grid-cols-2 gap-1.5 text-xs">
+              <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-1.5">
                 <div class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)] mb-1">Sumber video</div>
                 <div id="sourceBox" class="hidden">
                   <a id="s_url" class="text-[var(--accent)] hover:underline break-all font-mono text-xs" target="_blank" rel="noopener" href="#"></a>
                   <div id="sourceMeta" class="text-[11px] text-[var(--text-muted)] mt-1"></div>
                 </div>
                 <div id="sourceEmpty" class="text-[var(--text-muted)]">Tidak ada URL sumber.</div>
-                <div class="mt-2 flex flex-wrap gap-1.5">
-                  <button onclick="navigator.clipboard.writeText(document.getElementById('s_url')?.href||''); showToast('Link sumber disalin','success')" class="min-h-[32px] px-2.5 rounded-lg border border-[var(--border)] bg-[var(--bg-surface-2)] text-xs font-semibold">Salin link</button>
-                  <a id="btnOpenSource" href="#" target="_blank" rel="noopener" class="min-h-[32px] px-2.5 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] text-xs font-bold inline-flex items-center gap-1">Buka <i class="bi bi-box-arrow-up-right text-[10px]"></i></a>
+                <div class="mt-1 flex flex-wrap gap-1.5">
+                  <button onclick="navigator.clipboard.writeText(document.getElementById('s_url')?.href||''); showToast('Link sumber disalin','success')" class="min-h-[32px] px-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg-surface-2)] text-xs font-semibold">Salin link</button>
+                  <a id="btnOpenSource" href="#" target="_blank" rel="noopener" class="min-h-[32px] px-1.5 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] text-xs font-bold inline-flex items-center gap-1">Buka <i class="bi bi-box-arrow-up-right text-[10px]"></i></a>
                 </div>
               </div>
-              <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-3 space-y-2">
+              <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-1.5 space-y-1">
                 <div class="flex items-center justify-between">
                   <span class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Timeline</span>
                   <button onclick="document.getElementById('timelineBox')?.classList.toggle('hidden')" class="text-[11px] font-semibold text-[var(--accent)]">Toggle</button>
                 </div>
-                <div class="space-y-1.5 text-[11px] text-[var(--text-secondary)]" id="timelineBox">
+                <div class="space-y-1 text-[11px] text-[var(--text-secondary)]" id="timelineBox">
                   <div class="flex justify-between"><span class="text-[var(--text-muted)]">Dibuat</span><span id="infoCreated" class="font-mono font-semibold">-</span></div>
                   <div class="flex justify-between"><span class="text-[var(--text-muted)]">Mulai proses</span><span id="infoStarted" class="font-mono">-</span></div>
                   <div class="flex justify-between"><span class="text-[var(--text-muted)]">Selesai</span><span id="infoCompleted" class="font-mono">-</span></div>
@@ -243,9 +244,9 @@ details.cfg-group[open] summary::before{transform:rotate(90deg)}
           </div>
 
           <!-- Mentahan / Bahan  -  file raw (_temp / _temp_gdrive / srt / source) -->
-          <div class="card-panel p-3 space-y-3" id="mentahanCard">
+          <div class="card-panel p-1.5 space-y-1" id="mentahanCard">
             <div class="flex items-center justify-between">
-              <h2 class="text-xs font-extrabold tracking-tight text-[var(--text-primary)] flex items-center gap-2">
+              <h2 class="text-xs font-extrabold tracking-tight text-[var(--text-primary)] flex items-center gap-1.5">
                 <span class="w-1 h-4 rounded-full bg-amber-500"></span>
                 <span>Bahan Mentahan</span>
                 <span class="text-[11px] font-normal text-[var(--text-muted)]" id="rawCountInfo">(0 file)</span>
@@ -255,9 +256,9 @@ details.cfg-group[open] summary::before{transform:rotate(90deg)}
                 <button onclick="loadSession()" class="w-8 h-8 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] flex items-center justify-center" title="Refresh"><i class="bi bi-arrow-clockwise text-xs"></i></button>
               </div>
             </div>
-            <div id="rawList" class="space-y-2"></div>
-            <div id="rawEmpty" class="hidden rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-surface-2)] p-4 text-center">
-              <div class="w-9 h-9 rounded-full bg-[var(--bg-surface)] border border-[var(--border)] flex items-center justify-center mx-auto mb-2"><i class="bi bi-folder2-open text-[var(--text-muted)]"></i></div>
+            <div id="rawList" class="space-y-1"></div>
+            <div id="rawEmpty" class="hidden rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-surface-2)] p-2 text-center">
+              <div class="w-9 h-9 rounded-full bg-[var(--bg-surface)] border border-[var(--border)] flex items-center justify-center mx-auto mb-1"><i class="bi bi-folder2-open text-[var(--text-muted)]"></i></div>
               <div class="text-xs font-bold text-[var(--text-primary)]">Belum ada file mentahan</div>
               <div class="text-[11px] text-[var(--text-muted)] mt-1 max-w-[520px] mx-auto">File sumber muncul di <code class="px-1 py-0.5 rounded bg-[var(--bg-surface)] border border-[var(--border)]">_temp</code> / <code class="px-1 py-0.5 rounded bg-[var(--bg-surface)] border border-[var(--border)]">_temp_gdrive</code> setelah pipeline download. Cek sumber campaign di atas atau lihat log proses.</div>
             </div>
@@ -265,36 +266,36 @@ details.cfg-group[open] summary::before{transform:rotate(90deg)}
           </div>
 
           <!-- Highlights  -  virality, hook, timed_title -->
-          <div class="card-panel p-3 space-y-3">
-            <div class="flex flex-wrap justify-between items-center gap-2">
-              <h2 class="text-xs font-extrabold tracking-tight text-[var(--text-primary)] flex items-center gap-2">
+          <div class="card-panel p-1.5 space-y-1">
+            <div class="flex flex-wrap justify-between items-center gap-1.5">
+              <h2 class="text-xs font-extrabold tracking-tight text-[var(--text-primary)] flex items-center gap-1.5">
                 <span class="w-1 h-4 rounded-full bg-teal-500"></span>
                 <span>Highlight</span>
                 <span class="text-[11px] font-normal text-[var(--text-muted)]" id="hlCountInfo">(0 momen)</span>
               </h2>
               <div class="flex items-center gap-1.5 flex-wrap">
-                <input type="number" id="refindCount" min="1" max="20" placeholder="auto" class="w-20 min-h-[36px] bg-[var(--bg-surface)] border border-[var(--border)] rounded-lg px-2.5 text-xs focus:border-[var(--accent)]" title="Jumlah highlight baru (kosong = auto)">
-                <button onclick="doRefind()" class="min-h-[36px] px-3 text-xs font-bold bg-[var(--bg-surface)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg inline-flex items-center gap-1.5"><i class="bi bi-search text-sky-500"></i>Cari Ulang</button>
-                <button onclick="toggleAllCheck()" class="min-h-[36px] px-3 text-xs font-bold bg-[var(--bg-surface)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg inline-flex items-center gap-1.5"><i class="bi bi-check2-square"></i>Pilih Semua</button>
+                <input type="number" id="refindCount" min="1" max="20" placeholder="auto" class="w-20 min-h-[36px] bg-[var(--bg-surface)] border border-[var(--border)] rounded-lg px-1.5 text-xs focus:border-[var(--accent)]" title="Jumlah highlight baru (kosong = auto)">
+                <button onclick="doRefind()" class="min-h-[36px] px-2 text-xs font-bold bg-[var(--bg-surface)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg inline-flex items-center gap-1.5"><i class="bi bi-search text-sky-500"></i>Cari Ulang</button>
+                <button onclick="toggleAllCheck()" class="min-h-[36px] px-2 text-xs font-bold bg-[var(--bg-surface)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg inline-flex items-center gap-1.5"><i class="bi bi-check2-square"></i>Pilih Semua</button>
               </div>
             </div>
             <div id="tplBar" class="flex flex-wrap gap-1.5"></div>
-            <div id="tplMsg" class="hidden text-xs px-3 py-2 rounded-lg"></div>
-            <div id="hlListContainer" class="space-y-2"></div>
+            <div id="tplMsg" class="hidden text-xs px-2 py-1 rounded-lg"></div>
+            <div id="hlListContainer" class="space-y-1"></div>
             <div class="flex items-center justify-between pt-2 border-t border-[var(--border)]">
               <span class="text-xs text-[var(--text-muted)]" id="selCount">0 / 0 dipilih</span>
-              <button onclick="startProcess()" class="min-h-[40px] px-4 text-xs font-extrabold bg-[var(--accent)] text-[var(--accent-text)] rounded-xl hover:opacity-95 transition inline-flex items-center gap-1.5"><i class="bi bi-play-fill"></i>Proses Terpilih</button>
+              <button onclick="startProcess()" class="min-h-[40px] px-2 text-xs font-extrabold bg-[var(--accent)] text-[var(--accent-text)] rounded-xl hover:opacity-95 transition inline-flex items-center gap-1.5"><i class="bi bi-play-fill"></i>Proses Terpilih</button>
             </div>
-            <div id="hlEmptyCta" class="hidden rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-surface-2)] p-4 text-center">
+            <div id="hlEmptyCta" class="hidden rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-surface-2)] p-2 text-center">
               <div class="text-sm font-bold text-[var(--text-primary)]">Belum ada momen highlight</div>
               <div class="text-xs text-[var(--text-muted)] mt-1">Sesi ini belum punya highlight (transkrip mungkin belum jadi atau AI belum jalan). Klik Cari Ulang untuk generate ulang</div>
             </div>
           </div>
 
           <!-- Clips grid  -  portrait, flags, thumb -->
-          <div class="card-panel p-3 space-y-3">
-            <div class="flex flex-wrap justify-between items-center gap-2">
-              <h2 class="text-xs font-extrabold tracking-tight text-[var(--text-primary)] flex items-center gap-2">
+          <div class="card-panel p-1.5 space-y-1">
+            <div class="flex flex-wrap justify-between items-center gap-1.5">
+              <h2 class="text-xs font-extrabold tracking-tight text-[var(--text-primary)] flex items-center gap-1.5">
                 <span class="w-1 h-4 rounded-full bg-fuchsia-500"></span>
                 <span>Klip Hasil Render</span>
                 <span class="text-[11px] font-normal text-[var(--text-muted)]" id="clipCountInfo">(0 klip)</span>
@@ -304,88 +305,88 @@ details.cfg-group[open] summary::before{transform:rotate(90deg)}
                 <button onclick="loadSession()" class="w-8 h-8 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] flex items-center justify-center" title="Refresh"><i class="bi bi-arrow-clockwise text-xs"></i></button>
               </div>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3" id="clipsGrid"></div>
-            <div id="clipsEmpty" class="hidden rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-surface-2)] p-6 text-center">
-              <div class="w-10 h-10 rounded-full bg-[var(--bg-surface)] border border-[var(--border)] flex items-center justify-center mx-auto mb-2"><i class="bi bi-film text-[var(--text-muted)]"></i></div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-1.5" id="clipsGrid"></div>
+            <div id="clipsEmpty" class="hidden rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-surface-2)] p-1.5 text-center">
+              <div class="w-10 h-10 rounded-full bg-[var(--bg-surface)] border border-[var(--border)] flex items-center justify-center mx-auto mb-1"><i class="bi bi-film text-[var(--text-muted)]"></i></div>
               <div class="text-sm font-bold text-[var(--text-primary)]">Belum ada klip dirender</div>
               <div class="text-xs text-[var(--text-muted)] mt-1 max-w-[420px] mx-auto">Pilih highlight di atas lalu Proses Terpilih, atau buka Create untuk render ulang dengan template lain</div>
-              <button onclick="goCreate()" class="mt-3 min-h-[40px] px-4 rounded-xl bg-[var(--accent)] text-[var(--accent-text)] text-xs font-extrabold">Buka Create → Render</button>
+              <button onclick="goCreate()" class="mt-1.5 min-h-[40px] px-2 rounded-xl bg-[var(--accent)] text-[var(--accent-text)] text-xs font-extrabold">Buka Create → Render</button>
             </div>
           </div>
 
           <!-- Render ulang + logs -->
-          <div class="card-panel p-3 space-y-3">
+          <div class="card-panel p-1.5 space-y-1">
             <div class="flex items-center justify-between">
               <div>
                 <h2 class="text-xs font-extrabold text-[var(--text-primary)] flex items-center gap-1.5"><i class="bi bi-arrow-repeat text-emerald-500"></i>Render & Log</h2>
                 <p class="text-[11px] text-[var(--text-muted)]">Kontrol render dan lihat log proses tanpa buka Tasks</p>
               </div>
-              <button onclick="goCreate()" class="min-h-[36px] px-3 text-xs font-bold bg-[var(--bg-surface-2)] border border-[var(--border)] rounded-xl inline-flex items-center gap-1.5"><i class="bi bi-box-arrow-up-right"></i>Create</button>
+              <button onclick="goCreate()" class="min-h-[36px] px-2 text-xs font-bold bg-[var(--bg-surface-2)] border border-[var(--border)] rounded-xl inline-flex items-center gap-1.5"><i class="bi bi-box-arrow-up-right"></i>Create</button>
             </div>
             <div class="grid sm:grid-cols-3 gap-1.5">
               <button onclick="startProcess()" class="min-h-[40px] rounded-xl bg-[var(--accent)] text-[var(--accent-text)] text-xs font-extrabold inline-flex items-center justify-center gap-1.5"><i class="bi bi-play-fill"></i>Proses Terpilih</button>
-              <button onclick="doRefind()" class="min-h-[40px] rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] text-xs font-bold inline-flex items-center justify-center gap-1.5"><i class="bi bi-stars text-amber-500"></i>Regenerate Highlight</button>
+              <button onclick="doRefind()" class="min-h-[40px] rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] text-xs font-bold inline-flex items-center justify-center gap-1.5"><i class="bi bi-arrow-repeat text-amber-500"></i>Regenerate Highlight</button>
               <a id="btnOpenCreateSession" href="#" class="min-h-[40px] rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] text-xs font-bold inline-flex items-center justify-center gap-1.5"><i class="bi bi-pencil-square"></i>Buka di Create</a>
             </div>
             <div id="actionStatus"></div>
             <details class="cfg-group rounded-xl border border-[var(--border)] bg-[var(--bg-surface)]" open>
-              <summary class="px-3 py-2.5 text-xs font-bold text-[var(--text-primary)] flex items-center justify-between"><span><i class="bi bi-terminal text-sky-500"></i> Log proses</span><span class="text-[11px] font-normal text-[var(--text-muted)]" id="logHint">process.log + refind.log</span></summary>
-              <div class="px-3 pb-3 space-y-2">
+              <summary class="px-2 py-1.5 text-xs font-bold text-[var(--text-primary)] flex items-center justify-between"><span><i class="bi bi-terminal text-sky-500"></i> Log proses</span><span class="text-[11px] font-normal text-[var(--text-muted)]" id="logHint">process.log + refind.log</span></summary>
+              <div class="px-2 pb-1.5 space-y-1">
                 <div class="flex items-center gap-1.5 flex-wrap">
                   <button onclick="switchLog('process')" id="tabLogProcess" class="chip chip-accent text-[11px]">process.log</button>
                   <button onclick="switchLog('refind')" id="tabLogRefind" class="chip text-[11px]">refind.log</button>
                   <button onclick="switchLog('campaign')" id="tabLogCampaign" class="chip text-[11px]">campaign.log</button>
-                  <button onclick="copyLog()" class="ml-auto min-h-[32px] px-2.5 rounded-lg border border-[var(--border)] bg-[var(--bg-surface-2)] text-xs font-semibold inline-flex items-center gap-1"><i class="bi bi-copy"></i>Salin</button>
+                  <button onclick="copyLog()" class="ml-auto min-h-[32px] px-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg-surface-2)] text-xs font-semibold inline-flex items-center gap-1"><i class="bi bi-copy"></i>Salin</button>
                 </div>
                 <pre class="log" id="actionLog" style="max-height:320px;overflow:auto;white-space:pre-wrap;word-break:break-word"></pre>
-                <div class="live-progress hidden"><div class="h-1.5 bg-[var(--bg-surface-2)] rounded-full overflow-hidden border border-[var(--border)]"><div class="h-full bg-[var(--accent)] transition-all duration-500" style="width:0%"></div></div><div class="text-[10px] text-[var(--text-muted)] mt-1 tabular-nums">0%</div></div>
+                <div class="live-progress hidden"><div class="h-1 bg-[var(--bg-surface-2)] rounded-full overflow-hidden border border-[var(--border)]"><div class="h-full bg-[var(--accent)] transition-all duration-500" style="width:0%"></div></div><div class="text-[10px] text-[var(--text-muted)] mt-1 tabular-nums">0%</div></div>
               </div>
             </details>
           </div>
 
         </main>
 
-        <aside class="w-full xl:w-[340px] xl:shrink-0 space-y-3 xl:sticky xl:top-4 xl:self-start xl:max-h-[calc(100vh-1rem)] xl:overflow-y-auto">
-          <div class="card-panel p-3">
-            <div class="flex items-center justify-between mb-2.5">
+        <aside class="w-full xl:w-[340px] xl:shrink-0 space-y-1 xl:sticky xl:top-4 xl:self-start xl:max-h-[calc(100vh-1rem)] xl:overflow-y-auto">
+          <div class="card-panel p-1.5">
+            <div class="flex items-center justify-between mb-1">
               <span class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)]"><i class="bi bi-speedometer2 text-emerald-500"></i> Ringkasan Sesi</span>
-              <span id="sideStatus" class="text-[10px] px-2 py-1 rounded-full border font-bold">-</span>
+              <span id="sideStatus" class="text-[10px] px-2 py-1 rounded-lg border font-bold">-</span>
             </div>
-            <div class="space-y-2 text-xs">
+            <div class="space-y-1 text-xs">
               <div class="flex justify-between"><span class="text-[var(--text-muted)]">Sesi</span><span class="font-mono font-bold text-[var(--text-primary)] truncate max-w-[160px]" id="sideId">-</span></div>
               <div class="flex justify-between"><span class="text-[var(--text-muted)]">Channel</span><span class="font-semibold truncate max-w-[150px]" id="sideChannel">-</span></div>
               <div class="flex justify-between"><span class="text-[var(--text-muted)]">Dibuat</span><span class="font-mono text-[11px]" id="sideCreated">-</span></div>
               <div class="flex justify-between"><span class="text-[var(--text-muted)]">Mulai</span><span class="font-mono text-[11px]" id="sideStarted">-</span></div>
               <div class="flex justify-between"><span class="text-[var(--text-muted)]">Selesai</span><span class="font-mono text-[11px]" id="sideCompleted">-</span></div>
             </div>
-            <div class="grid grid-cols-2 gap-2 mt-3">
-              <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] p-3 text-center">
+            <div class="grid grid-cols-2 gap-1.5 mt-1.5">
+              <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] p-1.5 text-center">
                 <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Highlight</div>
                 <div id="sideHl" class="text-[18px] font-extrabold leading-none mt-1 text-amber-600">0</div>
                 <div class="text-[10px] text-[var(--text-muted)] mt-1">momen</div>
               </div>
-              <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-3 text-center">
+              <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-1.5 text-center">
                 <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Klip</div>
                 <div id="sideClips" class="text-[18px] font-extrabold leading-none mt-1 text-[var(--accent)]">0</div>
                 <div class="text-[10px] text-[var(--text-muted)] mt-1">rendered</div>
               </div>
             </div>
-            <div class="mt-3 flex flex-wrap gap-1.5" id="sideFlags"></div>
+            <div class="mt-1.5 flex flex-wrap gap-1.5" id="sideFlags"></div>
           </div>
 
-          <div id="sideCampaign" class="hidden card-panel p-3 space-y-2">
+          <div id="sideCampaign" class="hidden card-panel p-1.5 space-y-1">
             <div class="flex items-center justify-between">
               <span class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)]"><i class="bi bi-bullseye text-violet-500"></i> Campaign</span>
               <a id="sideCampLink" href="#" target="_blank" class="text-[11px] font-bold text-[var(--accent)] hover:underline">Buka <i class="bi bi-box-arrow-up-right"></i></a>
             </div>
             <div id="sideCampTitle" class="text-xs font-extrabold leading-tight text-[var(--text-primary)] line-clamp-2">-</div>
             <div id="sideCampClient" class="text-[11px] text-[var(--text-muted)]">-</div>
-            <div class="grid grid-cols-2 gap-2">
-              <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] p-2.5 text-center">
+            <div class="grid grid-cols-2 gap-1.5">
+              <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] p-1.5 text-center">
                 <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Hadiah</div>
                 <div id="sideCampPrize" class="text-xs font-extrabold text-emerald-600 mt-1">-</div>
               </div>
-              <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-2.5 text-center">
+              <div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-1.5 text-center">
                 <div class="text-[10px] font-bold tracking-widest uppercase text-[var(--text-muted)]">Peserta</div>
                 <div id="sideCampParts" class="text-xs font-extrabold mt-1">-</div>
               </div>
@@ -394,23 +395,23 @@ details.cfg-group[open] summary::before{transform:rotate(90deg)}
             <div id="sideCampTags" class="flex flex-wrap gap-1"></div>
           </div>
 
-          <div class="card-panel p-3">
-            <div class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)] mb-2"><i class="bi bi-lightning-charge text-amber-500"></i> Aksi cepat</div>
-            <div class="grid grid-cols-2 gap-2">
+          <div class="card-panel p-1.5">
+            <div class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)] mb-1"><i class="bi bi-lightning-charge text-amber-500"></i> Aksi cepat</div>
+            <div class="grid grid-cols-2 gap-1.5">
               <button onclick="goCreate()" class="min-h-[40px] rounded-xl bg-[var(--accent)] text-[var(--accent-text)] text-xs font-extrabold inline-flex items-center justify-center gap-1.5"><i class="bi bi-play-fill"></i>Render di Create</button>
-              <button onclick="doRefind()" class="min-h-[40px] rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] text-xs font-bold inline-flex items-center justify-center gap-1.5"><i class="bi bi-stars"></i>Refind</button>
+              <button onclick="doRefind()" class="min-h-[40px] rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] text-xs font-bold inline-flex items-center justify-center gap-1.5"><i class="bi bi-arrow-repeat"></i>Refind</button>
               <button onclick="startProcess()" class="min-h-[40px] rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] text-xs font-bold inline-flex items-center justify-center gap-1.5"><i class="bi bi-gear"></i>Proses</button>
               <a href="/tasks.html" class="min-h-[40px] rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] text-xs font-bold inline-flex items-center justify-center gap-1.5"><i class="bi bi-list-task"></i>Tasks</a>
             </div>
-            <div class="mt-2 grid grid-cols-2 gap-2">
+            <div class="mt-1 grid grid-cols-2 gap-1.5">
               <button onclick="copySessionLink()" class="min-h-[36px] rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] text-xs font-semibold inline-flex items-center justify-center gap-1.5"><i class="bi bi-link-45deg"></i>Salin link sesi</button>
               <button onclick="deleteSessionPrompt()" class="min-h-[36px] rounded-xl border border-rose-200 bg-rose-50 text-rose-700 text-xs font-bold inline-flex items-center justify-center gap-1.5"><i class="bi bi-trash"></i>Hapus sesi</button>
             </div>
           </div>
 
-          <div class="card-panel p-3">
-            <div class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)] mb-2"><i class="bi bi-lightbulb text-amber-500"></i> Tips</div>
-            <ul class="space-y-1.5 text-xs leading-relaxed text-[var(--text-secondary)] list-disc pl-4">
+          <div class="card-panel p-1.5">
+            <div class="text-[11px] font-bold tracking-widest uppercase text-[var(--text-muted)] mb-1"><i class="bi bi-lightbulb text-amber-500"></i> Tips</div>
+            <ul class="space-y-1 text-xs leading-relaxed text-[var(--text-secondary)] list-disc pl-4">
               <li><b>Highlight</b> dari AI berdasarkan transkrip Faster-Whisper; skor virality 0-100 memprediksi potensi FYP</li>
               <li><b>Hook & timed_title</b> dipakai untuk overlay thumbnail auto</li>
               <li>Jika campaign, <b>tags & source_links</b> persis dari TernakKlip (campaign_brief.json)</li>
@@ -449,12 +450,12 @@ function statusBadge(st){
   const label=m[st]||st||'-';
   const cls=st==='completed'?'bg-emerald-500/10 text-emerald-700 border-emerald-500/20':st==='error'||st==='failed'?'bg-rose-500/10 text-rose-600 border-rose-500/20':st==='processing'||st==='downloading'?'bg-amber-500/10 text-amber-700 border-amber-500/20 animate-pulse':'bg-[var(--bg-surface-2)] text-[var(--text-muted)] border-[var(--border)]';
   const dot=st==='completed'?'bg-emerald-500':st==='error'?'bg-rose-500':st==='processing'?'bg-amber-500':'bg-zinc-400';
-  return `<span class="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1 rounded-full border ${cls}"><span class="w-1.5 h-1.5 rounded-full ${dot}"></span>${esc(label)}</span>`;
+  return `<span class="inline-flex items-center gap-1.5 text-[11px] font-bold px-1.5 py-1 rounded-lg border ${cls}"><span class="w-1.5 h-1 rounded-full ${dot}"></span>${esc(label)}</span>`;
 }
 
 async function loadSession(){
   if(!sid){
-    document.getElementById('loadingState').innerHTML='<div class="card-panel p-6 text-center text-sm text-rose-600">ID sesi tidak ada di URL (?id=...)</div>';
+    document.getElementById('loadingState').innerHTML='<div class="card-panel p-1.5 text-center text-sm text-rose-600">ID sesi tidak ada di URL (?id=...)</div>';
     return;
   }
   try{
@@ -474,7 +475,7 @@ async function loadSession(){
     document.getElementById('loadingState').classList.add('hidden');
     document.getElementById('contentState').classList.remove('hidden');
   }catch(e){
-    document.getElementById('loadingState').innerHTML=`<div class="card-panel p-6 text-center"><div class="text-sm font-bold text-rose-600">Gagal memuat sesi</div><div class="text-xs text-[var(--text-muted)] mt-1">${esc(e.message||e)}</div><a href="/" class="mt-3 inline-flex min-h-[36px] px-4 rounded-xl bg-[var(--accent)] text-[var(--accent-text)] text-xs font-bold items-center">Kembali ke Library</a></div>`;
+    document.getElementById('loadingState').innerHTML=`<div class="card-panel p-1.5 text-center"><div class="text-sm font-bold text-rose-600">Gagal memuat sesi</div><div class="text-xs text-[var(--text-muted)] mt-1">${esc(e.message||e)}</div><a href="/" class="mt-1.5 inline-flex min-h-[36px] px-2 rounded-xl bg-[var(--accent)] text-[var(--accent-text)] text-xs font-bold items-center">Kembali ke Library</a></div>`;
   }
 }
 
@@ -567,12 +568,12 @@ function renderCampaign(c, s){
     const has=p.reward_per_item!=null||p.reward_rate!=null;
     const val=p.reward_per_item!=null? `• ${fmtRp(p.reward_per_item)}/view`:p.reward_rate!=null? `• ${p.reward_rate}%`:'';
     const icon=p.provider==='tiktok'?'bi-tiktok':p.provider==='instagram'?'bi-instagram':p.provider==='youtube'?'bi-youtube':p.provider==='facebook'?'bi-facebook':'bi-hash';
-    return `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border text-[11px] font-bold ${has?'bg-[var(--accent)] text-[var(--accent-text)] border-[var(--accent)]':'bg-[var(--bg-surface-2)] text-[var(--text-muted)] border-[var(--border)]'}"><i class="bi ${icon}"></i>${esc(p.provider)} ${val}</span>`;
+    return `<span class="inline-flex items-center gap-1 px-1.5 py-1 rounded-lg border text-[11px] font-bold ${has?'bg-[var(--accent)] text-[var(--accent-text)] border-[var(--accent)]':'bg-[var(--bg-surface-2)] text-[var(--text-muted)] border-[var(--border)]'}"><i class="bi ${icon}"></i>${esc(p.provider)} ${val}</span>`;
   }).join('') || '<span class="text-xs text-[var(--text-muted)]">Tidak ada detail reward.</span>';
   rewards.innerHTML=rw;
   // model pills
-  document.getElementById('campModelPills').innerHTML=(c.is_accumulation?'<span class="px-2.5 py-1 rounded-full bg-emerald-500 text-white text-[11px] font-bold"><i class="bi bi-graph-up-arrow"></i> Akumulasi</span>':'<span class="px-2.5 py-1 rounded-full bg-sky-500 text-white text-[11px] font-bold"><i class="bi bi-trophy"></i> Single</span>') + (c.is_umkm?'<span class="px-2.5 py-1 rounded-full bg-violet-600 text-white text-[11px] font-bold"><i class="bi bi-shop"></i> UMKM</span>':'') + (c.is_special_collab?'<span class="px-2.5 py-1 rounded-full bg-amber-500 text-white text-[11px] font-bold"><i class="bi bi-patch-check"></i> Special</span>':'');
-  document.getElementById('campTopBadges').innerHTML=(c.is_accumulation?'<span class="px-2 py-1 rounded-full bg-emerald-500 text-white text-[10px] font-bold">Akumulasi</span>':'');
+  document.getElementById('campModelPills').innerHTML=(c.is_accumulation?'<span class="px-1.5 py-1 rounded-lg bg-emerald-500 text-white text-[11px] font-bold"><i class="bi bi-graph-up-arrow"></i> Akumulasi</span>':'<span class="px-1.5 py-1 rounded-lg bg-sky-500 text-white text-[11px] font-bold"><i class="bi bi-trophy"></i> Single</span>') + (c.is_umkm?'<span class="px-1.5 py-1 rounded-lg bg-violet-600 text-white text-[11px] font-bold"><i class="bi bi-shop"></i> UMKM</span>':'') + (c.is_special_collab?'<span class="px-1.5 py-1 rounded-lg bg-amber-500 text-white text-[11px] font-bold"><i class="bi bi-patch-check"></i> Special</span>':'');
+  document.getElementById('campTopBadges').innerHTML=(c.is_accumulation?'<span class="px-2 py-1 rounded-lg bg-emerald-500 text-white text-[10px] font-bold">Akumulasi</span>':'');
   // description
   if(c.description){
     document.getElementById('campDescWrap').classList.remove('hidden');
@@ -582,21 +583,21 @@ function renderCampaign(c, s){
   const tags=c.tags||[]; const tagsRaw=c.tags_raw||[];
   if(tags.length){
     document.getElementById('campTagsWrap').classList.remove('hidden');
-    const tagHtml=(tagsRaw.length? tagsRaw: tags.map(t=>({label:t}))).map(t=>`<button onclick="navigator.clipboard.writeText('${esc(t.label)}'); showToast('Tag disalin: ${esc(t.label)}','success')" class="px-2.5 py-1 rounded-full bg-[var(--bg-surface-2)] border border-[var(--border)] text-[11px] font-medium text-[var(--text-secondary)] hover:border-[var(--accent)]">${esc(t.label)}</button>`).join('');
+    const tagHtml=(tagsRaw.length? tagsRaw: tags.map(t=>({label:t}))).map(t=>`<button onclick="navigator.clipboard.writeText('${esc(t.label)}'); showToast('Tag disalin: ${esc(t.label)}','success')" class="px-1.5 py-1 rounded-lg bg-[var(--bg-surface-2)] border border-[var(--border)] text-[11px] font-medium text-[var(--text-secondary)] hover:border-[var(--accent)]">${esc(t.label)}</button>`).join('');
     document.getElementById('campTags').innerHTML=tagHtml;
     document.getElementById('btnCopyTags').onclick=()=>{ navigator.clipboard.writeText(tags.join(' ')); showToast('Semua tag disalin','success'); };
   }
   // links grid
   const linksGrid=document.getElementById('campLinksGrid');
   linksGrid.innerHTML=[
-    c.file_brief_url?`<a href="${esc(c.file_brief_url)}" target="_blank" rel="noopener" class="flex items-center gap-2.5 p-3 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] hover:border-[var(--accent)]/30 transition"><span class="w-9 h-9 rounded-xl bg-rose-500 text-white flex items-center justify-center shrink-0"><i class="bi bi-file-earmark-pdf"></i></span><span class="min-w-0 flex-1"><span class="block text-xs font-bold text-[var(--text-primary)]">Brief PDF</span><span class="block text-[11px] text-[var(--text-muted)] truncate">Buka brief resmi</span></span><i class="bi bi-box-arrow-up-right text-[var(--text-muted)]"></i></a>`:'',
-    c.share_url||c.public_id?`<div class="flex items-center gap-2 p-3 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)]"><span class="w-9 h-9 rounded-xl bg-[var(--accent)] text-[var(--accent-text)] flex items-center justify-center shrink-0"><i class="bi bi-share"></i></span><span class="min-w-0 flex-1"><span class="block text-xs font-bold text-[var(--text-primary)]">Share link</span><span class="block text-[11px] text-[var(--text-muted)] truncate">${esc(c.share_url||`https://app.ternakklip.com/campaign/share/${c.public_id}`)}</span></span><button onclick="navigator.clipboard.writeText('${esc(c.share_url||`https://app.ternakklip.com/campaign/share/${c.public_id}`)}'); showToast('Link share disalin','success')" class="w-8 h-8 rounded-lg border border-[var(--border)] bg-[var(--bg-surface-2)] flex items-center justify-center"><i class="bi bi-copy text-xs"></i></button></div>`:''
+    c.file_brief_url?`<a href="${esc(c.file_brief_url)}" target="_blank" rel="noopener" class="flex items-center gap-1.5 p-1.5 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] hover:border-[var(--accent)]/30 transition"><span class="w-9 h-9 rounded-xl bg-rose-500 text-white flex items-center justify-center shrink-0"><i class="bi bi-file-earmark-pdf"></i></span><span class="min-w-0 flex-1"><span class="block text-xs font-bold text-[var(--text-primary)]">Brief PDF</span><span class="block text-[11px] text-[var(--text-muted)] truncate">Buka brief resmi</span></span><i class="bi bi-box-arrow-up-right text-[var(--text-muted)]"></i></a>`:'',
+    c.share_url||c.public_id?`<div class="flex items-center gap-1.5 p-1.5 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)]"><span class="w-9 h-9 rounded-xl bg-[var(--accent)] text-[var(--accent-text)] flex items-center justify-center shrink-0"><i class="bi bi-share"></i></span><span class="min-w-0 flex-1"><span class="block text-xs font-bold text-[var(--text-primary)]">Share link</span><span class="block text-[11px] text-[var(--text-muted)] truncate">${esc(c.share_url||`https://app.ternakklip.com/campaign/share/${c.public_id}`)}</span></span><button onclick="navigator.clipboard.writeText('${esc(c.share_url||`https://app.ternakklip.com/campaign/share/${c.public_id}`)}'); showToast('Link share disalin','success')" class="w-8 h-8 rounded-lg border border-[var(--border)] bg-[var(--bg-surface-2)] flex items-center justify-center"><i class="bi bi-copy text-xs"></i></button></div>`:''
   ].filter(Boolean).join('');
   document.getElementById('btnShareCopy').onclick=()=>{ navigator.clipboard.writeText(c.share_url||`https://app.ternakklip.com/campaign/share/${c.public_id}`); showToast('Link share disalin','success'); };
   document.getElementById('btnShareOpen').href=c.share_url||`https://app.ternakklip.com/campaign/share/${c.public_id}`;
   // sources
   const srcs=c.source_links||[];
-  document.getElementById('campSources').innerHTML=srcs.map(s=>`<div class="flex items-center gap-2 p-2.5 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] hover:border-[var(--border-hover)] transition">${sourceIcon(s.url)}<a href="${esc(s.url)}" target="_blank" rel="noopener" class="flex-1 min-w-0 text-xs font-medium text-[var(--accent)] hover:underline truncate">${esc(s.label||'Sumber')}  -  ${esc(s.url)}</a><button onclick="navigator.clipboard.writeText('${esc(s.url)}'); showToast('Link disalin','success')" class="shrink-0 w-8 h-8 rounded-lg border border-[var(--border)] bg-[var(--bg-surface-2)] flex items-center justify-center" title="Salin"><i class="bi bi-copy text-xs"></i></button><a href="${esc(s.url)}" target="_blank" class="shrink-0 w-8 h-8 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] flex items-center justify-center" title="Buka"><i class="bi bi-box-arrow-up-right text-xs"></i></a></div>`).join('') || '<div class="text-xs text-[var(--text-muted)]">Tidak ada link sumber di campaign_brief.</div>';
+  document.getElementById('campSources').innerHTML=srcs.map(s=>`<div class="flex items-center gap-1.5 p-1.5 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] hover:border-[var(--border-hover)] transition">${sourceIcon(s.url)}<a href="${esc(s.url)}" target="_blank" rel="noopener" class="flex-1 min-w-0 text-xs font-medium text-[var(--accent)] hover:underline truncate">${esc(s.label||'Sumber')}  -  ${esc(s.url)}</a><button onclick="navigator.clipboard.writeText('${esc(s.url)}'); showToast('Link disalin','success')" class="shrink-0 w-8 h-8 rounded-lg border border-[var(--border)] bg-[var(--bg-surface-2)] flex items-center justify-center" title="Salin"><i class="bi bi-copy text-xs"></i></button><a href="${esc(s.url)}" target="_blank" class="shrink-0 w-8 h-8 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] flex items-center justify-center" title="Buka"><i class="bi bi-box-arrow-up-right text-xs"></i></a></div>`).join('') || '<div class="text-xs text-[var(--text-muted)]">Tidak ada link sumber di campaign_brief.</div>';
   // sidebar campaign
   const sc=document.getElementById('sideCampaign'); sc.classList.remove('hidden');
   document.getElementById('sideCampTitle').textContent=c.title||'-';
@@ -605,9 +606,9 @@ function renderCampaign(c, s){
   document.getElementById('sideCampParts').textContent=String(c.total_participants||0);
   document.getElementById('sideCampRewards').innerHTML=(c.platform_rewards||[]).slice(0,4).map(p=>{
     const has=p.reward_per_item!=null||p.reward_rate!=null; if(!has) return '';
-    return `<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-[var(--accent)] text-[var(--accent-text)] font-bold">${esc(p.provider)}</span>`;
+    return `<span class="text-[10px] px-1.5 py-0.5 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] font-bold">${esc(p.provider)}</span>`;
   }).join('');
-  document.getElementById('sideCampTags').innerHTML=(c.tags||[]).slice(0,4).map(t=>`<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-[var(--bg-surface-2)] border border-[var(--border)]">${esc(t)}</span>`).join('');
+  document.getElementById('sideCampTags').innerHTML=(c.tags||[]).slice(0,4).map(t=>`<span class="text-[10px] px-1.5 py-0.5 rounded-lg bg-[var(--bg-surface-2)] border border-[var(--border)]">${esc(t)}</span>`).join('');
   document.getElementById('sideCampLink').href=c.share_url||`https://app.ternakklip.com/campaign/share/${c.public_id}`;
 }
 
@@ -643,21 +644,21 @@ function renderRawFiles(rawFiles, session){
     const extLabel = esc((f.ext||'').replace('.','').toUpperCase()||'-');
     const dateLabel = (()=>{ try{ return new Date(f.mtimeIso||f.mtime).toLocaleString('id-ID',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});}catch{return ''}})();
     const preview = isVid ? `<video src="${esc(href)}" preload="metadata" muted playsinline class="w-full rounded-lg border border-[var(--border)] bg-black max-h-[220px] object-contain" controls></video>` : isSrt ? `<div class="rounded-lg border border-[var(--border)] bg-[var(--bg-surface-2)] p-2 max-h-[160px] overflow-auto"><a href="${esc(href)}" target="_blank" class="text-[11px] text-[var(--accent)] hover:underline inline-flex items-center gap-1">Buka SRT <i class="bi bi-box-arrow-up-right"></i></a><span class="text-[11px] text-[var(--text-muted)] ml-2">${dateLabel}</span></div>` : '';
-    return `<div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-2.5 space-y-2">
-      <div class="flex items-center gap-2 min-w-0">
+    return `<div class="rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-1.5 space-y-1">
+      <div class="flex items-center gap-1.5 min-w-0">
         <span class="w-8 h-8 rounded-lg bg-[var(--bg-surface-2)] border border-[var(--border)] flex items-center justify-center shrink-0">${icon}</span>
         <div class="min-w-0 flex-1">
           <div class="text-xs font-bold text-[var(--text-primary)] truncate" title="${esc(f.name)}">${esc(f.name)}</div>
           <div class="flex flex-wrap items-center gap-1.5 mt-1">
-            <span class="px-1.5 py-0.5 rounded-full bg-[var(--bg-surface-2)] border border-[var(--border)] text-[10px] font-mono text-[var(--text-muted)]">${dirBadge}</span>
-            <span class="px-1.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-700 text-[10px] font-bold">${sizeLabel}</span>
-            <span class="px-1.5 py-0.5 rounded-full bg-[var(--bg-surface-2)] border border-[var(--border)] text-[10px] font-bold text-[var(--text-muted)]">${extLabel}</span>
+            <span class="px-1.5 py-0.5 rounded-lg bg-[var(--bg-surface-2)] border border-[var(--border)] text-[10px] font-mono text-[var(--text-muted)]">${dirBadge}</span>
+            <span class="px-1.5 py-0.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-700 text-[10px] font-bold">${sizeLabel}</span>
+            <span class="px-1.5 py-0.5 rounded-lg bg-[var(--bg-surface-2)] border border-[var(--border)] text-[10px] font-bold text-[var(--text-muted)]">${extLabel}</span>
             <span class="text-[10px] text-[var(--text-muted)]">${dateLabel}</span>
           </div>
         </div>
         <div class="flex items-center gap-1.5 shrink-0">
-          <a href="${esc(href)}" target="_blank" rel="noopener" class="min-h-[32px] px-2.5 rounded-lg border border-[var(--border)] bg-[var(--bg-surface-2)] text-xs font-semibold inline-flex items-center gap-1" title="Buka / Preview">${isVid?'<i class="bi bi-play-fill"></i>':'<i class="bi bi-eye"></i>'} Buka</a>
-          <a href="${esc(hrefDl)}" download class="min-h-[32px] px-2.5 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] text-xs font-bold inline-flex items-center gap-1"><i class="bi bi-download"></i> Unduh</a>
+          <a href="${esc(href)}" target="_blank" rel="noopener" class="min-h-[32px] px-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg-surface-2)] text-xs font-semibold inline-flex items-center gap-1" title="Buka / Preview">${isVid?'<i class="bi bi-play-fill"></i>':'<i class="bi bi-eye"></i>'} Buka</a>
+          <a href="${esc(hrefDl)}" download class="min-h-[32px] px-1.5 rounded-lg bg-[var(--accent)] text-[var(--accent-text)] text-xs font-bold inline-flex items-center gap-1"><i class="bi bi-download"></i> Unduh</a>
         </div>
       </div>
       ${preview}
@@ -676,7 +677,7 @@ function renderHighlights(){
   const cta=document.getElementById('hlEmptyCta');
   if(!container) return;
   if(!Array.isArray(HIGHLIGHTS)||!HIGHLIGHTS.length){
-    container.innerHTML='<div class="p-4 text-xs text-[var(--text-muted)] text-center border border-dashed border-[var(--border)] rounded-xl bg-[var(--bg-surface-2)]">Belum ada highlight  -  jalankan Cari Ulang untuk generate momen baru</div>';
+    container.innerHTML='<div class="p-2 text-xs text-[var(--text-muted)] text-center border border-dashed border-[var(--border)] rounded-xl bg-[var(--bg-surface-2)]">Belum ada highlight  -  jalankan Cari Ulang untuk generate momen baru</div>';
     const a=document.getElementById('hlCountInfo'); if(a) a.textContent='(0 momen)';
     cta.classList.remove('hidden');
     updateCount(); return;
@@ -684,14 +685,14 @@ function renderHighlights(){
   cta.classList.add('hidden');
   const b=document.getElementById('hlCountInfo'); if(b) b.textContent=`(${HIGHLIGHTS.length} momen siap)`;
   container.innerHTML=HIGHLIGHTS.map(h=>`
-    <label class="hl-item flex items-start gap-3 p-3 bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-2)] transition cursor-pointer">
+    <label class="hl-item flex items-start gap-1.5 p-1.5 bg-[var(--bg-surface)] hover:bg-[var(--bg-surface-2)] transition cursor-pointer">
       <input class="rg-check mt-1 flex-shrink-0 w-4 h-4 accent-[var(--accent)]" type="checkbox" value="${h.i}" onchange="updateCount()">
       <div class="flex-1 min-w-0">
-        <div class="flex items-center gap-2 flex-wrap">
+        <div class="flex items-center gap-1.5 flex-wrap">
           <span class="font-bold text-xs text-[var(--text-primary)] line-clamp-2">${esc(h.title)}</span>
-          ${h.score!=null?`<span class="px-1.5 py-0.5 text-[10px] font-extrabold ${Number(h.score)>=80?'bg-amber-400 text-black':'bg-[var(--bg-surface-2)] text-[var(--text-secondary)] border border-[var(--border)]'} rounded-full"><i class="bi bi-fire text-orange-500"></i> ${h.score}/100</span>`:''}
-          ${h.timed_title&&h.timed_title.text?`<span class="px-1.5 py-0.5 text-[10px] font-bold bg-violet-600 text-white rounded-full"><i class="bi bi-type"></i> ${esc(h.timed_title.text)}</span>`:''}
-          ${h.duration?`<span class="px-1.5 py-0.5 text-[10px] font-mono bg-sky-500 text-white rounded-full"><i class="bi bi-stopwatch"></i> ${typeof h.duration==='number'? fmtDur(h.duration): esc(h.duration)}</span>`:''}
+          ${h.score!=null?`<span class="px-1.5 py-0.5 text-[10px] font-extrabold ${Number(h.score)>=80?'bg-amber-400 text-black':'bg-[var(--bg-surface-2)] text-[var(--text-secondary)] border border-[var(--border)]'} rounded-lg"><i class="bi bi-fire text-orange-500"></i> ${h.score}/100</span>`:''}
+          ${h.timed_title&&h.timed_title.text?`<span class="px-1.5 py-0.5 text-[10px] font-bold bg-violet-600 text-white rounded-lg"><i class="bi bi-type"></i> ${esc(h.timed_title.text)}</span>`:''}
+          ${h.duration?`<span class="px-1.5 py-0.5 text-[10px] font-mono bg-sky-500 text-white rounded-lg"><i class="bi bi-stopwatch"></i> ${typeof h.duration==='number'? fmtDur(h.duration): esc(h.duration)}</span>`:''}
         </div>
         <span class="text-[11px] text-[var(--text-muted)] mt-0.5 block font-mono">${esc(h.start||h.start_time||'')} → ${esc(h.end||h.end_time||'')}</span>
         ${h.hook_text||h.hook?`<p class="text-[11px] text-[var(--text-secondary)] font-semibold mt-1"><i class="bi bi-bullseye text-teal-500"></i> ${esc(h.hook_text||h.hook)}</p>`:''}
@@ -709,8 +710,8 @@ function initTemplateBar(){
 }
 async function applyTemplate(key){
   const t=TEMPLATES[key]; if(!t) return; ACTIVE_TPL={...t.cfg};
-  const m=document.getElementById('tplMsg'); m.classList.remove('hidden'); m.className='text-xs px-3 py-2 rounded-xl border border-amber-500/20 bg-amber-500/10 text-amber-700'; m.innerHTML=`<i class="bi bi-hourglass-split animate-pulse"></i> Menyimpan template ${esc(t.label)}…`;
-  try{ const r=await fetch('/api/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(ACTIVE_TPL)}); if(!r.ok) throw new Error('HTTP '+r.status); m.className='text-xs px-3 py-2 rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-700'; m.textContent=`Template ${esc(t.label)} aktif & tersimpan`; setTimeout(()=>m.classList.add('hidden'),3500);}catch(e){ m.className='text-xs px-3 py-2 rounded-xl border border-rose-500/20 bg-rose-500/10 text-rose-700'; m.textContent=`Gagal: ${e.message}`;}
+  const m=document.getElementById('tplMsg'); m.classList.remove('hidden'); m.className='text-xs px-2 py-1 rounded-xl border border-amber-500/20 bg-amber-500/10 text-amber-700'; m.innerHTML=`<i class="bi bi-hourglass-split animate-pulse"></i> Menyimpan template ${esc(t.label)}…`;
+  try{ const r=await fetch('/api/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(ACTIVE_TPL)}); if(!r.ok) throw new Error('HTTP '+r.status); m.className='text-xs px-2 py-1 rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-700'; m.textContent=`Template ${esc(t.label)} aktif & tersimpan`; setTimeout(()=>m.classList.add('hidden'),3500);}catch(e){ m.className='text-xs px-2 py-1 rounded-xl border border-rose-500/20 bg-rose-500/10 text-rose-700'; m.textContent=`Gagal: ${e.message}`;}
 }
 function toggleAllCheck(){ const boxes=[...document.querySelectorAll('.rg-check')]; const anyOff=boxes.some(x=>!x.checked); boxes.forEach(x=>x.checked=anyOff); updateCount(); }
 function updateCount(){ const all=document.querySelectorAll('.rg-check'); const el=document.getElementById('selCount'); if(!el) return; const sel=[...all].filter(x=>x.checked).length; el.innerHTML=`<i class="bi bi-film text-fuchsia-500"></i> ${sel} / ${all.length} dipilih`; }
@@ -730,35 +731,35 @@ function renderClips(clips){
     const dl=`/download/${encodeURIComponent(sid)}/${encodeURIComponent(c.dir)}/${encodeURIComponent(c.file)}`;
     const detailUrl=`/detail.html?session=${encodeURIComponent(sid)}&clip=${encodeURIComponent(c.dir)}`;
     const tags=[
-      c.hook?'<span class="text-[9px] px-1.5 py-0.5 bg-violet-600 text-white rounded-full">hook</span>':'',
-      c.captions?'<span class="text-[9px] px-1.5 py-0.5 bg-sky-500 text-white rounded-full">caption</span>':'',
-      c.watermark?'<span class="text-[9px] px-1.5 py-0.5 bg-cyan-600 text-white rounded-full">watermark</span>':'',
-      c.credit?'<span class="text-[9px] px-1.5 py-0.5 bg-emerald-600 text-white rounded-full">credit</span>':'',
-      c.has_bgm?'<span class="text-[9px] px-1.5 py-0.5 bg-fuchsia-600 text-white rounded-full"><i class="bi bi-music-note-beamed"></i> bgm</span>':'',
-      c.has_broll?'<span class="text-[9px] px-1.5 py-0.5 bg-orange-500 text-white rounded-full">b-roll</span>':'',
-      c.has_transition?'<span class="text-[9px] px-1.5 py-0.5 bg-teal-600 text-white rounded-full">transisi</span>':'',
-      c.hook_v2?'<span class="text-[9px] px-1.5 py-0.5 bg-amber-500 text-white rounded-full">hook-v2</span>':'',
-      c.akun_tujuan?`<span class="text-[9px] px-1.5 py-0.5 bg-zinc-600 text-white rounded-full"><i class="bi bi-person"></i> ${esc(c.akun_tujuan)}</span>`:'',
+      c.hook?'<span class="text-[9px] px-1.5 py-0.5 bg-violet-600 text-white rounded-lg">hook</span>':'',
+      c.captions?'<span class="text-[9px] px-1.5 py-0.5 bg-sky-500 text-white rounded-lg">caption</span>':'',
+      c.watermark?'<span class="text-[9px] px-1.5 py-0.5 bg-cyan-600 text-white rounded-lg">watermark</span>':'',
+      c.credit?'<span class="text-[9px] px-1.5 py-0.5 bg-emerald-600 text-white rounded-lg">credit</span>':'',
+      c.has_bgm?'<span class="text-[9px] px-1.5 py-0.5 bg-fuchsia-600 text-white rounded-lg"><i class="bi bi-music-note-beamed"></i> bgm</span>':'',
+      c.has_broll?'<span class="text-[9px] px-1.5 py-0.5 bg-orange-500 text-white rounded-lg">b-roll</span>':'',
+      c.has_transition?'<span class="text-[9px] px-1.5 py-0.5 bg-teal-600 text-white rounded-lg">transisi</span>':'',
+      c.hook_v2?'<span class="text-[9px] px-1.5 py-0.5 bg-amber-500 text-white rounded-lg">hook-v2</span>':'',
+      c.akun_tujuan?`<span class="text-[9px] px-1.5 py-0.5 bg-zinc-600 text-white rounded-lg"><i class="bi bi-person"></i> ${esc(c.akun_tujuan)}</span>`:'',
     ].filter(Boolean).join(' ');
     return `<div class="group tk-card flex flex-col hover:border-[var(--accent)]/40 transition">
       <a class="relative aspect-[9/16] sm:aspect-video bg-black block overflow-hidden" href="${detailUrl}">
         <img class="w-full h-full object-cover group-hover:scale-[1.02] transition duration-300" loading="lazy" alt="${esc(c.title)}" src="/thumb/${encodeURIComponent(sid)}/${encodeURIComponent(c.dir)}">
-        ${c.score!=null?`<span class="absolute top-1.5 right-1.5 px-1.5 py-0.5 text-[10px] font-extrabold bg-amber-400 text-black rounded-full shadow"><i class="bi bi-star-fill"></i> ${c.score}</span>`:''}
-        ${c.duration?`<span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 text-[10px] font-bold bg-black/70 text-white rounded-full font-mono border border-white/20"><i class="bi bi-stopwatch"></i> ${fmtDur(c.duration)}</span>`:''}
-        <span class="absolute bottom-1.5 left-1.5 px-1.5 py-0.5 text-[10px] font-bold bg-[var(--accent)] text-[var(--accent-text)] rounded-full">${esc(c.aspect||'9:16')}</span>
+        ${c.score!=null?`<span class="absolute top-1.5 right-1.5 px-1.5 py-0.5 text-[10px] font-extrabold bg-amber-400 text-black rounded-lg shadow"><i class="bi bi-star-fill"></i> ${c.score}</span>`:''}
+        ${c.duration?`<span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 text-[10px] font-bold bg-black/70 text-white rounded-lg font-mono border border-white/20"><i class="bi bi-stopwatch"></i> ${fmtDur(c.duration)}</span>`:''}
+        <span class="absolute bottom-1.5 left-1.5 px-1.5 py-0.5 text-[10px] font-bold bg-[var(--accent)] text-[var(--accent-text)] rounded-lg">${esc(c.aspect||'9:16')}</span>
       </a>
-      <div class="p-2.5 flex flex-col flex-1">
+      <div class="p-1.5 flex flex-col flex-1">
         <a href="${detailUrl}" class="text-[11px] font-extrabold text-[var(--text-primary)] line-clamp-2 hover:text-[var(--accent)]" title="${esc(c.title)}">${esc(c.title)}</a>
         ${c.hook_text?`<p class="text-[11px] text-[var(--text-secondary)] line-clamp-1 mt-1"><i class="bi bi-bullseye text-teal-500"></i> ${esc(c.hook_text)}</p>`:''}
         <p class="text-[11px] text-[var(--text-muted)] line-clamp-2 mt-1 leading-relaxed">${esc(c.desc||c.post_title||'')}</p>
-        <div class="text-[10px] text-[var(--text-muted)] mt-2 flex items-center justify-between">
+        <div class="text-[10px] text-[var(--text-muted)] mt-1 flex items-center justify-between">
           <span><i class="bi bi-hdd text-sky-500"></i> ${fmtSize(c.size_bytes)}</span>
           <span class="font-mono">${c.created? new Date(c.created).toLocaleDateString('id-ID',{day:'2-digit',month:'short'}):'-'}</span>
         </div>
-        <div class="flex flex-wrap gap-1 mt-2">${tags || '<span class="text-[10px] text-[var(--text-muted)]">-</span>'}</div>
-        <div class="grid grid-cols-2 gap-1.5 mt-3">
-          <a class="flex items-center justify-center py-1.5 text-xs font-bold bg-[var(--bg-surface-2)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-xl transition" href="${dl}" download><i class="bi bi-download"></i> Download</a>
-          <button class="flex items-center justify-center py-1.5 text-xs font-bold bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 rounded-xl transition" onclick="deleteClip('${esc(c.dir)}','${esc(c.title)}',this)"><i class="bi bi-trash"></i> Hapus</button>
+        <div class="flex flex-wrap gap-1 mt-1">${tags || '<span class="text-[10px] text-[var(--text-muted)]">-</span>'}</div>
+        <div class="grid grid-cols-2 gap-1.5 mt-1.5">
+          <a class="flex items-center justify-center py-1 text-xs font-bold bg-[var(--bg-surface-2)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-xl transition" href="${dl}" download><i class="bi bi-download"></i> Download</a>
+          <button class="flex items-center justify-center py-1 text-xs font-bold bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 rounded-xl transition" onclick="deleteClip('${esc(c.dir)}','${esc(c.title)}',this)"><i class="bi bi-trash"></i> Hapus</button>
         </div>
       </div>
     </div>`;
@@ -798,20 +799,20 @@ async function doRefind(){
   const num_clips=countEl? (countEl.value||'auto'):'auto';
   const st=document.getElementById('actionStatus');
   const logBox=document.getElementById('actionLog');
-  if(st) st.innerHTML=`<div class="p-3 text-xs rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] text-[var(--text-secondary)]"><i class="bi bi-hourglass-split animate-pulse text-sky-500"></i> AI menganalisis transkrip & mencari ${esc(num_clips)} highlight...</div>`;
+  if(st) st.innerHTML=`<div class="p-1.5 text-xs rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] text-[var(--text-secondary)]"><i class="bi bi-hourglass-split animate-pulse text-sky-500"></i> AI menganalisis transkrip & mencari ${esc(num_clips)} highlight...</div>`;
   try{
     const r=await fetch(`/api/refind/${encodeURIComponent(sid)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({num_clips})});
     const j=await r.json().catch(()=>({})); if(!r.ok||!j.ok) throw new Error(j.error||'HTTP '+r.status);
-  }catch(e){ if(st) st.innerHTML=`<div class="p-3 text-xs rounded-xl border border-rose-200 bg-rose-50 text-rose-700">${esc(String(e))}</div>`; return; }
+  }catch(e){ if(st) st.innerHTML=`<div class="p-1.5 text-xs rounded-xl border border-rose-200 bg-rose-50 text-rose-700">${esc(String(e))}</div>`; return; }
   if(logBox){ logBox.textContent='Menunggu log...'; }
   switchLog('refind');
   pollJob(`/api/refind/status/${encodeURIComponent(sid)}`, logBox, async j=>{
     if(j.code===0 && j.result && j.result.ok){
-      if(st) st.innerHTML=`<div class="p-3 text-xs rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-700">${j.result.count} momen baru ditemukan! Memuat ulang…</div>`;
+      if(st) st.innerHTML=`<div class="p-1.5 text-xs rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-700">${j.result.count} momen baru ditemukan! Memuat ulang…</div>`;
       showToast(`${j.result.count} highlight baru`,'success');
       setTimeout(async()=>{ await loadSession(); }, 900);
     } else {
-      if(st) st.innerHTML=`<div class="p-3 text-xs rounded-xl border border-rose-200 bg-rose-50 text-rose-700">Gagal cari highlight  -  cek log</div>`;
+      if(st) st.innerHTML=`<div class="p-1.5 text-xs rounded-xl border border-rose-200 bg-rose-50 text-rose-700">Gagal cari highlight  -  cek log</div>`;
       showToast('Gagal regenerate','error');
     }
   });
@@ -822,22 +823,22 @@ async function startProcess(){
   let base=ACTIVE_TPL; if(!base){ try{ base=await (await fetch('/api/config')).json(); }catch{ base={}; } }
   const hook=base.hook!==false; const caps=base.captions!==false;
   const st=document.getElementById('actionStatus'); const logBox=document.getElementById('actionLog');
-  if(st) st.innerHTML='<div class="p-3 text-xs rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] text-[var(--text-secondary)]"><i class="bi bi-hourglass-split animate-pulse text-sky-500"></i> Mengunduh & merender klip terpilih...</div>';
+  if(st) st.innerHTML='<div class="p-1.5 text-xs rounded-xl border border-[var(--border)] bg-[var(--bg-surface-2)] text-[var(--text-secondary)]"><i class="bi bi-hourglass-split animate-pulse text-sky-500"></i> Mengunduh & merender klip terpilih...</div>';
   try{
     const r=await fetch(`/api/process/${encodeURIComponent(sid)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({selected:sel, hook, captions:caps})});
     const j=await r.json().catch(()=>({})); if(!r.ok||!j.ok) throw new Error(j.error||'HTTP '+r.status);
     showToast(`${sel.length} klip masuk antrean render`,'success');
-  }catch(e){ if(st) st.innerHTML=`<div class="p-3 text-xs rounded-xl border border-rose-200 bg-rose-50 text-rose-700">${esc(String(e))}</div>`; return; }
+  }catch(e){ if(st) st.innerHTML=`<div class="p-1.5 text-xs rounded-xl border border-rose-200 bg-rose-50 text-rose-700">${esc(String(e))}</div>`; return; }
   switchLog('process');
   pollJob(`/api/process/status/${encodeURIComponent(sid)}`, logBox, j=>{
-    if(j.code===0){ if(st) st.innerHTML='<div class="p-3 text-xs rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-700">Render selesai! Refresh untuk lihat klip baru</div>'; showToast('Render selesai','success'); setTimeout(()=>loadSession(),1200); }
-    else { if(st) st.innerHTML=`<div class="p-3 text-xs rounded-xl border border-rose-200 bg-rose-50 text-rose-700">Render gagal (exit ${j.code??'?'})  -  cek log</div>`; showToast('Render gagal','error'); }
+    if(j.code===0){ if(st) st.innerHTML='<div class="p-1.5 text-xs rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-700">Render selesai! Refresh untuk lihat klip baru</div>'; showToast('Render selesai','success'); setTimeout(()=>loadSession(),1200); }
+    else { if(st) st.innerHTML=`<div class="p-1.5 text-xs rounded-xl border border-rose-200 bg-rose-50 text-rose-700">Render gagal (exit ${j.code??'?'})  -  cek log</div>`; showToast('Render gagal','error'); }
   });
 }
 function ensureProgressBar(logBox){
   if(!logBox||!logBox.parentNode) return null;
   let bar=logBox.parentNode.querySelector(':scope > .live-progress');
-  if(!bar){ bar=document.createElement('div'); bar.className='live-progress mt-2'; bar.innerHTML='<div class="h-1.5 bg-[var(--bg-surface-2)] rounded-full overflow-hidden border border-[var(--border)]"><div class="h-full bg-[var(--accent)] transition-all duration-500" style="width:0%"></div></div><div class="text-[10px] text-[var(--text-muted)] mt-1 tabular-nums">0%</div>'; logBox.parentNode.insertBefore(bar, logBox); }
+  if(!bar){ bar=document.createElement('div'); bar.className='live-progress mt-1'; bar.innerHTML='<div class="h-1 bg-[var(--bg-surface-2)] rounded-full overflow-hidden border border-[var(--border)]"><div class="h-full bg-[var(--accent)] transition-all duration-500" style="width:0%"></div></div><div class="text-[10px] text-[var(--text-muted)] mt-1 tabular-nums">0%</div>'; logBox.parentNode.insertBefore(bar, logBox); }
   return bar;
 }
 function updateProgressBar(logBox,p){

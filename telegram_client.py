@@ -15,7 +15,7 @@ Cara pakai:
      (atau set env TELEGRAM_API_ID / TELEGRAM_API_HASH / TELEGRAM_PHONE).
   3. Jalankan:  python telegram_client.py
      - Pertama kali akan minta kode verifikasi yang dikirim Telegram ke akunmu.
-     - Sesion disimpan (ytclipper_client.session) — login berikutnya otomatis.
+     - Sesion disimpan (ytclipper_client.session), login berikutnya otomatis.
 """
 
 import os

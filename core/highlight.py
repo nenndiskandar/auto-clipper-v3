@@ -95,6 +95,296 @@ class HighlightMixin:
     Transcript:
     {transcript}"""
 
+        # ================================================================
+        # v3 single-pass highlight via orchestrator (highlight_finder).
+        # find_highlights() lama di bawah dipertahankan utuh sbg fallback.
+        # Scoring terpusat di _v3_score_highlights (tanpa API,
+        # unit-testable): buang durasi <min/>max, buang overlap (keep
+        # virality tertinggi), dedup hook_text, sort virality, limit top-N.
+        # ================================================================
+
+        def _v3_log(self, msg: str) -> None:
+            """Log aman untuk path v3 (tahan tanpa log_callback)."""
+            try:
+                self.log(msg)
+            except Exception:
+                pass
+
+        @staticmethod
+        def _v3_normalize_list(raw) -> list:
+            """Normalisasi output LLM jadi list of dict highlight."""
+            items = raw
+            if isinstance(raw, dict):
+                for key in ("highlights", "clips", "segments", "data", "results"):
+                    if isinstance(raw.get(key), list):
+                        items = raw[key]
+                        break
+                else:
+                    vals = [v for v in raw.values() if isinstance(v, dict)]
+                    if vals:
+                        items = vals
+                    elif "start_time" in raw or "end_time" in raw or "start" in raw:
+                        items = [raw]
+                    else:
+                        return []
+            if not isinstance(items, list):
+                return []
+            return [h for h in items if isinstance(h, dict)]
+
+        def _v3_score_highlights(self, highlights: list, num_clips="auto",
+                                 min_dur: float = 15, max_dur: float = 90) -> list:
+            """Filter + scoring deterministik (tanpa API, unit-testable).
+
+            - Buang timestamp hilang/tak-terparse, durasi di luar min-max.
+            - Sort virality_score desc, greedy buang overlap (keep tertinggi).
+            - Dedup hook_text (case-insensitive, keep virality tertinggi).
+            - Limit top-N bila num_clips int > 0 ("auto" = tanpa cap).
+            """
+            valid = []
+            for h in highlights or []:
+                if not isinstance(h, dict):
+                    continue
+                if "reason" in h and "description" not in h:
+                    h["description"] = h.pop("reason")
+                start_raw = h.get("start_time") or h.get("start")
+                end_raw = h.get("end_time") or h.get("end")
+                if not start_raw or not end_raw:
+                    continue
+                try:
+                    start_s = self.parse_timestamp(str(start_raw))
+                    end_s = self.parse_timestamp(str(end_raw))
+                except (ValueError, TypeError):
+                    continue
+                duration = end_s - start_s
+                if not (min_dur <= duration <= max_dur):
+                    continue
+                h["start_time"] = start_raw
+                h["end_time"] = end_raw
+                h["duration_seconds"] = round(duration, 1)
+                if h.get("virality_score") is None:
+                    h["virality_score"] = 5
+                try:
+                    h["virality_score"] = float(h["virality_score"])
+                except (ValueError, TypeError):
+                    h["virality_score"] = 5
+                if not h.get("description"):
+                    h["description"] = h.get("title") or "No description"
+                if not h.get("hook_text"):
+                    h["hook_text"] = h.get("title") or ""
+                tt = h.get("timed_title")
+                if not isinstance(tt, dict) or not tt.get("text"):
+                    hook = str(h.get("hook_text") or h.get("title") or "")[:20]
+                    h["timed_title"] = {"text": hook, "start": 0.0, "end": 3.0}
+                else:
+                    tt.setdefault("start", 0.0)
+                    tt.setdefault("end", 3.0)
+                valid.append(h)
+
+            valid.sort(key=lambda x: (x.get("virality_score") or 0), reverse=True)
+
+            deduped = []
+            seen_hooks = set()
+            for h in valid:
+                try:
+                    s = self.parse_timestamp(str(h.get("start_time", "0")))
+                    e = self.parse_timestamp(str(h.get("end_time", "0")))
+                except (ValueError, TypeError):
+                    continue
+                overlapped = False
+                for k in deduped:
+                    try:
+                        ks = self.parse_timestamp(str(k.get("start_time", "0")))
+                        ke = self.parse_timestamp(str(k.get("end_time", "0")))
+                    except (ValueError, TypeError):
+                        continue
+                    if max(s, ks) < min(e, ke):
+                        overlapped = True
+                        break
+                if overlapped:
+                    continue
+                hook_key = re.sub(r"\s+", " ", str(h.get("hook_text") or "")).strip().lower()
+                if hook_key and hook_key in seen_hooks:
+                    continue
+                if hook_key:
+                    seen_hooks.add(hook_key)
+                deduped.append(h)
+
+            try:
+                top_n = None
+                if num_clips is not None and str(num_clips).lower() != "auto":
+                    top_n = int(str(num_clips))
+                    if top_n <= 0:
+                        top_n = None
+            except (ValueError, TypeError):
+                top_n = None
+            if top_n is not None:
+                deduped = deduped[:top_n]
+            return deduped
+
+        def find_highlights_v3(self, transcript: str, brief_dict: dict = None) -> list:
+            """Single-pass highlight via orchestrator (provider highlight_finder).
+
+            Return JSON Array {start_time,end_time,title,description,
+            virality_score,hook_text,timed_title}. Return [] bila
+            orchestrator tak tersedia/gagal — caller pakai find_highlights()
+            lama sebagai fallback.
+            """
+            brief = brief_dict or {}
+            orch = getattr(self, "orchestrator", None)
+            if orch is None:
+                self._v3_log("  [v3] orchestrator tidak tersedia, fallback ke find_highlights lama")
+                return []
+            niche = brief.get("niche") or ""
+            hook_style = brief.get("hook_style") or ""
+            try:
+                min_dur = int(brief.get("duration_min") or 15)
+            except (ValueError, TypeError):
+                min_dur = 15
+            try:
+                max_dur = int(brief.get("duration_max") or 90)
+            except (ValueError, TypeError):
+                max_dur = 90
+            if max_dur < min_dur:
+                min_dur, max_dur = 15, 90
+            brief_lines = []
+            if niche:
+                brief_lines.append(f"Niche: {niche}")
+            if hook_style:
+                brief_lines.append(f"Hook style: {hook_style}")
+            if brief.get("brief_text"):
+                brief_lines.append(f"Brief: {str(brief['brief_text'])[:1000]}")
+            brief_lines.append(f"Durasi tiap klip: {min_dur}-{max_dur} detik. Hindari overlap.")
+            user = (
+                "Transcript video:\n"
+                f"{transcript}\n\n"
+                + "\n".join(brief_lines) + "\n\n"
+                + "Tugas: pilih SEMUA momen terbaik, kembalikan JSON ARRAY ONLY "
+                + "(tanpa teks lain): "
+                + '[{"start_time": "HH:MM:SS,mmm", "end_time": "HH:MM:SS,mmm", '
+                + '"title": "...", "description": "...", "virality_score": 1-10, '
+                + '"hook_text": "...", '
+                + '"timed_title": {"text": "MAX 20 KARAKTER", "start": 0.0, "end": 3.0}}]'
+            )
+            try:
+                raw = orch.chat_json("highlight_finder", None, user, fallback=None)
+            except Exception as e:
+                self._v3_log(f"  [v3] highlight_finder error: {e}")
+                return []
+            items = self._v3_normalize_list(raw)
+            if not items:
+                self._v3_log("  [v3] highlight_finder kosong/tak-terparse, fallback ke lama")
+                return []
+            num_clips = brief.get("num_clips", brief.get("max_clips", brief.get("top_n", "auto")))
+            scored = self._v3_score_highlights(items, num_clips=num_clips,
+                                              min_dur=min_dur, max_dur=max_dur)
+            self._v3_log(f"  [v3] {len(scored)} highlight valid (dari {len(items)} kandidat)")
+            return scored
+
+        def make_clip_title_v3(self, clip_transcript: str, niche: str = "",
+                               hook_style: str = "") -> dict:
+            """Judul per klip via orchestrator (title_maker).
+
+            Return {title, hook_text} (+hashtags bila provider memberi).
+            Return kosong bila orchestrator off — caller pakai judul AI lama.
+            """
+            orch = getattr(self, "orchestrator", None)
+            if orch is None or not clip_transcript:
+                return {"title": "", "hook_text": ""}
+            user = (
+                (f"Niche: {niche}\n" if niche else "")
+                + (f"Hook style: {hook_style}\n" if hook_style else "")
+                + f"Transcript klip:\n{clip_transcript[:2000]}\n\n"
+                + 'Return JSON ONLY: {"title": "judul hook max 60 char", '
+                + '"hook_text": "kalimat hook pendek"}'
+            )
+            try:
+                res = orch.chat_json("title_maker", None, user, fallback=None)
+            except Exception:
+                return {"title": "", "hook_text": ""}
+            if not isinstance(res, dict):
+                return {"title": "", "hook_text": ""}
+            out = {
+                "title": str(res.get("title") or "")[:60],
+                "hook_text": str(res.get("hook_text") or res.get("hook") or ""),
+            }
+            if res.get("hashtags") is not None:
+                out["hashtags"] = res.get("hashtags")
+            return out
+
+        def make_clip_hashtags_v3(self, clip_transcript: str, niche: str = "",
+                                  required: list = None, suggested: list = None) -> list:
+            """Hashtag niche-aware via orchestrator (hashtag_maker).
+
+            Hashtag wajib brief selalu di depan; dedup case-insensitive,
+            cap 10. Tanpa orchestrator: required + suggested saja.
+            """
+            def _norm(t):
+                t = re.sub(r"\s+", "", str(t or "").strip())
+                if not t:
+                    return ""
+                if not t.startswith("#"):
+                    t = "#" + t
+                return t
+
+            tags = []
+            for t in (required or []):
+                nt = _norm(t)
+                if nt and nt.lower() not in {x.lower() for x in tags}:
+                    tags.append(nt)
+            raw = None
+            orch = getattr(self, "orchestrator", None)
+            if orch is not None and clip_transcript:
+                user = (
+                    (f"Niche: {niche}\n" if niche else "")
+                    + f"Transcript klip:\n{clip_transcript[:2000]}\n\n"
+                    + 'Return JSON ONLY: {"hashtags": ["#tag1", "#tag2", ...]} '
+                    + "(5-8 hashtag niche-aware)"
+                )
+                try:
+                    raw = orch.chat_json("hashtag_maker", None, user, fallback=None)
+                except Exception:
+                    raw = None
+            items = []
+            if isinstance(raw, list):
+                items = raw
+            elif isinstance(raw, dict):
+                for key in ("hashtags", "hashtag", "tags"):
+                    if isinstance(raw.get(key), list):
+                        items = raw[key]
+                        break
+            for t in list(items) + list(suggested or []):
+                nt = _norm(t)
+                if nt and nt.lower() not in {x.lower() for x in tags}:
+                    tags.append(nt)
+            return tags[:10]
+
+        def match_clip_bgm_v3(self, clip_transcript: str, mood_hint: str = "") -> dict:
+            """BGM sound_id by mood via orchestrator (bgm_matcher).
+
+            Return {sound_id, reason, mood}. sound_id None bila tak ada.
+            """
+            orch = getattr(self, "orchestrator", None)
+            if orch is None or not clip_transcript:
+                return {"sound_id": None, "reason": "", "mood": mood_hint or ""}
+            user = (
+                (f"Mood hint: {mood_hint}\n" if mood_hint else "")
+                + f"Transcript klip:\n{clip_transcript[:2000]}\n\n"
+                + 'Return JSON ONLY: {"sound_id": "tiktok sound id atau null", '
+                + '"reason": "...", "mood": "..."}'
+            )
+            try:
+                res = orch.chat_json("bgm_matcher", None, user, fallback=None)
+            except Exception:
+                return {"sound_id": None, "reason": "", "mood": mood_hint or ""}
+            if not isinstance(res, dict):
+                return {"sound_id": None, "reason": "", "mood": mood_hint or ""}
+            return {
+                "sound_id": res.get("sound_id"),
+                "reason": str(res.get("reason") or ""),
+                "mood": str(res.get("mood") or mood_hint or ""),
+            }
+
+
         def parse_srt(self, srt_path: str) -> str:
             """Parse SRT to text with timestamps"""
             with open(srt_path, "r", encoding="utf-8") as f:
@@ -1067,7 +1357,9 @@ Aturan: pilih highlight yang paling sesuai brief di atas, prioritas momen yang m
             self.temp_dir = session_dir / "_temp"
             self.temp_dir.mkdir(parents=True, exist_ok=True)
         
-            # Mark session as processing right away
+            # WORKFLOW Step7 manifest source: simpan URL agar manifest.json per-clip terisi.
+            # KEEP-ALL: section/raw + transcript + clips tetap disimpan (no deletion).
+            self._last_source_url = url or ""
             session_data_file = session_dir / "session_data.json"
             session_data = {}
             if session_data_file.exists():

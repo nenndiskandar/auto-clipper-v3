@@ -1,5 +1,5 @@
 """
-core/thumbnail.py — Thumbnail Generator.
+core/thumbnail.py: Thumbnail Generator.
 
 Extracts a representative frame from a rendered clip, darkens it, and
 composites the clip title on top as a YouTube-thumbnail-style image.
