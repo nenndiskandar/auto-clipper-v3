@@ -40,11 +40,9 @@ tailwind.config = {
 })();
 </script>
 
-</head>
-<body class="min-h-screen flex flex-col md:flex-row antialiased">
+</head><body class="min-h-screen flex flex-col md:flex-row antialiased">
 <div class="portal-bg" aria-hidden="true"><i></i><i></i><i></i></div>
 
-<!-- SIDEBAR -->
 <aside class="w-full md:w-64 border-b md:border-b-0 md:border-r border-zinc-800 flex flex-col shrink-0">
  <div class="p-2 border-b border-zinc-800 flex items-center justify-between">
   <div class="flex items-center gap-1.5">
@@ -53,66 +51,39 @@ tailwind.config = {
   </div>
   <div class="flex items-center gap-1.5"><button class="darkmode-btn darkmode-compact" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button><a href="/logout" class="min-h-[32px] min-w-[44px] flex items-center justify-center text-xs text-zinc-400 hover:text-white transition md:hidden">Logout</a></div>
  </div>
-
- <nav aria-label="Menu Utama" class="p-2 md:p-1.5 flex flex-row md:flex-col gap-1.5 flex-wrap" id="sidebarLinks">
-  <a href="/" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition bg-[var(--accent)] text-[var(--accent-text)] font-bold shadow-sm"><i class="bi bi-house-door"></i><span>Library Sesi</span></a>
-  <a href="/create.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-plus-square text-emerald-400"></i><span>Create Clip</span></a>
-  <a href="/tasks.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-list-task text-amber-400"></i><span>Antrean Tasks</span></a>
-  <a href="/story.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-film text-fuchsia-400"></i><span>AI Story</span></a>
-  <a href="/facebook.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-facebook text-blue-400"></i><span>FB Auto Upload</span></a>
-  <a href="/cookies.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-shield-lock text-orange-400"></i><span>Cookies YouTube</span></a>
-  <a href="/ternaklip.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-bullseye text-teal-400"></i><span>TernakKlip</span></a>
-  <a href="/dependencies.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-box-seam text-violet-400"></i><span>Dependencies</span></a>
-  <a href="/settings.html" class="flex items-center gap-1.5 md:gap-1.5 md:gap-1.5 min-h-[28px] md:min-h-[40px] px-2 md:px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium"><i class="bi bi-gear text-zinc-400"></i><span>Settings & AI</span></a>
+ <nav role="tablist" aria-label="Pilih tampilan" aria-orientation="vertical" class="p-2 md:p-1.5 flex flex-row md:flex-col gap-1.5 flex-wrap" id="sidebarLinks">
+  <button data-view-tab="sesi" role="tab" aria-selected="true" class="sidebar-nav-btn flex w-full items-center gap-1.5 min-h-[28px] md:min-h-[40px] px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition bg-[var(--accent)] text-[var(--accent-text)] font-bold shadow-sm text-left"><i class="bi bi-collection-play shrink-0"></i><span class="sidebar-label flex-1 text-left">Sesi</span></button>
+  <button data-view-tab="campaign" role="tab" aria-selected="false" class="sidebar-nav-btn flex w-full items-center gap-1.5 min-h-[28px] md:min-h-[40px] px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium text-left"><i class="bi bi-plus-square shrink-0"></i><span class="sidebar-label flex-1 text-left">Campaign</span></button>
+  <button data-view-tab="task" role="tab" aria-selected="false" class="sidebar-nav-btn flex w-full items-center gap-1.5 min-h-[28px] md:min-h-[40px] px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium text-left"><i class="bi bi-list-task shrink-0"></i><span class="sidebar-label flex-1 text-left">Task</span></button>
+  <button data-view-tab="dependencies" role="tab" aria-selected="false" class="sidebar-nav-btn flex w-full items-center gap-1.5 min-h-[28px] md:min-h-[40px] px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium text-left"><i class="bi bi-box-seam shrink-0"></i><span class="sidebar-label flex-1 text-left">Dependencies</span></button>
+  <button data-view-tab="settings" role="tab" aria-selected="false" class="sidebar-nav-btn flex w-full items-center gap-1.5 min-h-[28px] md:min-h-[40px] px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium text-left"><i class="bi bi-gear shrink-0"></i><span class="sidebar-label flex-1 text-left">Settings</span></button>
  </nav>
-
- <!-- Engine Status Indication -->
  <div class="mt-auto px-2 py-1.5 border-t border-zinc-800/80 hidden md:flex flex-col gap-1.5 text-xs text-zinc-400 bg-zinc-950">
   <span class="font-semibold text-[10px] uppercase tracking-wider text-zinc-400"><i class="bi bi-cpu text-emerald-400"></i> Engine Status</span>
-  <div class="flex items-center justify-between">
-   <span>FFmpeg</span>
-   <span id="st_ffmpeg" class="w-2.5 h-2.5 rounded-full bg-zinc-600" title="Checking..."></span>
-  </div>
-  <div class="flex items-center justify-between">
-   <span>yt-dlp</span>
-   <span id="st_ytdlp" class="w-2.5 h-2.5 rounded-full bg-zinc-600" title="Checking..."></span>
-  </div>
-  <div class="flex items-center justify-between">
-   <span>Deno</span>
-   <span id="st_deno" class="w-2.5 h-2.5 rounded-full bg-zinc-600" title="Checking..."></span>
-  </div>
-  <div class="flex items-center justify-between">
-   <span>AI Proxy</span>
-   <span id="st_ai" class="w-2.5 h-2.5 rounded-full bg-zinc-600" title="Checking..."></span>
-  </div>
+  <div class="flex items-center justify-between"><span>FFmpeg</span><span id="st_ffmpeg" class="w-2.5 h-2.5 rounded-full bg-zinc-600" title="Checking..."></span></div>
+  <div class="flex items-center justify-between"><span>yt-dlp</span><span id="st_ytdlp" class="w-2.5 h-2.5 rounded-full bg-zinc-600" title="Checking..."></span></div>
+  <div class="flex items-center justify-between"><span>Deno</span><span id="st_deno" class="w-2.5 h-2.5 rounded-full bg-zinc-600" title="Checking..."></span></div>
+  <div class="flex items-center justify-between"><span>AI Proxy</span><span id="st_ai" class="w-2.5 h-2.5 rounded-full bg-zinc-600" title="Checking..."></span></div>
  </div>
-
  <div class="p-2 border-t border-zinc-800 hidden md:flex items-center justify-between text-xs">
   <span class="text-zinc-400 truncate max-w-[130px]" id="whoami"></span>
   <div class="flex items-center gap-1.5"><button class="darkmode-btn darkmode-compact" aria-label="Toggle dark mode"><i class="bi bi-moon-stars"></i></button><a href="/logout" class="text-zinc-400 hover:text-white transition">Logout</a></div>
  </div>
-
- <!-- Engine Status Mobile -->
  <div class="md:hidden flex items-center justify-around px-2 py-1.5 border-t border-b border-zinc-800/80 bg-zinc-950/60 text-[10px] text-zinc-300">
   <div class="flex items-center gap-1.5"><span id="st_ffmpeg_mob" class="w-2 h-2 rounded-full bg-zinc-600" title="Checking..."></span><span>FFmpeg</span></div>
   <div class="flex items-center gap-1.5"><span id="st_ytdlp_mob" class="w-2 h-2 rounded-full bg-zinc-600" title="Checking..."></span><span>yt-dlp</span></div>
   <div class="flex items-center gap-1.5"><span id="st_deno_mob" class="w-2 h-2 rounded-full bg-zinc-600" title="Checking..."></span><span>Deno</span></div>
   <div class="flex items-center gap-1.5"><span id="st_ai_mob" class="w-2 h-2 rounded-full bg-zinc-600" title="Checking..."></span><span>AI</span></div>
  </div>
-
- <!-- Disk Space Widget (desktop & mobile) -->
  <div class="disk-widget border-t border-zinc-800/80">
   <div class="disk-label"><i class="bi bi-hdd-stack text-sky-400"></i> memuat...</div>
   <div class="disk-bar"><div class="disk-fill" style="width:0%"></div></div>
  </div>
-
- 
-
 </aside>
 
 <!-- MAIN CONTENT AREA -->
 <div class="flex-1 flex flex-col min-w-0">
- <!-- TOP SUB-NAV -->
+<!-- TOP SUB-NAV -->
  <header class="flex items-center justify-between px-2 py-1 border-b border-zinc-800 bg-zinc-950">
   <div class="flex items-center flex-1 max-w-sm">
    <input id="search" class="w-full min-h-[36px] md:min-h-[44px] bg-zinc-900 border border-zinc-700 rounded-lg px-2 py-1 text-xs text-white placeholder-zinc-400 focus:border-[var(--accent)] transition" placeholder="Cari judul sesi atau klip...">
@@ -125,8 +96,11 @@ tailwind.config = {
   </div>
  </header>
 
+ 
  <!-- CONTAINER -->
  <main class="max-w-[1600px] w-full mx-auto px-2 py-2 sm:px-3 sm:py-2 space-y-1">
+  <section id="sesi-section" class="space-y-1">
+
   <!-- DASHBOARD (agregat) -->
   <section id="dash" class="hidden space-y-1">
    <div class="grid grid-cols-2 md:grid-cols-4 gap-1.5">
@@ -220,6 +194,267 @@ tailwind.config = {
    <button onclick="bulkDelete()" class="min-h-[36px] md:min-h-[44px] px-2 md:px-2 py-1 md:py-1 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-lg transition"><i class="bi bi-trash"></i> Hapus Terpilih</button>
    <button onclick="selectedSessions.clear(); render()" class="min-h-[36px] md:min-h-[44px] px-2 py-1 text-xs text-zinc-400 hover:text-white transition">Batal</button>
   </div>
+ 
+  </section>
+  <section id="campaign-section" class="hidden space-y-1">
+   <div class="card-panel p-2 space-y-1">
+    <h2 class="text-xs font-bold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5"><i class="bi bi-plus-square text-emerald-400"></i> Buat Campaign</h2>
+    <p class="text-xs text-zinc-400">Tulis brief campaign, sistem akan proses sumber dan buat sesi klip. Endpoint <span class="font-mono text-zinc-300">POST /api/campaigns</span></p>
+    <div class="space-y-1">
+     <label class="text-[10px] uppercase tracking-wider font-semibold text-zinc-400">Brief Campaign</label>
+     <textarea id="campaignBrief" rows="5" placeholder="Tulis brief: tujuan, gaya, topik, target audiens..." class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-2 py-1.5 text-xs text-white placeholder-zinc-500 focus:border-[var(--accent)] focus-visible:ring-2 focus-visible:ring-teal-500"></textarea>
+     <div class="space-y-1">
+      <label class="text-[10px] uppercase tracking-wider font-semibold text-zinc-400">Sumber (pisah baris atau koma)</label>
+      <input id="campaignSources" placeholder="https://youtube.com/watch?v=... , https://tiktok.com/..." class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-2 py-1 text-xs text-white placeholder-zinc-500 focus:border-[var(--accent)]">
+      <p class="text-[10px] text-zinc-500">Hint: tempel URL YouTube, TikTok, IG, Drive, atau X. Kosongkan untuk brief saja.</p>
+     </div>
+     <div class="flex flex-wrap items-center gap-1.5">
+      <button id="btnCampaignCreate" onclick="handleCampaignCreate()" class="min-h-[36px] px-3 py-1 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--accent-text)] text-xs font-bold rounded-lg transition flex items-center gap-1.5"><i class="bi bi-send"></i> Buat Campaign</button>
+      <span id="campaignStatus" class="text-xs text-zinc-400"></span>
+     </div>
+     <pre id="campaignLog" class="hidden mt-1 p-2 bg-black border border-zinc-800 rounded-lg text-[11px] font-mono text-zinc-300 max-h-[200px] overflow-y-auto"></pre>
+    </div>
+   </div>
+   <div class="card-panel p-2 space-y-1">
+    <h3 class="text-[11px] font-bold uppercase tracking-wider text-zinc-400">Alternatif</h3>
+    <p class="text-xs text-zinc-400">Butuh import massal? Gunakan <a href="/ternaklip.html" class="text-[var(--accent)] hover:underline">TernakKlip</a> untuk akumulasi multi-sumber.</p>
+   </div>
+  </section>
+  <section id="task-section" class="hidden space-y-1">
+   <div class="bg-surface-1 border border-zinc-800 rounded-xl overflow-hidden shadow-lg">
+    <div class="px-2 py-1.5 border-b border-zinc-800 flex justify-between items-center bg-surface-0/50 flex-wrap gap-1.5">
+     <div>
+      <h2 class="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Daftar Job</h2>
+      <p class="text-[10px] text-zinc-400">Semua job berjalan dan terakhir - polling <span class="font-mono">/api/tasks</span></p>
+     </div>
+     <span class="text-[10px] text-zinc-400 bg-zinc-850 px-2 py-0.5 rounded border border-zinc-800">auto-refresh 1.5s</span>
+    </div>
+    <div class="overflow-x-auto">
+     <table class="w-full text-left text-xs border-collapse">
+      <thead>
+       <tr class="border-b border-zinc-800 bg-surface-2/30 text-zinc-400 text-[10px] uppercase tracking-wider">
+        <th class="py-1.5 px-2 font-semibold">Job</th>
+        <th class="py-1.5 px-2 font-semibold">Sesi</th>
+        <th class="py-1.5 px-2 font-semibold">Status</th>
+        <th class="py-1.5 px-2 font-semibold">Progress</th>
+        <th class="py-1.5 px-2 font-semibold hidden md:table-cell">Durasi</th>
+        <th class="py-1.5 px-2 font-semibold hidden lg:table-cell">Log</th>
+        <th class="py-1.5 px-2 font-semibold text-right">Aksi</th>
+       </tr>
+      </thead>
+      <tbody id="taskBody" class="divide-y divide-zinc-800/60">
+       <tr><td colspan="7" class="py-1.5 px-2 text-center text-zinc-400">memuat...</td></tr>
+      </tbody>
+     </table>
+    </div>
+    <div id="taskEmpty" class="text-zinc-400 text-xs text-center py-1 hidden bg-surface-2/10">Tidak ada job aktif atau terakhir saat ini.</div>
+   </div>
+  </section>
+  <section id="dependencies-section" class="hidden space-y-1">
+   <div class="flex flex-wrap items-start justify-between gap-1.5">
+    <div>
+     <h2 class="text-lg font-black tracking-tight text-white flex items-center gap-1.5"><i class="bi bi-box-seam text-violet-400"></i> Dependencies</h2>
+     <p class="text-xs text-zinc-400 mt-1">Kelola binaries, Python packages, disk, services, dan model AI. Data dari <span class="font-mono">/api/dependencies</span> dan <span class="font-mono">/api/binaries</span>.</p>
+    </div>
+    <div class="flex items-center gap-1.5">
+     <span id="depUpdated" class="text-[10px] text-zinc-500 hidden md:inline"> - </span>
+     <button onclick="refreshDeps()" id="btnRefreshDep" class="min-h-[36px] px-2 py-1 bg-surface-2 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 text-xs font-semibold rounded-lg transition flex items-center gap-1.5"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+     <button onclick="testAiProxy()" id="btnTestAiDep" class="min-h-[36px] px-2 py-1 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--accent-text)] text-xs font-bold rounded-lg transition flex items-center gap-1.5"><i class="bi bi-plugin"></i> Test AI Proxy</button>
+    </div>
+   </div>
+   <section class="space-y-1">
+    <h3 class="text-[11px] font-bold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5"><i class="bi bi-cpu text-emerald-400"></i> System Overview</h3>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-1.5">
+     <div class="card-panel p-2">
+      <div class="text-[10px] font-semibold uppercase tracking-wider text-zinc-500 flex items-center gap-1"><i class="bi bi-hdd"></i> Host</div>
+      <div class="text-sm font-bold text-white mt-1 truncate" id="depSysHost"> - </div>
+      <div class="text-[10px] text-zinc-400 mt-0.5" id="depSysPlatform"> - </div>
+     </div>
+     <div class="card-panel p-2">
+      <div class="text-[10px] font-semibold uppercase tracking-wider text-zinc-500 flex items-center gap-1"><i class="bi bi-stopwatch"></i> Uptime</div>
+      <div class="text-sm font-bold text-white mt-1" id="depSysUptime"> - </div>
+      <div class="text-[10px] text-zinc-400 mt-0.5" id="depSysLoad">load  - </div>
+     </div>
+     <div class="card-panel p-2">
+      <div class="text-[10px] font-semibold uppercase tracking-wider text-zinc-500 flex items-center gap-1"><i class="bi bi-memory"></i> Memory</div>
+      <div class="text-sm font-bold text-white mt-1" id="depSysMem"> - </div>
+      <div class="text-[10px] text-zinc-400 mt-0.5" id="depSysMemDetail"> - </div>
+     </div>
+     <div class="card-panel p-2">
+      <div class="text-[10px] font-semibold uppercase tracking-wider text-zinc-500 flex items-center gap-1"><i class="bi bi-cpu"></i> CPU</div>
+      <div class="text-sm font-bold text-white mt-1 truncate" id="depSysCpu"> - </div>
+      <div class="text-[10px] text-zinc-400 mt-0.5" id="depSysCpuCount"> - </div>
+     </div>
+    </div>
+   </section>
+   <section class="space-y-1">
+    <div class="flex items-center justify-between">
+     <h3 class="text-[11px] font-bold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5"><i class="bi bi-terminal text-amber-400"></i> Binaries dan Core Dependencies</h3>
+     <span class="text-[10px] text-zinc-500" id="depBinCount"> - </span>
+    </div>
+    <div class="card-panel overflow-hidden">
+     <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs border-collapse">
+       <thead>
+        <tr class="border-b border-zinc-800 bg-zinc-900/40 text-zinc-400 text-[10px] uppercase tracking-wider">
+         <th class="py-1.5 px-2 font-semibold">Status</th>
+         <th class="py-1.5 px-2 font-semibold">Name</th>
+         <th class="py-1.5 px-2 font-semibold">Version / Detail</th>
+         <th class="py-1.5 px-2 font-semibold hidden md:table-cell">Path</th>
+         <th class="py-1.5 px-2 font-semibold text-right">Action</th>
+        </tr>
+       </thead>
+       <tbody id="depBinBody" class="divide-y divide-zinc-800/60">
+        <tr><td colspan="5" class="py-1.5 text-center text-zinc-500">memuat... ffmpeg deno yt-dlp mediapipe akan muncul di sini</td></tr>
+       </tbody>
+      </table>
+     </div>
+     <div class="px-2 py-1 text-[10px] text-zinc-500 flex items-center gap-1.5"><i class="bi bi-info-circle"></i> ffmpeg, deno, yt-dlp, mediapipe, python, node. Endpoint <span class="font-mono">/api/binaries</span> dan <span class="font-mono">/api/dependencies/install</span></div>
+    </div>
+   </section>
+   <section class="space-y-1">
+    <div class="flex items-center justify-between">
+     <h3 class="text-[11px] font-bold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5"><i class="bi bi-box-seam text-sky-400"></i> Python Packages</h3>
+     <span class="text-[10px] text-zinc-500" id="depPkgCount"> - </span>
+    </div>
+    <div class="card-panel overflow-hidden">
+     <div class="overflow-x-auto max-h-[240px] overflow-y-auto">
+      <table class="w-full text-left text-xs border-collapse">
+       <thead class="sticky top-0 bg-zinc-900/90 backdrop-blur">
+        <tr class="border-b border-zinc-800 text-zinc-400 text-[10px] uppercase tracking-wider">
+         <th class="py-1.5 px-2 font-semibold">Status</th>
+         <th class="py-1.5 px-2 font-semibold">Package</th>
+         <th class="py-1.5 px-2 font-semibold">Version</th>
+         <th class="py-1.5 px-2 font-semibold text-right">Action</th>
+        </tr>
+       </thead>
+       <tbody id="depPkgBody" class="divide-y divide-zinc-800/60">
+        <tr><td colspan="4" class="py-1.5 text-center text-zinc-500">memuat...</td></tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </section>
+   <section class="space-y-1">
+    <div class="flex items-center justify-between">
+     <h3 class="text-[11px] font-bold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5"><i class="bi bi-mic text-fuchsia-400"></i> Faster-Whisper Models</h3>
+     <span class="text-[10px] text-zinc-500">5 sizes via huggingface</span>
+    </div>
+    <div class="card-panel overflow-hidden">
+     <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs border-collapse">
+       <thead>
+        <tr class="border-b border-zinc-800 bg-zinc-900/40 text-zinc-400 text-[10px] uppercase tracking-wider">
+         <th class="py-1.5 px-2 font-semibold">Status</th>
+         <th class="py-1.5 px-2 font-semibold">Size</th>
+         <th class="py-1.5 px-2 font-semibold">Installed</th>
+         <th class="py-1.5 px-2 font-semibold">Size on Disk</th>
+         <th class="py-1.5 px-2 font-semibold text-right">Action</th>
+        </tr>
+       </thead>
+       <tbody id="depWhisperBody" class="divide-y divide-zinc-800/60">
+        <tr><td colspan="5" class="py-1.5 text-center text-zinc-500">memuat... whisper models tiny base small medium large-v3</td></tr>
+       </tbody>
+      </table>
+     </div>
+     <div class="px-2 py-1.5 bg-zinc-900/30 border-t border-zinc-800 text-[10px] text-zinc-500 flex items-center gap-1.5"><i class="bi bi-info-circle"></i> Download berjalan di background - cek Task atau refresh.</div>
+    </div>
+   </section>
+   <section class="space-y-1">
+    <h3 class="text-[11px] font-bold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5"><i class="bi bi-plugin text-teal-400"></i> AI Proxy Detail</h3>
+    <div class="card-panel p-2">
+     <div class="grid grid-cols-1 md:grid-cols-2 gap-1.5 text-xs">
+      <div class="space-y-1">
+       <div class="flex justify-between"><span class="text-zinc-400">Base URL</span><span class="font-mono text-white truncate max-w-[200px]" id="depAiUrl"> - </span></div>
+       <div class="flex justify-between"><span class="text-zinc-400">Model</span><span class="font-mono text-white" id="depAiModel"> - </span></div>
+       <div class="flex justify-between"><span class="text-zinc-400">API Key</span><span class="font-mono text-zinc-400" id="depAiKey"> - </span></div>
+      </div>
+      <div class="space-y-1">
+       <div class="flex items-center justify-between"><span class="text-zinc-400">Status</span><span id="depAiStatus" class="px-1.5 py-1 rounded-lg text-[10px] font-bold border bg-zinc-800 text-zinc-400 border-zinc-700">checking...</span></div>
+       <div class="text-[10px] text-zinc-500" id="depAiDetail"> - </div>
+       <div class="flex gap-1.5">
+        <button onclick="testAiProxy()" class="px-2 py-1 bg-surface-2 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 text-xs font-semibold rounded-lg transition flex items-center gap-1"><i class="bi bi-lightning-charge"></i> Test Koneksi</button>
+        <button onclick="switchToTab('settings')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-300 text-xs font-semibold rounded-lg transition">Buka Settings</button>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+   <section id="depLogWrap" class="space-y-1 hidden">
+    <h3 class="text-[11px] font-bold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5"><i class="bi bi-terminal text-zinc-400"></i> Logs</h3>
+    <div id="depLogs" class="space-y-1"></div>
+   </section>
+  </section>
+  <section id="settings-section" class="hidden space-y-1">
+   <div id="toastSettings" class="hidden fixed top-4 right-4 z-50 px-2 py-1 bg-emerald-600 text-white text-xs font-bold rounded shadow-lg"></div>
+   <div class="flex items-center justify-between">
+    <div>
+     <h2 class="text-lg font-black tracking-tight text-white flex items-center gap-1.5"><i class="bi bi-gear text-zinc-400"></i> Settings dan AI</h2>
+     <p class="text-xs text-zinc-400 mt-1">Kelola api_key, base_url, model, dan ai_providers. Semua tersimpan via <span class="font-mono">POST /api/config</span></p>
+    </div>
+    <button onclick="saveSettings()" class="min-h-[36px] px-3 py-1 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--accent-text)] text-xs font-bold rounded-lg transition flex items-center gap-1.5"><i class="bi bi-floppy"></i> Simpan</button>
+   </div>
+   <div class="grid grid-cols-1 lg:grid-cols-2 gap-1.5">
+    <div class="card-panel p-2 space-y-1">
+     <h3 class="text-[11px] font-bold uppercase tracking-wider text-zinc-400"><i class="bi bi-display"></i> Server AI dan api_key</h3>
+     <div class="space-y-1">
+      <label class="text-[10px] text-zinc-400 block">base_url (Server URL)</label>
+      <input id="s_server_url" placeholder="http://localhost:20128/v1" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-2 py-1 text-xs text-white focus:border-[var(--accent)]">
+      <label class="text-[10px] text-zinc-400 block">api_key</label>
+      <div class="flex gap-1.5">
+       <input type="password" id="s_hf_api_key" placeholder="(tidak diubah)" class="flex-1 bg-zinc-900 border border-zinc-700 rounded-lg px-2 py-1 text-xs text-white focus:border-[var(--accent)]">
+       <button type="button" onclick="toggleSettingsApiKey()" class="px-2 py-1 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 text-xs">eye</button>
+      </div>
+      <label class="text-[10px] text-zinc-400 block">model <button onclick="fetchSettingsModels()" class="ml-1 text-[9px] px-1 py-0.5 border border-zinc-700 rounded hover:border-accent">fetch</button> <span id="settingsModelCount" class="ml-1 text-[9px] px-1.5 py-0.5 rounded bg-zinc-800 border border-zinc-700 text-zinc-400"></span></label>
+      <input id="s_hf_model_filter" placeholder="Ketik untuk cari model..." class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-2 py-1 text-xs text-white placeholder-zinc-500 focus:border-[var(--accent)]">
+      <select id="s_hf_model" class="hidden"><option value="AUTO">AUTO</option></select>
+      <div class="flex items-center gap-1.5">
+       <button onclick="testSettingsConn()" class="px-2 py-1 bg-zinc-800 border border-zinc-700 text-zinc-200 text-xs rounded-lg">Test Koneksi</button>
+       <span id="settingsConnMsg" class="text-[11px]"></span>
+       <span id="hfStatus" class="ml-auto text-[10px] px-2 py-0.5 rounded-lg border border-zinc-700 text-zinc-400">checking...</span>
+      </div>
+      <p class="text-[10px] text-zinc-500">Field ini dipetakan ke api_key, base_url, model. Provider list disimpan sebagai ai_providers.</p>
+     </div>
+    </div>
+    <div class="card-panel p-2 space-y-1">
+     <h3 class="text-[11px] font-bold uppercase tracking-wider text-zinc-400"><i class="bi bi-boxes"></i> AI Providers</h3>
+     <div class="space-y-1">
+      <label class="text-[10px] text-zinc-400 block">ai_providers (JSON atau daftar)</label>
+      <textarea id="s_ai_providers" rows="4" placeholder="JSON array providers" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-2 py-1 text-xs font-mono text-white placeholder-zinc-500 focus:border-[var(--accent)]"></textarea>
+      <p class="text-[10px] text-zinc-500">Opsional. Jika dikosongkan, gunakan single api_key dan base_url di atas.</p>
+      <label class="text-[10px] text-zinc-400 block">temperature</label>
+      <input type="number" step="0.05" min="0" max="2" id="s_temperature" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-2 py-1 text-xs text-white">
+      <label class="text-[10px] text-zinc-400 block">subtitle_language</label>
+      <input id="s_subtitle_language" placeholder="id" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-2 py-1 text-xs text-white">
+     </div>
+    </div>
+   </div>
+   <div class="card-panel p-2 space-y-1">
+    <h3 class="text-[11px] font-bold uppercase tracking-wider text-zinc-400"><i class="bi bi-film"></i> Render dan Subtitle (ringkas)</h3>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-1.5">
+     <div><label class="text-[10px] text-zinc-400 block">resolution</label><select id="s_resolution" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-2 py-1 text-xs text-white"><option>1080p</option><option>720p</option><option>480p</option><option>360p</option><option>auto</option></select></div>
+     <div><label class="text-[10px] text-zinc-400 block">aspect_ratio</label><select id="s_aspect_ratio" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-2 py-1 text-xs text-white"><option>9:16</option><option>4:5</option><option>3:4</option><option>1:1</option><option>16:9</option></select></div>
+     <div><label class="text-[10px] text-zinc-400 block">fw_model (whisper)</label><select id="s_fw_model" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-2 py-1 text-xs text-white"><option value="tiny">tiny</option><option value="base">base</option><option value="small">small</option><option value="medium">medium</option><option value="large-v3">large-v3</option></select></div>
+     <div class="flex items-end"><label class="flex items-center gap-1.5 text-xs text-zinc-300"><input type="checkbox" id="s_captions"> Bakar Sub</label></div>
+    </div>
+    <div class="hidden">
+     <input id="s_hf_system_message" type="hidden">
+     <input id="s_num_clips" type="hidden" value="auto">
+     <input id="s_gpu" type="hidden">
+     <input id="s_smooth_follow" type="hidden">
+     <select id="s_portrait_mode" class="hidden"><option>crop</option><option>blur</option></select>
+     <select id="s_face_tracking_mode" class="hidden"><option>mediapipe</option></select>
+     <input id="s_subtitle_style" type="hidden" value="pop">
+     <input id="s_font_preset" type="hidden" value="default">
+    </div>
+    <div class="flex items-center gap-1.5 pt-1">
+     <button onclick="saveSettings()" class="px-3 py-1 bg-[var(--accent)] text-[var(--accent-text)] text-xs font-bold rounded-lg">Simpan</button>
+     <span id="settingsSaveMsg" class="text-xs text-emerald-400 hidden">Tersimpan</span>
+    </div>
+   </div>
+   <div class="text-[10px] text-zinc-500">Save memanggil <span class="font-mono">POST /api/config</span> dengan field api_key, base_url, model, ai_providers, dan konfigurasi render.</div>
+  </section>
+
  </main>
 </div>
 
@@ -263,7 +498,26 @@ tailwind.config = {
  </div>
 </div>
 
+
+
+<!-- MODAL: TASK LOG -->
+<div id="logModalTask" class="fixed inset-0 z-50 hidden items-center justify-center p-2 bg-black/80 backdrop-blur-sm">
+ <div class="bg-surface-1 border border-zinc-800 rounded-xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+  <div class="flex items-center justify-between px-2 py-1.5 border-b border-zinc-800 bg-surface-0/50">
+   <h3 class="text-xs font-semibold text-zinc-300 uppercase tracking-wider truncate" id="logTitleTask">Log</h3>
+   <button onclick="closeTaskLog()" class="text-zinc-400 hover:text-white text-lg">X</button>
+  </div>
+  <div class="p-2 overflow-y-auto flex-1 bg-black">
+   <pre id="logBoxTask" class="log font-mono text-xs text-zinc-300">memuat...</pre>
+  </div>
+  <div class="flex justify-end px-2 py-1.5 border-t border-zinc-800 bg-surface-1">
+   <button onclick="closeTaskLog()" class="px-2 py-1 text-xs bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-700 rounded transition">Tutup</button>
+  </div>
+ </div>
+</div>
+
 <script>
+
 fetch('/api/me').then(r=>r.json()).then(d=>{if(d.name)document.getElementById('whoami').innerHTML='<i class="bi bi-person text-zinc-400"></i> '+esc(d.name);});
 
 let DATA = [];
@@ -823,6 +1077,449 @@ checkEngineStatus();
 setInterval(checkEngineStatus, 15000);
 
 load();
+
+</script>
+<script>
+function initClipperTabs(){
+ if (window._clipperTabsWired) return; window._clipperTabsWired = true;
+ var KEY = 'clipperViewTab';
+ var hashTab = (location.hash || '').replace(/^#/, '');
+ var allowed = ['sesi','campaign','task','dependencies','settings'];
+ var stored = null;
+ try { stored = localStorage.getItem(KEY); } catch(e) {}
+ var initial = 'sesi';
+ if (allowed.indexOf(hashTab) !== -1) initial = hashTab;
+ else if (allowed.indexOf(stored) !== -1) initial = stored;
+ window._clipperView = initial;
+ var sesiSection = document.getElementById('sesi-section');
+ var campaignSection = document.getElementById('campaign-section');
+ var taskSection = document.getElementById('task-section');
+ var depSection = document.getElementById('dependencies-section');
+ var settingsSection = document.getElementById('settings-section');
+ function applyView(tab){
+  window._clipperView = tab;
+  try { localStorage.setItem(KEY, tab); } catch(e) {}
+  if (history.replaceState) {
+   try { history.replaceState(null, '', '#' + tab); } catch(e) {}
+  } else {
+   location.hash = tab;
+  }
+  var isSesi = (tab === 'sesi');
+  var isCampaign = (tab === 'campaign');
+  var isTask = (tab === 'task');
+  var isDep = (tab === 'dependencies');
+  var isSettings = (tab === 'settings');
+  document.querySelectorAll('[data-view-tab]').forEach(function(b){
+   var on = (b.getAttribute('data-view-tab') === tab);
+   b.setAttribute('aria-selected', on ? 'true' : 'false');
+   b.className = on
+    ? 'sidebar-nav-btn flex w-full items-center gap-1.5 min-h-[28px] md:min-h-[40px] px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition bg-[var(--accent)] text-[var(--accent-text)] font-bold shadow-sm text-left'
+    : 'sidebar-nav-btn flex w-full items-center gap-1.5 min-h-[28px] md:min-h-[40px] px-2 py-1 md:py-1.5 text-[10px] md:text-xs rounded-lg transition text-zinc-300 hover:text-white hover:bg-zinc-900 font-medium text-left';
+  });
+  if (sesiSection) sesiSection.classList.toggle('hidden', !isSesi);
+  if (campaignSection) campaignSection.classList.toggle('hidden', !isCampaign);
+  if (taskSection) taskSection.classList.toggle('hidden', !isTask);
+  if (depSection) depSection.classList.toggle('hidden', !isDep);
+  if (settingsSection) settingsSection.classList.toggle('hidden', !isSettings);
+  if (isTask && typeof window.refreshTasks === 'function') { try { window.refreshTasks(); } catch(e) {} }
+  if (isDep && typeof window.refreshDeps === 'function') { try { window.refreshDeps(); } catch(e) {} }
+  if (isSettings && typeof window.loadSettings === 'function') { try { window.loadSettings(); } catch(e) {} }
+ }
+ window.switchToTab = applyView;
+ applyView(window._clipperView);
+ document.querySelectorAll('[data-view-tab]').forEach(function(b){
+  b.addEventListener('click', function(){
+   applyView(b.getAttribute('data-view-tab'));
+  });
+ });
+ window.addEventListener('hashchange', function(){
+  var h = (location.hash || '').replace(/^#/, '');
+  if (allowed.indexOf(h) !== -1) applyView(h);
+ });
+}
+document.addEventListener('DOMContentLoaded', function(){ try { initClipperTabs(); } catch(e) {} });
+try { initClipperTabs(); } catch(e) {}
+</script>
+<script>
+async function handleCampaignCreate(){
+ var briefEl = document.getElementById('campaignBrief');
+ var srcEl = document.getElementById('campaignSources');
+ var btn = document.getElementById('btnCampaignCreate');
+ var st = document.getElementById('campaignStatus');
+ var logEl = document.getElementById('campaignLog');
+ var brief = (briefEl.value || '').trim();
+ var sourcesRaw = (srcEl.value || '').trim();
+ if (!brief) { st.textContent = 'Brief wajib diisi'; st.className = 'text-xs text-rose-400'; return; }
+ var sources = sourcesRaw ? sourcesRaw.split(/[,\n]+/).map(function(s){ return s.trim(); }).filter(Boolean) : [];
+ btn.disabled = true;
+ st.textContent = 'Mengirim...';
+ st.className = 'text-xs text-zinc-400';
+ logEl.classList.add('hidden');
+ logEl.textContent = '';
+ try {
+  var res = await fetch('/api/campaigns', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ brief: brief, sources: sources }) });
+  var txt = await res.text();
+  var data;
+  try { data = JSON.parse(txt); } catch(e) { data = { raw: txt }; }
+  if (!res.ok) throw new Error(data.error || txt || 'Gagal');
+  st.textContent = 'Campaign dibuat';
+  st.className = 'text-xs text-emerald-400';
+  logEl.textContent = JSON.stringify(data, null, 2);
+  logEl.classList.remove('hidden');
+  setTimeout(function(){ if (window.switchToTab) window.switchToTab('sesi'); try { load(); } catch(e) {} }, 1200);
+ } catch(e) {
+  st.textContent = 'Gagal: ' + e.message;
+  st.className = 'text-xs text-rose-400';
+  logEl.textContent = e.message;
+  logEl.classList.remove('hidden');
+ } finally {
+  btn.disabled = false;
+ }
+}
+</script>
+<script>
+(function(){
+ var escTask = function(s){ return String(s ?? '').replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+ var durTask = function(s){ return s == null ? '-' : (s >= 60 ? Math.floor(s/60)+'m '+(s%60)+'s' : s+'s'); };
+ var sessLinkTask = function(sid){ return sid === '-' ? '<span class="text-zinc-600 font-mono">-</span>' : '<a href="/session.html?id='+encodeURIComponent(sid)+'" class="text-accent hover:underline font-mono text-[11px]">'+escTask(sid)+'</a>'; };
+ var statusBadgeTask = function(j){
+  if (j.running) return '<span class="inline-flex items-center gap-1.5 px-1.5 py-1 text-[10px] font-bold bg-[#7c3aed]/15 text-[#a78bfa] border border-[#7c3aed]/30 rounded-lg animate-pulse">PROCESSING</span>';
+  return j.code === 0 ? '<span class="inline-flex items-center gap-1.5 px-1.5 py-1 text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg">COMPLETED</span>' : '<span class="inline-flex items-center gap-1.5 px-1.5 py-1 text-[10px] font-bold bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg">FAILED ('+(j.code ?? '?')+')</span>';
+ };
+ var progressBarTask = function(j){
+  if (j.progress == null) return '<span class="text-[11px] text-zinc-600"> - </span>';
+  var pct = Math.round(j.progress);
+  var color = j.running ? 'from-[#7c3aed] to-[#a78bfa]' : (j.code===0 ? 'from-emerald-500 to-emerald-400' : 'from-red-500 to-red-400');
+  return '<div class="w-32"><div class="h-2 bg-zinc-800 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r '+color+' transition-all duration-700 rounded-full" style="width:'+pct+'%"></div></div><div class="text-[10px] font-mono font-bold mt-1 '+(j.running?'text-[#a78bfa]':'text-zinc-400')+' tabular-nums">'+pct+'%</div></div>';
+ };
+ var JOBS_TASK = [];
+ async function refreshTasks(){
+  var jobs = [];
+  try { jobs = await (await fetch('/api/tasks')).json(); } catch(e) {}
+  if (!Array.isArray(jobs)) jobs = [];
+  JOBS_TASK = jobs;
+  var emptyEl = document.getElementById('taskEmpty');
+  var bodyEl = document.getElementById('taskBody');
+  if (!bodyEl) return;
+  if (emptyEl) emptyEl.style.display = jobs.length ? 'none' : 'block';
+  bodyEl.innerHTML = jobs.map(function(j,i){
+   return '<tr class="group hover:bg-zinc-800/40 transition cursor-pointer '+(j.running?'bg-[#7c3aed]/[0.06]':'')+'" onclick="window.openTaskLog('+i+')">'
+    +'<td class="py-1 px-2 font-bold text-[12px] tracking-tight">'+(j.session !== '-' ? '<a href="/session.html?id='+encodeURIComponent(j.session)+'" onclick="event.stopPropagation()" class="text-white hover:text-accent hover:underline">'+escTask(j.type)+'</a>' : '<span class="text-white">'+escTask(j.type)+'</span>')+'</td>'
+    +'<td class="py-1 px-2" onclick="event.stopPropagation()">'+sessLinkTask(j.session)+'</td>'
+    +'<td class="py-1 px-2">'+statusBadgeTask(j)+'</td>'
+    +'<td class="py-1 px-2">'+progressBarTask(j)+'</td>'
+    +'<td class="py-1 px-2 text-zinc-300 font-mono text-[11px] hidden md:table-cell">'+durTask(j.elapsed_s)+'</td>'
+    +'<td class="py-1 px-2 text-zinc-400 font-mono text-[10px] hidden lg:table-cell truncate max-w-[320px]" title="'+escTask(j.last_line || 'Klik baris untuk log penuh')+'">'+escTask((j.last_line || '-').slice(0,120))+'</td>'
+    +'<td class="py-1 px-2 text-right" onclick="event.stopPropagation()">'+(j.running ? '<button class="px-2 py-1 text-[10px] font-bold bg-red-500 text-white hover:bg-red-600 rounded-lg transition shadow" onclick="window.stopTaskJob(event,'+i+')" title="Stop job">STOP</button>' : '<span class="text-zinc-600 text-[10px]"> - </span>')+'</td>'
+    +'</tr>';
+  }).join('');
+ }
+ window.refreshTasks = refreshTasks;
+ window.stopTaskJob = async function(ev,i){
+  ev.stopPropagation();
+  var j = JOBS_TASK[i];
+  if (!j || !j.running) return;
+  if (!confirm('Stop '+j.type+' ('+(j.session==='-'?j.detail:'sesi '+j.session)+')?')) return;
+  try {
+   await fetch('/api/tasks/stop', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ kind: j.kind, session: j.session==='-'?'':j.session, clip: j.kind==='render'?(j.detail||'') : '' }) });
+   refreshTasks();
+  } catch(e) {}
+ };
+ var logPollTask = null;
+ var logTargetTask = null;
+ window.openTaskLog = function(i){
+  var j = JOBS_TASK[i];
+  if (!j) return;
+  logTargetTask = { kind: j.kind, session: j.session==='-'?'':j.session, clip: j.kind==='render'?(j.detail||'') : '' };
+  var label = j.type + (j.session!=='-' ? ' : sesi '+j.session : '') + (j.kind==='render'&&j.detail ? ' : '+j.detail : '');
+  var titleEl = document.getElementById('logTitleTask');
+  var boxEl = document.getElementById('logBoxTask');
+  if (titleEl) titleEl.textContent = label;
+  if (boxEl) boxEl.textContent = 'memuat...';
+  var modal = document.getElementById('logModalTask');
+  if (modal){ modal.classList.remove('hidden'); modal.classList.add('flex'); document.body.classList.add('overflow-hidden'); }
+  loadTaskLog();
+  clearInterval(logPollTask);
+  logPollTask = setInterval(function(){
+   var m = document.getElementById('logModalTask');
+   if (!m || m.classList.contains('hidden')) { clearInterval(logPollTask); return; }
+   loadTaskLog();
+  }, 1000);
+ };
+ async function loadTaskLog(){
+  if (!logTargetTask) return;
+  try {
+   var q = new URLSearchParams({ kind: logTargetTask.kind, session: logTargetTask.session, clip: logTargetTask.clip });
+   var resp = await fetch('/api/tasks/log?' + q);
+   var data = await resp.json();
+   if (data.error) { var b=document.getElementById('logBoxTask'); if(b) b.textContent = data.error; return; }
+   var box = document.getElementById('logBoxTask');
+   if (!box) return;
+   var stick = box.scrollTop + box.clientHeight >= box.scrollHeight - 40;
+   box.textContent = data.log || '(log kosong)';
+   if (stick) box.scrollTop = box.scrollHeight;
+   if (!data.running && !box.dataset.done){
+    box.dataset.done='1';
+    box.textContent += data.code===0 ? '\n\nSelesai.' : '\n\nGagal (exit '+(data.code ?? '?')+').';
+   }
+   if (data.running) delete box.dataset.done;
+  } catch(e) {}
+ }
+ window.closeTaskLog = function(){
+  var m=document.getElementById('logModalTask');
+  if(m){ m.classList.add('hidden'); m.classList.remove('flex'); document.body.classList.remove('overflow-hidden'); }
+  clearInterval(logPollTask);
+ };
+ setInterval(function(){
+  var sec=document.getElementById('task-section');
+  if (sec && !sec.classList.contains('hidden')) refreshTasks();
+ }, 1500);
+ refreshTasks();
+})();
+</script>
+<script>
+(function(){
+ var depEsc = function(s){ return String(s ?? '').replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+ var fmtBytesDep = function(b){ if(!b) return ' - '; var gb=b/(1024*1024*1024); if(gb>=1) return gb.toFixed(1)+' GB'; var mb=b/(1024*1024); return mb.toFixed(1)+' MB'; };
+ var fmtUptimeDep = function(s){ if(s==null) return ' - '; var d=Math.floor(s/86400), h=Math.floor((s%86400)/3600), m=Math.floor((s%3600)/60); if(d) return d+'d '+h+'h'; if(h) return h+'h '+m+'m'; return m+'m'; };
+ async function loadDepSystem(){
+  try{
+   var r=await fetch('/api/system');
+   var s=await r.json();
+   var el=function(id){ return document.getElementById(id); };
+   if(el('depSysHost')) el('depSysHost').textContent = s.host || ' - ';
+   if(el('depSysPlatform')) el('depSysPlatform').textContent = (s.platform||'')+' '+(s.arch||'')+' '+(s.release||'');
+   if(el('depSysUptime')) el('depSysUptime').textContent = fmtUptimeDep(s.uptime_s);
+   if(el('depSysLoad')) el('depSysLoad').textContent = 'load '+(s.loadavg||[]).map(function(v){return v.toFixed(2);}).join(' \u00b7 ');
+   var memPct = s.mem_total ? Math.round((s.mem_used/s.mem_total)*100) : 0;
+   if(el('depSysMem')) el('depSysMem').textContent = fmtBytesDep(s.mem_used)+' / '+fmtBytesDep(s.mem_total)+' ('+memPct+'%)';
+   if(el('depSysMemDetail')) el('depSysMemDetail').textContent = 'free '+fmtBytesDep(s.mem_free);
+   if(el('depSysCpu')) el('depSysCpu').textContent = s.cpu_model || ' - ';
+   if(el('depSysCpuCount')) el('depSysCpuCount').textContent = (s.cpu_count||0)+' cores';
+  }catch(e){}
+ }
+ async function loadDepBinaries(){
+  try{
+   var r=await fetch('/api/binaries');
+   var list=await r.json();
+   var elCount=document.getElementById('depBinCount');
+   if(elCount) elCount.textContent = list.length+' items';
+   var iconMap={'ffmpeg':'bi-camera-reels text-rose-400','ffprobe':'bi-film text-orange-400','deno':'bi-braces text-emerald-400','rclone':'bi-cloud-arrow-down text-cyan-400','yt-dlp':'bi-download text-sky-400','gdown':'bi-google text-yellow-400','python':'bi-code-slash text-amber-400','node':'bi-hexagon text-emerald-400','mediapipe':'bi-eye text-fuchsia-400'};
+   var body=document.getElementById('depBinBody');
+   if(!body) return;
+   body.innerHTML = list.map(function(b){
+    var ic=iconMap[b.name] || 'bi-box text-zinc-400';
+    var ver=depEsc(b.version || b.detail || '');
+    var pathVal=depEsc(b.path || (b.detail||'').slice(0,120) || '');
+    var badge = b.ok ? '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"><i class="bi bi-check-circle-fill"></i> OK</span>' : '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20"><i class="bi bi-x-circle-fill"></i> ERR</span>';
+    var action = b.name==='ffmpeg'||b.name==='yt-dlp'||b.name==='deno' ? '<button onclick="depInstall(\''+depEsc(b.name)+'\')" class="px-2 py-1 text-[10px] bg-zinc-800 border border-zinc-700 rounded-lg hover:bg-zinc-700">Install</button>' : '<span class="text-[10px] text-zinc-500"> - </span>';
+    return '<tr class="hover:bg-zinc-800/30"><td class="py-1.5 px-2">'+badge+'</td><td class="py-1.5 px-2 font-mono text-white flex items-center gap-1.5"><i class="bi '+ic+'"></i>'+depEsc(b.name)+'</td><td class="py-1.5 px-2 text-zinc-300">'+ver+'</td><td class="py-1.5 px-2 font-mono text-[11px] text-zinc-400 hidden md:table-cell truncate max-w-[180px]" title="'+pathVal+'">'+pathVal+'</td><td class="py-1.5 px-2 text-right">'+action+'</td></tr>';
+   }).join('');
+   if (!list.length) body.innerHTML = '<tr><td colspan="5" class="py-1.5 text-center text-zinc-500">Tidak ada data binaries</td></tr>';
+  }catch(e){ var b=document.getElementById('depBinBody'); if(b) b.innerHTML='<tr><td colspan="5" class="py-1.5 text-center text-rose-400">Gagal memuat binaries</td></tr>'; }
+ }
+ async function loadDepPackages(){
+  try{
+   var r=await fetch('/api/python/packages');
+   var list=await r.json();
+   var elCount=document.getElementById('depPkgCount');
+   if(elCount) elCount.textContent = (Array.isArray(list)?list.length:0)+' packages';
+   var body=document.getElementById('depPkgBody');
+   if(!body) return;
+   if(!Array.isArray(list)) list=[];
+   body.innerHTML = list.slice(0,120).map(function(p){
+    var name=depEsc(p.name||p.package||'');
+    var ver=depEsc(p.version||'');
+    var ok = p.ok !== false;
+    var badge = ok ? '<span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>' : '<span class="w-2 h-2 rounded-full bg-rose-500 inline-block"></span>';
+    return '<tr class="hover:bg-zinc-800/30"><td class="py-1.5 px-2">'+badge+'</td><td class="py-1.5 px-2 font-mono text-white">'+name+'</td><td class="py-1.5 px-2 text-zinc-300">'+ver+'</td><td class="py-1.5 px-2 text-right"><span class="text-[10px] text-zinc-500"> - </span></td></tr>';
+   }).join('') || '<tr><td colspan="4" class="py-1.5 text-center text-zinc-500">Tidak ada packages</td></tr>';
+  }catch(e){ var b=document.getElementById('depPkgBody'); if(b) b.innerHTML='<tr><td colspan="4" class="py-1.5 text-center text-rose-400">Gagal memuat packages</td></tr>'; }
+ }
+ async function loadDepWhisper(){
+  try{
+   var r=await fetch('/api/whisper/models');
+   var data=await r.json();
+   var list = Array.isArray(data) ? data : (data.models||data.list||[]);
+   var body=document.getElementById('depWhisperBody');
+   if(!body) return;
+   if (!Array.isArray(list) || !list.length){
+    body.innerHTML = '<tr><td colspan="5" class="py-1.5 text-center text-zinc-500">Whisper: tiny base small medium large-v3 - belum terpasang atau endpoint kosong</td></tr>';
+    return;
+   }
+   body.innerHTML = list.map(function(m){
+    var size=depEsc(m.size||m.name||'');
+    var installed = m.installed ? 'ya' : 'tidak';
+    var sz=depEsc(m.size_on_disk ? fmtBytesDep(m.size_on_disk) : (m.size_bytes?fmtBytesDep(m.size_bytes):' - '));
+    var badge = m.installed ? '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">installed</span>' : '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-zinc-800 text-zinc-400 border border-zinc-700">not installed</span>';
+    var act = m.installed ? '<span class="text-[10px] text-zinc-500"> - </span>' : '<button onclick="downloadWhisperDep(\''+depEsc(size)+'\')" class="px-2 py-1 text-[10px] bg-[var(--accent)] text-[var(--accent-text)] rounded-lg">Download</button>';
+    return '<tr class="hover:bg-zinc-800/30"><td class="py-1.5 px-2">'+badge+'</td><td class="py-1.5 px-2 font-mono text-white">'+size+'</td><td class="py-1.5 px-2 text-zinc-300">'+installed+'</td><td class="py-1.5 px-2 text-zinc-300">'+sz+'</td><td class="py-1.5 px-2 text-right">'+act+'</td></tr>';
+   }).join('');
+  }catch(e){ var b=document.getElementById('depWhisperBody'); if(b) b.innerHTML='<tr><td colspan="5" class="py-1.5 text-center text-zinc-500">Whisper endpoint /api/whisper/models belum tersedia</td></tr>'; }
+ }
+ async function loadDepAiProxy(){
+  try{
+   var r=await fetch('/api/config');
+   if(!r.ok) throw new Error('no config');
+   var cfg=await r.json();
+   var urlEl=document.getElementById('depAiUrl');
+   var modelEl=document.getElementById('depAiModel');
+   var keyEl=document.getElementById('depAiKey');
+   var statusEl=document.getElementById('depAiStatus');
+   var detailEl=document.getElementById('depAiDetail');
+   if(urlEl) urlEl.textContent = cfg.server_url || cfg.base_url || ' - ';
+   if(modelEl) modelEl.textContent = cfg.hf_model || cfg.model || ' - ';
+   if(keyEl) keyEl.textContent = cfg.hf_api_key ? '***'+String(cfg.hf_api_key).slice(-4) : (cfg.api_key ? '***'+String(cfg.api_key).slice(-4) : ' - ');
+   var testRes=await fetch('/api/test-llm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({server_url: cfg.server_url||'', hf_api_key: cfg.hf_api_key||''})});
+   var data=await testRes.json();
+   var ok=!!data.ok;
+   if(statusEl){ statusEl.textContent = ok ? 'connected ('+(data.count||0)+' models)' : 'disconnected'; statusEl.className = ok ? 'px-1.5 py-1 rounded-lg text-[10px] font-bold border bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'px-1.5 py-1 rounded-lg text-[10px] font-bold border bg-rose-500/10 text-rose-400 border-rose-500/20'; }
+   if(detailEl) detailEl.textContent = data.error || (ok ? 'AI Proxy OK' : 'Gagal konek');
+  }catch(e){ var st=document.getElementById('depAiStatus'); if(st){ st.textContent='offline'; st.className='px-1.5 py-1 rounded-lg text-[10px] font-bold border bg-zinc-800 text-zinc-400 border-zinc-700'; } }
+ }
+ window.testAiProxy = async function(){
+  var btn=document.getElementById('btnTestAiDep');
+  if(btn){ btn.disabled=true; btn.textContent='Testing...'; }
+  await loadDepAiProxy();
+  if(btn){ btn.disabled=false; btn.innerHTML='<i class="bi bi-plugin"></i> Test AI Proxy'; }
+ };
+ window.depInstall = async function(target){
+  try{
+   await fetch('/api/dependencies/install', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({target:target})});
+   alert('Install '+target+' dipicu, cek Task untuk progress');
+  }catch(e){ alert('Gagal: '+e.message); }
+ };
+ window.downloadWhisperDep = async function(size){
+  try{
+   await fetch('/api/whisper/download',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({size:size})});
+   alert('Download '+size+' berjalan di background');
+  }catch(e){ alert('Gagal: '+e.message); }
+ };
+ async function refreshDeps(){
+  var btn=document.getElementById('btnRefreshDep');
+  if(btn){ btn.disabled=true; var orig=btn.innerHTML; btn.innerHTML='<i class="bi bi-arrow-clockwise animate-spin"></i> Memuat...'; }
+  var depUpdated=document.getElementById('depUpdated');
+  if(depUpdated) depUpdated.textContent='memuat...';
+  await Promise.all([loadDepSystem(), loadDepBinaries(), loadDepPackages(), loadDepWhisper(), loadDepAiProxy()]);
+  if(depUpdated) depUpdated.textContent='diperbarui '+new Date().toLocaleTimeString('id-ID');
+  if(btn){ btn.disabled=false; btn.innerHTML='<i class="bi bi-arrow-clockwise"></i> Refresh'; }
+ }
+ window.refreshDeps = refreshDeps;
+ if (location.hash === '#dependencies') refreshDeps();
+})();
+</script>
+<script>
+(function(){
+ var escSet = function(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); };
+ async function loadSettings(){
+  try{
+   var r=await fetch('/api/config');
+   var d=await r.json();
+   var set = function(id,v){ var el=document.getElementById(id); if(el) el.value = (v==null?'':v); };
+   var chk = function(id,v){ var el=document.getElementById(id); if(el) el.checked = !!v; };
+   set('s_server_url', d.server_url || d.base_url || '');
+   if (d.hf_api_key) set('s_hf_api_key', d.hf_api_key);
+   else if (d.api_key) set('s_hf_api_key', d.api_key);
+   set('s_hf_model', d.hf_model || d.model || '');
+   var mf=document.getElementById('s_hf_model_filter');
+   if (mf) mf.value = d.hf_model || d.model || '';
+   set('s_temperature', d.temperature ?? 0.7);
+   set('s_subtitle_language', d.subtitle_language || 'id');
+   set('s_fw_model', d.fw_model || d.faster_whisper_model || 'small');
+   set('s_resolution', d.resolution || '1080p');
+   set('s_aspect_ratio', d.aspect_ratio || '9:16');
+   if (d.ai_providers) {
+    var el=document.getElementById('s_ai_providers');
+    if(el) el.value = typeof d.ai_providers === 'string' ? d.ai_providers : JSON.stringify(d.ai_providers, null, 2);
+   }
+   chk('s_captions', d.captions);
+   if (d.hf_api_key || d.api_key) checkSettingsHf();
+  }catch(e){}
+ }
+ window.loadSettings = loadSettings;
+ window.saveSettings = async function(){
+  var getVal=function(id){ var el=document.getElementById(id); return el?el.value:''; };
+  var getChk=function(id){ var el=document.getElementById(id); return el?el.checked:false; };
+  var data={
+   server_url: getVal('s_server_url'),
+   hf_api_key: getVal('s_hf_api_key') || undefined,
+   hf_model: getVal('s_hf_model') || getVal('s_hf_model_filter') || 'AUTO',
+   temperature: parseFloat(getVal('s_temperature'))||0.7,
+   subtitle_language: getVal('s_subtitle_language')||'id',
+   fw_model: getVal('s_fw_model')||'small',
+   resolution: getVal('s_resolution')||'1080p',
+   aspect_ratio: getVal('s_aspect_ratio')||'9:16',
+   captions: getChk('s_captions'),
+   hf_system_message: (document.getElementById('s_hf_system_message')?document.getElementById('s_hf_system_message').value:'')||'',
+   num_clips: 'auto',
+   use_gpu: false
+  };
+  var provEl=document.getElementById('s_ai_providers');
+  if (provEl && provEl.value.trim()){
+   try { data.ai_providers = JSON.parse(provEl.value); } catch(e){ alert('ai_providers bukan JSON valid: '+e.message); return; }
+  }
+  data.base_url = data.server_url;
+  data.api_key = data.hf_api_key;
+  data.model = data.hf_model;
+  try{
+   var res=await fetch('/api/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+   if(!res.ok) throw new Error(await res.text());
+   var msg=document.getElementById('settingsSaveMsg');
+   if(msg){ msg.classList.remove('hidden'); msg.textContent='Tersimpan'; setTimeout(function(){ msg.classList.add('hidden'); },3000); }
+   var toast=document.getElementById('toastSettings');
+   if(toast){ toast.textContent='Config tersimpan'; toast.classList.remove('hidden'); setTimeout(function(){ toast.classList.add('hidden'); },3000); }
+  }catch(e){ alert('Gagal menyimpan: '+e.message); }
+ };
+ window.toggleSettingsApiKey = function(){
+  var el=document.getElementById('s_hf_api_key');
+  if(!el) return;
+  el.type = el.type==='password' ? 'text' : 'password';
+ };
+ window.testSettingsConn = async function(){
+  var badge=document.getElementById('hfStatus');
+  if(badge){ badge.textContent='checking...'; badge.className='ml-auto text-[10px] px-2 py-0.5 rounded-lg border border-zinc-700 text-zinc-400'; }
+  var msg=document.getElementById('settingsConnMsg');
+  if(msg) msg.textContent='';
+  try{
+   var r=await fetch('/api/test-llm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({server_url: document.getElementById('s_server_url').value, hf_api_key: document.getElementById('s_hf_api_key').value})});
+   var d=await r.json();
+   if(d.ok){
+    if(badge){ badge.textContent='connected ('+(d.count||0)+' models)'; badge.className='ml-auto text-[10px] px-2 py-0.5 rounded-lg border border-emerald-700 bg-emerald-950 text-emerald-400'; }
+    if(msg){ msg.textContent='connected'; msg.className='text-[11px] text-emerald-400'; }
+   } else {
+    if(badge){ badge.textContent='disconnected'; badge.className='ml-auto text-[10px] px-2 py-0.5 rounded-lg border border-red-800 bg-red-950 text-red-400'; }
+    if(msg){ msg.textContent=d.error||'gagal'; msg.className='text-[11px] text-rose-400'; }
+   }
+  }catch(e){
+   if(badge){ badge.textContent='offline'; badge.className='ml-auto text-[10px] px-2 py-0.5 rounded-lg border border-red-800 bg-red-950 text-red-400'; }
+  }
+ };
+ window.fetchSettingsModels = async function(){
+  var badge=document.getElementById('settingsModelCount');
+  if(badge) badge.textContent='memuat...';
+  try{
+   var r=await fetch('/api/test-llm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({server_url: document.getElementById('s_server_url').value, hf_api_key: document.getElementById('s_hf_api_key').value})});
+   var d=await r.json();
+   if(d.ok && Array.isArray(d.models)){
+    var sel=document.getElementById('s_hf_model');
+    if(sel){
+     sel.innerHTML = d.models.map(function(m){ return '<option value="'+escSet(m)+'">'+escSet(m)+'</option>'; }).join('');
+     sel.classList.remove('hidden');
+    }
+    if(badge) badge.textContent = d.models.length+' model';
+   } else {
+    if(badge) badge.textContent='0 model';
+   }
+  }catch(e){ if(badge) badge.textContent='gagal'; }
+ };
+ function checkSettingsHf(){
+  var badge=document.getElementById('hfStatus');
+  if(badge){ badge.textContent='checking...'; }
+  testSettingsConn();
+ }
+ window.checkSettingsHf = checkSettingsHf;
+ if (location.hash === '#settings') loadSettings();
+})();
 </script>
 <script>
 if ('serviceWorker' in navigator) {

@@ -1,0 +1,18 @@
+diubah:
+- webjs/public/index.html (837 -> 1535 lines, backup index.html.bak + index.html.bak.20261007_002231)
+- tidak ubah: tasks.html, dependencies.html, settings.html, create.html
+
+div balance per tab (balanced via section matching):
+- sesi-section: 28/28 OK
+- campaign-section: 5/5 OK
+- task-section: 5/5 OK
+- dependencies-section: 42/42 OK
+- settings-section: 19/19 OK
+- overall: div 205/205 section 12/12 script 13/13 OK
+
+inline JS OK: node --check 9 scripts semua OK
+no em dash: OK
+portal-bg kept: OK
+padat classes kept: OK
+5 tabs: sesi (visible), campaign hidden, task hidden, dependencies hidden, settings hidden - verified
+initClipperTabs: _clipperTabsWired guard, KEY clipperViewTab default sesi, hash fallback, localStorage, applyView toggle hidden + aria-selected + className, DOMContentLoaded + immediate - verified

@@ -239,7 +239,7 @@ class ConfigManager:
 
     def _get_default_ai_providers(self):
         """Get default AI provider configuration — sinkron dengan config.example.json (7 providers + caption/hook)"""
-        base = "http://localhost:20128/v1"
+        base = "http://localhost:20127/v1"
         return {
             "brief_parser": {
                 "base_url": base,
@@ -291,7 +291,7 @@ class ConfigManager:
                 "system_message": "QC klip: cek framing (kepala terpotong?), teks terbaca, audio sinkron. Output JSON {pass, issues[]}."
             },
             "caption_maker": {
-                "base_url": "http://localhost:20128/v1/audio/transcriptions",
+                "base_url": "http://localhost:20127/v1/audio/transcriptions",
                 "api_key": "",
                 "model": "groq/whisper-large-v3",
                 "faster_whisper": {
@@ -299,7 +299,7 @@ class ConfigManager:
                 }
             },
             "hook_maker": {
-                "base_url": "http://localhost:20128/v1/audio/speech",
+                "base_url": "http://localhost:20127/v1/audio/speech",
                 "api_key": "",
                 "model": "elevenlabs/eleven_flash_v2_5/pNInz6obpgDQGcFmaJgB"
             }

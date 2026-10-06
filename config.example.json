@@ -5,7 +5,7 @@
   "telegram_phone": "+628****0000",
   "telegram_session": "autoclipper_v3",
   "api_key": "YOUR_OMNIROUTE_API_KEY",
-  "base_url": "http://localhost:20128/v1",
+  "base_url": "http://localhost:20127/v1",
   "model": "opencos",
   "temperature": 0.7,
   "output_dir": "./output",
@@ -13,55 +13,55 @@
   "ai_providers": {
     "_provider_type": "custom",
     "brief_parser": {
-      "base_url": "http://localhost:20128/v1",
+      "base_url": "http://localhost:20127/v1",
       "api_key": "YOUR_OMNIROUTE_API_KEY",
       "model": "opencos",
       "system_message": "Parse brief kampanye jadi JSON {sources[], sound_id, niche, hook_style, target_duration}. Output JSON only."
     },
     "highlight_finder": {
-      "base_url": "http://localhost:20128/v1",
+      "base_url": "http://localhost:20127/v1",
       "api_key": "YOUR_OMNIROUTE_API_KEY",
       "model": "opencos",
       "system_message": "Kamu asisten highlight viral. Pilih SEMUA momen terbaik, durasi 15-90s, hindari overlap. Output JSON Array {start_time,end_time,title,description,virality_score,hook_text,timed_title{text,start:0,end:3}}."
     },
     "title_maker": {
-      "base_url": "http://localhost:20128/v1",
+      "base_url": "http://localhost:20127/v1",
       "api_key": "YOUR_OMNIROUTE_API_KEY",
       "model": "opencos",
       "system_message": "Buat judul TikTok/YouTube Shorts yang hook, max 60 char, SEO niche. Output JSON {title, hashtags[]}."
     },
     "bgm_matcher": {
-      "base_url": "http://localhost:20128/v1",
+      "base_url": "http://localhost:20127/v1",
       "api_key": "YOUR_OMNIROUTE_API_KEY",
       "model": "opencos",
       "system_message": "Pilih BGM paling cocok berdasar mood transcript. Output JSON {sound_id, reason, mood}."
     },
     "hashtag_maker": {
-      "base_url": "http://localhost:20128/v1",
+      "base_url": "http://localhost:20127/v1",
       "api_key": "YOUR_OMNIROUTE_API_KEY",
       "model": "opencos",
       "system_message": "Buat 5-8 hashtag niche-aware untuk TikTok/Shorts. Output JSON {hashtags[]}."
     },
     "thumbnail_picker": {
-      "base_url": "http://localhost:20128/v1",
+      "base_url": "http://localhost:20127/v1",
       "api_key": "YOUR_OMNIROUTE_API_KEY",
       "model": "opencos",
       "system_message": "Pilih timestamp terbaik untuk thumbnail berdasar ekspresi/aksi. Output JSON {timestamp, caption}."
     },
     "qc_checker": {
-      "base_url": "http://localhost:20128/v1",
+      "base_url": "http://localhost:20127/v1",
       "api_key": "YOUR_OMNIROUTE_API_KEY",
       "model": "opencos",
       "system_message": "QC klip: cek framing, teks terbaca, audio sinkron. Output JSON {pass, issues[]}."
     },
     "caption_maker": {
-      "base_url": "http://localhost:20128/v1/audio/transcriptions",
+      "base_url": "http://localhost:20127/v1/audio/transcriptions",
       "api_key": "YOUR_OMNIROUTE_API_KEY",
       "model": "groq/whisper-large-v3",
       "faster_whisper": { "model_size": "large-v3" }
     },
     "hook_maker": {
-      "base_url": "http://localhost:20128/v1/audio/speech",
+      "base_url": "http://localhost:20127/v1/audio/speech",
       "api_key": "YOUR_OMNIROUTE_API_KEY",
       "model": "elevenlabs/eleven_flash_v2_5/pNInz6obpgDQGcFmaJgB"
     }

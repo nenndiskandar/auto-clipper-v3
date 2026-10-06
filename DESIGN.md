@@ -58,5 +58,11 @@ Reading: creator tool untuk kreator TikTok/Reels, dalam bahasa PWA utilitas ring
 - Toast dan modal pakai token var: warna status konsisten di light/dark tanpa duplikasi CSS.
 - Portal aurora teal #0d9488/#2dd4bf + sky #0ea5e9 + rose #f43f5e blur 60px drift 6s/7s/8s di belakang konten (R-01 ALLOWED: hierarchy/identity — bg hidup satu-satunya dekor global; R-19 ALLOWED: slow drift ambient, bukan endless pulse di konten).
 
+## Tabs Pipeline (index.html 5 tabs)
+- Sidebar `index.html` memakai `role=tablist` + 5 `button[data-view-tab]`: `sesi` / `campaign` / `task` / `dependencies` / `settings`, masing-masing ke `section#{id}-section` (hidden toggle via `initClipperTabs()` + `switchToTab()`). Deep-link `#sesi|#campaign|#task|#dependencies|#settings` via `location.hash` + `hashchange`, persist `localStorage[clipperViewTab]`. Pindah tab me-refresh lazy: `task`→`refreshTasks()`, `dependencies`→`refreshDeps()`, `settings`→`loadSettings()`.
+- Sidebar padat dipertahankan: nav `p-2 md:p-1.5 gap-1.5 flex-wrap`, tombol `gap-1.5 min-h-[28px] md:min-h-[40px] px-2 py-1 text-[10px] md:text-xs rounded-lg`, active `bg-[var(--accent)] text-[var(--accent-text)] font-bold`, bukan gaya longgar min-h-44/rounded-md. `portal-bg` 3 layer tidak berubah (lihat bawah).
+- `create.html`/`tasks.html`/`dependencies.html`/`settings.html` TIDAK dihapus: hanya banner redirect exact `<div class="p-2 bg-amber-950/30 border border-amber-900/40 text-xs text-amber-300">Halaman ini pindah ke tabs - <a href="/index.html#campaign">Buka Campaign tab</a></div>` tepat setelah `portal-bg`, agar direct URL tidak membingungkan. `story/facebook/ternaklip/session/cookies/detail/login` keep as is.
+- R-01/R-19 aurora note: `.portal-bg` 3×`<i>` radial blur(60px) teal/sky/rose drift alternate 6s/7s/8s (`portal-drift-a/b/c`), `fixed inset-0 z-0 pointer-events-none`, konten `z-1` di atasnya. R-01 ALLOWED (hierarchy/identity — satu-satunya dekor global), R-19 ALLOWED (slow ambient drift, konten tetap hover/shimmer/pulse saja). `prefers-reduced-motion` → 12s; `body.portal-off` mematikan total.
+
 ## Notes
 Light-first keputusan produk (kreator siang, PWA di HP), bukan preferensi estetika (R-21). Dark toggle tetap ship dan diverifikasi kedua mode (R-34). Tidak ada landing hero, bento, atau fake terminal di app shell. Dekorasi hanya yang melayani monitoring: shimmer saat fetch, pulse saat render.

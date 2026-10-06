@@ -2942,6 +2942,36 @@ print(json.dumps(out))`;
         serve();
       });
     }
+    // POST /api/campaigns — create session from brief+sources (v3 Campaign tab)
+    // body { brief, sources[] } -> output/sessions/<ts>/campaign_brief.json + session_data.json skeleton
+    if (p === '/api/campaigns' && req.method === 'POST') {
+      let body = ''; req.on('data', c => body += c); req.on('end', () => {
+        let o = {}; try { o = JSON.parse(body || '{}'); } catch {}
+        const brief = String(o.brief || o.text || o.description || '').trim();
+        let sources = o.sources || o.source_links || [];
+        if (typeof sources === 'string') sources = sources.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
+        if (!Array.isArray(sources)) sources = [];
+        if (!brief || brief.length < 5) return json(res, 400, { error: 'brief wajib diisi (min 5 char)' });
+        const sid = 'sess_' + Date.now().toString(36) + Math.floor(Math.random()*1e4).toString(36);
+        const sd = path.join(SESSIONS, safe(sid));
+        try {
+          fs.mkdirSync(sd, { recursive: true });
+          const srcObjs = sources.map(s => ({ url: s, label: '' }));
+          fs.writeFileSync(path.join(sd, 'campaign_brief.json'), JSON.stringify({
+            description: brief, source_links: srcObjs, title: '',
+            public_id: sid, campaign_id: sid, created_at: new Date().toISOString()
+          }, null, 2));
+          fs.writeFileSync(path.join(sd, 'session_data.json'), JSON.stringify({
+            session_id: sid, campaign: { description: brief, source_links: srcObjs },
+            highlights: [], created_at: new Date().toISOString(), v3_campaign: true
+          }, null, 2));
+          try { invalidateSessions(); } catch {}
+          return json(res, 200, { ok: true, session_id: sid, sources: sources.length });
+        } catch (e) { return json(res, 500, { error: String(e.message || e).slice(0, 500) }); }
+      });
+      return;
+    }
+
     // ===== v3 NEW: AI routes — brief / qc / metadata — keep all v2 routes intact =====
     // Helper: load ai_providers 7 keys from config.json and expose via env + file for python helpers
     function loadAiProviders() {
