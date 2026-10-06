@@ -11,8 +11,8 @@ class ConfigManager:
     """Manages application configuration"""
     
     def __init__(self, config_file: Path, output_dir: Path):
-        self.config_file = config_file
-        self.output_dir = output_dir
+        self.config_file = Path(config_file)
+        self.output_dir = Path(output_dir)
         self.config = self.load()
     
     def load(self):
