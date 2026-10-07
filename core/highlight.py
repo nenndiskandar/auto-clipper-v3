@@ -253,11 +253,19 @@ class HighlightMixin:
                 brief_lines.append(f"Hook style: {hook_style}")
             if brief.get("brief_text"):
                 brief_lines.append(f"Brief: {str(brief['brief_text'])[:1000]}")
-            brief_lines.append(f"Durasi tiap klip: {min_dur}-{max_dur} detik. Hindari overlap.")
+            brief_lines.append(f"Durasi tiap klip: {min_dur}-{max_dur} detik. Hindari overlap. Jika video lebih pendek dari {min_dur} detik, tetap kembalikan 1 highlight full video (cover seluruh transcript) agar tidak kosong.")
+            video_dur_hint = ""
+            try:
+                _v = brief.get("video_duration") or brief.get("duration_seconds")
+                if _v:
+                    video_dur_hint = f"Durasi video sumber sekitar {float(_v):.1f}s. "
+            except (ValueError, TypeError):
+                pass
             user = (
                 "Transcript video:\n"
                 f"{transcript}\n\n"
                 + "\n".join(brief_lines) + "\n\n"
+                + video_dur_hint
                 + "Tugas: pilih SEMUA momen terbaik, kembalikan JSON ARRAY ONLY "
                 + "(tanpa teks lain): "
                 + '[{"start_time": "HH:MM:SS,mmm", "end_time": "HH:MM:SS,mmm", '
@@ -273,6 +281,7 @@ class HighlightMixin:
             items = self._v3_normalize_list(raw)
             if not items:
                 self._v3_log("  [v3] highlight_finder kosong/tak-terparse, fallback ke lama")
+                # tapi jangan return [] langsung biar caller yang kasih fallback full-video
                 return []
             num_clips = brief.get("num_clips", brief.get("max_clips", brief.get("top_n", "auto")))
             scored = self._v3_score_highlights(items, num_clips=num_clips,
@@ -1537,15 +1546,17 @@ Aturan: pilih highlight yang paling sesuai brief di atas, prioritas momen yang m
                     clip_dir.mkdir(parents=True, exist_ok=True)
                     section_path = str(clip_dir / "landscape.mp4")
                 
-                    is_youtube = 'youtube.com' in url or 'youtu.be' in url
+                    _clip_url = highlight.get("source_url") or url
+                    _clip_src_idx = highlight.get("source_index", i)
+                    is_youtube = 'youtube.com' in _clip_url or 'youtu.be' in _clip_url
                     try:
                         if not is_youtube:
                             # SEMUA non-YouTube (GDrive/TikTok/FB/IG): full download dulu baru ffmpeg cut - jangan --download-sections
                             self.log(f"  Non-YouTube detected - full download tanpa section (GDrive via rclone, lain via yt-dlp best)")
-                            full_tmp = str(session_dir / f"_full_{i}.mp4")
+                            full_tmp = str(session_dir / f"_full_src{_clip_src_idx}.mp4")
                             # pakai cache full video kalau sudah ada (hemat kuota)
                             if not pathlib.Path(full_tmp).exists() or pathlib.Path(full_tmp).stat().st_size < 1024*100:
-                                self._download_full_video(url, full_tmp)
+                                self._download_full_video(_clip_url, full_tmp)
                             else:
                                 self.log(f"  Reusing cached full video {full_tmp} ({pathlib.Path(full_tmp).stat().st_size//1024}KB)")
                             s=self._srt_to_sec(highlight["start_time"]); ee=self._srt_to_sec(highlight["end_time"])
@@ -1558,7 +1569,7 @@ Aturan: pilih highlight yang paling sesuai brief di atas, prioritas momen yang m
                             video_path=section_path
                         else:
                             video_path = self.download_video_section(
-                                url, 
+                                _clip_url, 
                                 highlight["start_time"], 
                                 highlight["end_time"],
                                 section_path,
@@ -1569,11 +1580,11 @@ Aturan: pilih highlight yang paling sesuai brief di atas, prioritas momen yang m
                         _e_msg = str(e)[:400] if str(e).strip() else f"{type(e).__name__} (no message)"
                         self.log(f"  ⚠ Section download failed ({'YouTube' if is_youtube else 'non-YouTube'}), fallback full download + ffmpeg cut: {_e_msg[:200]}")
                         try:
-                            full_tmp = str(session_dir / f"_full_{i}.mp4")
+                            full_tmp = str(session_dir / f"_full_src{_clip_src_idx}.mp4")
                             # pakai cache full video kalau sudah ada
                             if not pathlib.Path(full_tmp).exists() or pathlib.Path(full_tmp).stat().st_size < 1024*100:
                                 self.log(f"  Downloading full video for fallback cut...")
-                                self._download_full_video(url, full_tmp)
+                                self._download_full_video(_clip_url, full_tmp)
                             else:
                                 self.log(f"  Reusing cached full video {full_tmp}")
                             s=self._srt_to_sec(highlight["start_time"]); ee=self._srt_to_sec(highlight["end_time"])

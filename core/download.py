@@ -419,29 +419,38 @@ class DownloadMixin:
                 # timeout 300s untuk file besar (tapi guard sudah >500MB skip, jadi ini file <500MB)
                 proc = subprocess.run(cmd, capture_output=True, text=True, timeout=310)
                 if proc.returncode == 0 and out_path.exists() and out_path.stat().st_size > 1024:
-                    self.log(f"  rclone sukses: {self._human_bytes(out_path.stat().st_size)}")
-                    return True
-                else:
-                    # coba dengan confirm flag (?export=download&confirm=t)
-                    gurl2 = gurl + "&confirm=t"
-                    cmd2 = [rclone_bin, 'copyurl', gurl2, str(out_path)]
-                    self.log(f"  rclone retry dengan confirm=t ...")
-                    proc2 = subprocess.run(cmd2, capture_output=True, text=True, timeout=310)
-                    if proc2.returncode == 0 and out_path.exists() and out_path.stat().st_size > 1024:
-                        # cegah file HTML error page (biasanya <100KB dan berisi html)
-                        try:
-                            head = out_path.read_bytes()[:512].decode(errors='ignore').lower()
-                            if '<html' in head and out_path.stat().st_size < 200*1024:
-                                self.log("  rclone hasil looks like HTML error page, fallback gagal")
-                                try: out_path.unlink()
-                                except Exception: pass
-                                return False
-                        except Exception:
-                            pass
-                        self.log(f"  rclone retry sukses: {self._human_bytes(out_path.stat().st_size)}")
+                    try:
+                        head = out_path.read_bytes()[:512].decode(errors='ignore').lower()
+                        if '<html' in head and out_path.stat().st_size < 200*1024:
+                            self.log("  rclone hasil HTML (virus scan/confirm), hapus + lanjut fallback gdown/requests")
+                            try: out_path.unlink()
+                            except Exception: pass
+                        else:
+                            self.log(f"  rclone sukses: {self._human_bytes(out_path.stat().st_size)}")
+                            return True
+                    except Exception:
+                        self.log(f"  rclone sukses: {self._human_bytes(out_path.stat().st_size)}")
                         return True
-                    self.log(f"  rclone gagal: {(proc.stderr or proc.stdout or '')[:200]}")
-                    return False
+                # coba dengan confirm flag (?export=download&confirm=t)
+                gurl2 = gurl + "&confirm=t"
+                cmd2 = [rclone_bin, 'copyurl', gurl2, str(out_path)]
+                self.log(f"  rclone retry dengan confirm=t ...")
+                proc2 = subprocess.run(cmd2, capture_output=True, text=True, timeout=310)
+                if proc2.returncode == 0 and out_path.exists() and out_path.stat().st_size > 1024:
+                    # cegah file HTML error page (biasanya <100KB dan berisi html)
+                    try:
+                        head = out_path.read_bytes()[:512].decode(errors='ignore').lower()
+                        if '<html' in head and out_path.stat().st_size < 200*1024:
+                            self.log("  rclone retry hasil HTML, hapus + lanjut gdown/requests")
+                            try: out_path.unlink()
+                            except Exception: pass
+                            return False
+                    except Exception:
+                        pass
+                    self.log(f"  rclone retry sukses: {self._human_bytes(out_path.stat().st_size)}")
+                    return True
+                self.log(f"  rclone gagal: {(proc.stderr or proc.stdout or '')[:200]}")
+                return False
             except subprocess.TimeoutExpired:
                 self.log("  rclone timeout 310s, skip")
                 return False
@@ -465,10 +474,10 @@ class DownloadMixin:
                         return False
                 out_path = Path(out_path)
                 out_path.parent.mkdir(parents=True, exist_ok=True)
-                self.log(f"  Fallback gdown --id {fid[:8]}... -> {out_path.name}")
-                # coba via python -m gdown --id
+                self.log(f"  Fallback gdown {fid[:8]}... -> {out_path.name}")
+                gurl = self._gdrive_download_url(fid)
                 py = sys.executable
-                cmd = [py, '-m', 'gdown', '--id', fid, '-O', str(out_path)]
+                cmd = [py, '-m', 'gdown', gurl, '-O', str(out_path)]
                 # alternatif: gdown binary
                 if shutil.which('gdown'):
                     # jika gdown sebagai modul gagal, coba binary
@@ -479,7 +488,7 @@ class DownloadMixin:
                     return True
                 # coba binary gdown
                 if shutil.which('gdown'):
-                    cmd2 = ['gdown', '--id', fid, '-O', str(out_path)]
+                    cmd2 = ['gdown', gurl, '-O', str(out_path)]
                     proc2 = subprocess.run(cmd2, capture_output=True, text=True, timeout=310)
                     if proc2.returncode == 0 and out_path.exists() and out_path.stat().st_size > 1024:
                         self.log(f"  gdown (bin) sukses: {self._human_bytes(out_path.stat().st_size)}")

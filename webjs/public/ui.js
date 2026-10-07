@@ -1,4 +1,9 @@
-/* Auto Clipper Shared UI Helpers (Toast, Confirm, Disk, Dark Mode) */
+/* Auto Clipper Shared UI Helpers (Toast, Confirm, Disk) */
+
+/* Force dark only (toggle removed) */
+document.documentElement.classList.add('dark');
+document.documentElement.style.colorScheme = 'dark';
+try { localStorage.removeItem('ac' + '_theme'); } catch (e) {}
 
 /* ── Toast Notification ── */
 function showToast(message, type = 'info', duration = 3000) {
@@ -78,56 +83,13 @@ async function refreshDisk() {
   }
 }
 
-/* ── Dark Mode Toggle ── */
-function applyTheme(theme) {
-  const root = document.documentElement;
-  if (theme === 'light') {
-    root.classList.remove('dark');
-    root.classList.add('light');
-  } else {
-    root.classList.remove('light');
-    root.classList.add('dark');
-  }
-  try {
-    localStorage.setItem('ac_theme', theme);
-  } catch (e) {}
-  document.querySelectorAll('.darkmode-btn').forEach(btn => {
-    btn.innerHTML = theme === 'light' ? '<i class="bi bi-sun-fill text-amber-400"></i>' : '<i class="bi bi-moon-stars text-sky-400"></i>';
-  });
-}
-
-function initTheme() {
-  const saved = localStorage.getItem('ac_theme') || 'light';
-  applyTheme(saved);
-}
-
-// Global click delegation for dark mode button (works anywhere, anytime)
-document.addEventListener('click', e => {
-  const btn = e.target.closest('.darkmode-btn');
-  if (btn) {
-    e.preventDefault();
-    e.stopPropagation();
-    const isLight = document.documentElement.classList.contains('light');
-    const nextTheme = isLight ? 'dark' : 'light';
-    applyTheme(nextTheme);
-  }
-});
-
-// Immediate execution for instant theme application (prevent flash)
-try {
-  const initialTheme = localStorage.getItem('ac_theme') || 'light';
-  applyTheme(initialTheme);
-} catch (e) {}
-
 // Lifecycle hooks
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    initTheme();
     refreshDisk();
     setInterval(refreshDisk, 30000);
   });
 } else {
-  initTheme();
   refreshDisk();
   setInterval(refreshDisk, 30000);
 }

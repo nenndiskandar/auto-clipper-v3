@@ -199,11 +199,9 @@ let CREATE_JOB = null;
 const PROCESS_JOBS = new Map();
 const REFIND_JOBS = new Map();
 let TRANS_JOB = null;
-// job story clip & facebook upload
-let STORY_JOBS = new Map(); // key "run" -> job (biar /api/tasks legible)
-const FB_JOBS = new Map();
 const DEP_JOBS = new Map(); // dependency download/update jobs: target -> {proc,code,startedAt,logPath}  // key "run" -> job
 const CAMPAIGN_JOBS = new Map(); // campaign auto 1-click: campId -> {proc, code, startedAt, logPath, resultFile, session_id, stage, child}
+const REDOWNLOAD_JOBS = new Map(); // redownload per-source: session -> {proc, code, startedAt, logPath, resultFile, url, index}
 
 function safe(seg) {
   const decoded = decodeURIComponent(seg || '');
@@ -327,7 +325,6 @@ function listSessions() {
 
 const SESSIONS_CACHE = { t: 0, data: null };
 const invalidateSessions = () => { SESSIONS_CACHE.t = 0; };
-const DASH_STORY_CACHE = { t: 0, data: [] };
 
 function readCampaignBrief(sd, data) {
   try {
@@ -685,15 +682,6 @@ const server = http.createServer((req, res) => {
       const fp = resolveClipFile(safe(mVidPub[2]), parts[0], parts[1]);
       if (!fp) { res.writeHead(404, { 'Content-Type': 'video/mp4' }); return res.end(); }
       return sendFile(req, res, fp, mVidPub[1] === 'download');
-    }
-    // /video/story/:clip/:file - stream hasil Story Clip (output/story_clips)
-    const mVidStory = p.match(/^\/video\/story\/([^/]+)\/(.+)$/);
-    if (mVidStory) {
-      const clipDir = path.join(ROOT, 'output', 'story_clips', safe(mVidStory[1]));
-      const file = path.basename(mVidStory[2]);
-      const fp = path.join(clipDir, file);
-      if (!clipDir.startsWith(ROOT) || !fs.existsSync(fp) || !fs.statSync(fp).isFile()) { res.writeHead(404, { 'Content-Type': 'video/mp4' }); return res.end(); }
-      return sendFile(req, res, fp, false);
     }
     // /raw/:session/:rel - stream file mentahan (_temp / _temp_gdrive / root mp4/srt) with range
     const mRaw = p.match(/^\/raw\/([^/]+)\/(.+)$/);
@@ -1174,7 +1162,9 @@ const server = http.createServer((req, res) => {
               if (!sz && Array.isArray(info.formats)) {
                 try { sz = Math.max(...info.formats.map(f=> f.filesize || f.filesize_approx || 0)); } catch {}
               }
-              if (sz && sz > limit) return { too:true, size: sz, pretty: (sz/1024/1024).toFixed(1)+' MB' };
+              let dur = info.duration || 0;
+              if (sz && sz > limit) return { too:true, size: sz, pretty: (sz/1024/1024).toFixed(1)+' MB', duration: dur };
+              return { too:false, duration: dur };
             } catch(e) {
               // jika dump-json gagal (misal GDrive private), jangan blok - biarkan fallback handle, tapi coba HEAD untuk GDrive
               try {
@@ -1185,162 +1175,225 @@ const server = http.createServer((req, res) => {
             }
             return { too:false };
           };
-          try {
+          (async ()=>{
+            try {
             const brief = JSON.parse(fs.readFileSync(path.join(sessionDir, 'campaign_brief.json'), 'utf8'));
-            _allSources = (brief.source_links || []).map(s=> typeof s==='string' ? s : {url:s.url,label:s.label||''}).filter(x=> typeof x==='string' ? x : x.url);
+            let _minDur = 0, _maxDur = 0;
+            try { const _ab = aiBrief || JSON.parse(fs.readFileSync(path.join(sessionDir, 'ai_brief.json'), 'utf8')); _minDur = parseInt(_ab.duration_min || 0, 10) || 0; _maxDur = parseInt(_ab.duration_max || 0, 10) || 0; } catch {}
+            const _fltMin = _minDur > 0 ? _minDur : 15;
+            const _fltMax = _maxDur > 0 ? _maxDur : 90;
+            _allSources = (brief.source_links || []).map(s=> typeof s==='string' ? {url:s,label:''} : {url:(s.url||s),label:s.label||''}).filter(x=> x && x.url);
+            if (!_allSources.length && j.campaign && j.campaign.source_links) {
+              _allSources = (j.campaign.source_links || []).map(s=> typeof s==='string' ? {url:s,label:''} : {url:(s.url||s),label:s.label||''}).filter(x=> x && x.url);
+            }
+            if (!_allSources.length) {
+              try { const sd0 = JSON.parse(fs.readFileSync(path.join(sessionDir, 'session_data.json'), 'utf8')); if (sd0.url) _allSources = [{url: sd0.url, label: ''}]; } catch {}
+            }
             const ranked = getRanked(_allSources);
             if (ranked.length) {
               try { fs.appendFileSync(logPath, `[INFO] Sources ranked ${ranked.length}: ${ranked.map(r=> r.label||r.url.slice(0,40)+' score='+r._score).join(' | ').slice(0,400)}\n`); } catch {}
-              // coba dari skor tertinggi: kalau folder, expand dulu; kalau file, pakai langsung (skip poster) + guard >500MB
-              for (const cand of ranked) {
-                const u = cand.url;
-                // guard besar >500MB - diskusi dulu, cek hanya untuk GDrive (YouTube skip)
+            }
+            // --- Multi-source collect: semua url viable (file langsung + expand folder), max 8 ---
+            let _pool = [];
+            const _seen = new Set();
+            const _pushUrl = (url, label, score, dur)=>{ if (!url || _seen.has(url)) return; _seen.add(url); _pool.push({ url, label: label||'', score: (score==null?50:score), dur: dur||0 }); };
+            for (const cand of ranked) {
+              const u = cand.url;
+              if (isGDriveFolder(u)) {
+                try { fs.appendFileSync(logPath, `[INFO] Folder detected, expanding: ${cand.label||''} ${u.slice(0,70)}\n`); } catch {}
+                const expanded = tryExpandFolder(u);
+                if (!expanded.length) { try { fs.appendFileSync(logPath, `[WARN] Folder ${cand.label||u.slice(0,40)} kosong/private, skip\n`); } catch {} continue; }
+                for (const eu of expanded) {
+                  if (isExcludedLabel(String(eu||''))) continue;
+                  let dEu = 0;
+                  if (/drive\.google\.com/.test(String(eu))) {
+                    try {
+                      const chk2 = checkTooLarge(eu, 500);
+                      if (chk2.too) { try { fs.appendFileSync(logPath, `[SKIP] Expanded file besar ${chk2.pretty} (>500 MB) skip: ${eu.slice(0,70)}\n`); } catch {} continue; }
+                      dEu = chk2.duration || 0;
+                    } catch {}
+                  }
+                  _pushUrl(eu, cand.label||'folder', cand._score, dEu);
+                }
+                try { fs.appendFileSync(logPath, `[INFO] Folder expanded ${expanded.length} files -> pool=${_pool.length}\n`); } catch {}
+              } else {
+                if (isExcludedLabel(cand.label) && ranked.length>1) continue;
+                let dU = 0;
                 if (/drive\.google\.com/.test(String(u))) {
                   try {
                     const chk = checkTooLarge(u, 500);
                     if (chk.too) { try { fs.appendFileSync(logPath, `[SKIP] File besar ${chk.pretty} (>500 MB) - diskusi dulu, skip: ${cand.label||''} ${u.slice(0,70)}\n`); } catch {} continue; }
+                    dU = chk.duration || 0;
                   } catch {}
                 }
-                if (isGDriveFolder(u)) {
-                  try { fs.appendFileSync(logPath, `[INFO] Folder detected, expanding: ${cand.label||''} ${u.slice(0,70)}\n`); } catch {}
-                  const expanded = tryExpandFolder(u);
-                  if (expanded.length) {
-                    // filter expanded: skip file besar >500MB
-                    let picked = null;
-                    for (const eu of expanded) {
-                      if (/drive\.google\.com/.test(String(eu))) {
-                        try {
-                          const chk2 = checkTooLarge(eu, 500);
-                          if (chk2.too) { try { fs.appendFileSync(logPath, `[SKIP] Expanded file besar ${chk2.pretty} (>500 MB) skip: ${eu.slice(0,70)}\n`); } catch {} continue; }
-                        } catch {}
-                      }
-                      picked = eu; break;
-                    }
-                    if (picked) {
-                      sourceUrl = picked;
-                      try { fs.appendFileSync(logPath, `[INFO] Folder expanded ${expanded.length} files -> picked ${sourceUrl.slice(0,80)}\n`); } catch {}
-                      break;
-                    } else {
-                      try { fs.appendFileSync(logPath, `[WARN] Folder ${cand.label||u.slice(0,40)} semua file >500MB/kosong/private, coba sumber berikutnya\n`); } catch {}
-                      continue;
-                    }
-                  } else {
-                    try { fs.appendFileSync(logPath, `[WARN] Folder ${cand.label||u.slice(0,40)} kosong/private, coba sumber berikutnya\n`); } catch {}
-                    continue;
-                  }
-                } else {
-                  // file/video url - skip kalau label poster dan masih ada kandidat lain
-                  if (isExcludedLabel(cand.label) && ranked.length>1) continue;
-                  sourceUrl = u;
-                  try { fs.appendFileSync(logPath, `[INFO] Picked file: ${cand.label||''} ${u.slice(0,80)} score=${cand._score}\n`); } catch {}
-                  break;
-                }
-              }
-              // fallback jika semua folder gagal dan tidak ada file terpilih - tetap guard besar
-              if (!sourceUrl && ranked.length) {
-                const candsF = ranked.filter(r=> isFileUrl(r.url) && !isExcludedLabel(r.label));
-                let pickedF = null;
-                for (const r of (candsF.length? candsF : ranked.filter(r=> isFileUrl(r.url)))) {
-                  if (/drive\.google\.com/.test(String(r.url))) {
-                    try { const chkF = checkTooLarge(r.url, 500); if (chkF.too) { try { fs.appendFileSync(logPath, `[SKIP] Fallback skip besar ${chkF.pretty}: ${r.url.slice(0,60)}\n`); } catch {} continue; } } catch {}
-                  }
-                  pickedF = r; break;
-                }
-                if (pickedF) sourceUrl = pickedF.url;
-                else if (ranked.length && !/drive\.google\.com/.test(String(ranked[0].url))) sourceUrl = ranked[0].url;
+                _pushUrl(u, cand.label||'', cand._score, dU);
               }
             }
-            if (!_allSources.length) sourceUrl = (brief.source_links && brief.source_links[0] && brief.source_links[0].url) || '';
-            if (sourceUrl) try { fs.appendFileSync(logPath, `[INFO] Final source: ${sourceUrl.slice(0,90)}\n`); } catch {}
-          } catch (e) { try { fs.appendFileSync(logPath, `[WARN] pick error: ${String(e.message||e).slice(0,200)}\n`); } catch {} }
-          if (!sourceUrl && j.campaign && j.campaign.source_links) {
-            const raw = j.campaign.source_links.map(s=> typeof s==='string' ? {url:s,label:''} : {url:s.url||s,label:s.label||''}).filter(o=>o.url);
-            if (raw.length) {
-              const isExcluded2 = (lb)=>/poster|thumbnail|cover|image|foto|banner|sample|mockup/i.test(String(lb||'').toLowerCase());
-              const ranked2 = getRanked(raw);
-              if (ranked2.length) {
-                for (const cand of ranked2) {
-                  const u = cand.url;
-                  if (/drive\.google\.com/.test(String(u))) {
-                    try { const chk = checkTooLarge(u, 500); if (chk.too) { try { fs.appendFileSync(logPath, `[SKIP] (campaign) File besar ${chk.pretty} skip: ${cand.label||''} ${u.slice(0,60)}\n`); } catch {} continue; } } catch {}
-                  }
-                  if (isGDriveFolder(u)) {
-                    const expanded2 = tryExpandFolder(u);
-                    if (expanded2.length) {
-                      let picked2=null;
-                      for (const eu2 of expanded2) {
-                        if (/drive\.google\.com/.test(String(eu2))) {
-                          try { const chk2=checkTooLarge(eu2,500); if (chk2.too) { try { fs.appendFileSync(logPath, `[SKIP] (campaign) Expanded besar ${chk2.pretty} skip ${eu2.slice(0,60)}\n`);} catch{} continue; } } catch{}
-                        }
-                        picked2=eu2; break;
-                      }
-                      if (picked2) { sourceUrl = picked2; break; }
-                      else continue;
-                    }
-                    else continue;
-                  } else {
-                    if (isExcluded2(cand.label) && ranked2.length>1) continue;
-                    sourceUrl = u; break;
-                  }
+            if (!_pool.length && ranked.length) {
+              const candsF = ranked.filter(r=> isFileUrl(r.url) && !isExcludedLabel(r.label));
+              for (const r of (candsF.length? candsF : ranked.filter(r=> isFileUrl(r.url)))) {
+                if (/drive\.google\.com/.test(String(r.url))) {
+                  try { const chkF = checkTooLarge(r.url, 500); if (chkF.too) continue; } catch {}
                 }
-                if (!sourceUrl && ranked2.length) {
-                  let pickedF2=null;
-                  const cands2 = ranked2.filter(r=> isFileUrl(r.url) && !isExcluded2(r.label));
-                  for (const r of (cands2.length? cands2 : ranked2.filter(r=> isFileUrl(r.url)))) {
-                    if (/drive\.google\.com/.test(String(r.url))) {
-                      try { const chkF2=checkTooLarge(r.url,500); if (chkF2.too) continue; } catch{}
-                    }
-                    pickedF2=r; break;
-                  }
-                  if (pickedF2) sourceUrl = pickedF2.url;
-                  else if (ranked2.length && !/drive\.google\.com/.test(String(ranked2[0].url))) sourceUrl = ranked2[0].url;
-                }
+                _pushUrl(r.url, r.label||'', r._score, 0);
               }
+              if (!_pool.length && ranked.length && !/drive\.google\.com/.test(String(ranked[0].url))) _pushUrl(ranked[0].url, ranked[0].label||'', ranked[0]._score, 0);
             }
-          }
-          if (!sourceUrl) {
-            try { const sd0 = JSON.parse(fs.readFileSync(path.join(sessionDir, 'session_data.json'), 'utf8')); sourceUrl = sd0.url || ''; } catch {}
-          }
-          if (!sourceUrl) {
-            const err = 'Tidak ada source video di campaign ini (source_links kosong)';
-            try { fs.appendFileSync(logPath, `\n[ERROR] ${err}\n`); } catch {}
-            job.code = 1; job.stage = 'failed'; job.finishedAt = Date.now();
-            try { fs.writeFileSync(resultFile, JSON.stringify({ ok: false, stage: 'highlight', error: err })); } catch {}
-            return;
-          }
-          try {
-            const sdPath = path.join(sessionDir, 'session_data.json');
-            if (fs.existsSync(sdPath)) {
-              let sd = JSON.parse(fs.readFileSync(sdPath, 'utf8'));
-              sd.campaign = sd.campaign || {};
-              sd.campaign.preset = preset;
-              sd.campaign.num_clips = numClips;
-              sd.preset = preset;
-              fs.writeFileSync(sdPath, JSON.stringify(sd, null, 2));
-            }
-          } catch {}
-          try { fs.appendFileSync(logPath, `\n[INFO] Source: ${sourceUrl}\n[INFO] Starting highlight num_clips=${numClips} -> ${sessionId}\n`); } catch {}
-          const child2 = spawn(PY, [path.join(__dirname, 'phase1_create.py'), String(sourceUrl), String(numClips), resultFile, sessionDir], { env: { ...process.env, PYTHONIOENCODING: 'utf-8' } });
-          job.proc = child2;
-          const out2 = fs.createWriteStream(logPath, { flags: 'a' });
-          child2.stdout.pipe(out2); child2.stderr.pipe(out2);
-          child2.on('close', code2 => {
-            try { out2.end(); } catch {}
-            if (code2 !== 0) {
-              job.code = code2; job.finishedAt = Date.now(); job.stage = 'failed';
-              try { const r = JSON.parse(fs.readFileSync(resultFile, 'utf8')); job.error = r.error; } catch {}
-              try { fs.appendFileSync(logPath, `\n[ERROR] Highlight failed code ${code2}\n`); } catch {}
-              return;
-            }
-            let r2 = null;
-            try { r2 = JSON.parse(fs.readFileSync(resultFile, 'utf8')); } catch { r2 = null; }
-            if (!r2 || !r2.ok) {
+            // prefer durasi >= minDur, lalu score tertinggi; max 8 sumber
+            _pool.sort((a,b)=>{
+              const aShort = (_minDur>0 && a.dur>0 && a.dur<_minDur) ? 1 : 0;
+              const bShort = (_minDur>0 && b.dur>0 && b.dur<_minDur) ? 1 : 0;
+              if (aShort!==bShort) return aShort-bShort;
+              return (b.score||0)-(a.score||0);
+            });
+            const sourceUrls = _pool.slice(0, 8);
+            try { fs.appendFileSync(logPath, `[INFO] Multi-source ${sourceUrls.length} urls parallel\n`); } catch {}
+            sourceUrl = (sourceUrls[0] && sourceUrls[0].url) || '';
+            if (!sourceUrls.length) {
+              const err = 'Tidak ada source video di campaign ini (source_links kosong)';
+              try { fs.appendFileSync(logPath, `\n[ERROR] ${err}\n`); } catch {}
               job.code = 1; job.stage = 'failed'; job.finishedAt = Date.now();
-              try { fs.appendFileSync(logPath, `\n[ERROR] Highlight result not ok: ${JSON.stringify(r2).slice(0, 600)}\n`); } catch {}
+              try { fs.writeFileSync(resultFile, JSON.stringify({ ok: false, stage: 'highlight', error: err })); } catch {}
               return;
             }
-            const count = r2.count || 0;
+            try {
+              const sdPath = path.join(sessionDir, 'session_data.json');
+              if (fs.existsSync(sdPath)) {
+                let sd = JSON.parse(fs.readFileSync(sdPath, 'utf8'));
+                sd.campaign = sd.campaign || {};
+                sd.campaign.preset = preset;
+                sd.campaign.num_clips = numClips;
+                sd.preset = preset;
+                fs.writeFileSync(sdPath, JSON.stringify(sd, null, 2));
+              }
+            } catch {}
+            // --- Paralel phase1_create: tiap source -> workDir isolasi (_work_i), pool max 3 ---
+            const runOneSource = (src, idx)=>{
+              return new Promise((resolve)=>{
+                const workDir = path.join(sessionDir, `_work_${idx}`);
+                const tmpResult = `${resultFile}.work${idx}.json`;
+                try { fs.mkdirSync(workDir, { recursive: true }); } catch {}
+                try { fs.appendFileSync(logPath, `[INFO] Source ${idx+1}/${sourceUrls.length} start: ${(src.label||'').slice(0,40)} ${src.url.slice(0,80)} -> _work_${idx}\n`); } catch {}
+                let child;
+                try {
+                  child = spawn(PY, [path.join(__dirname, 'phase1_create.py'), String(src.url), String(numClips), tmpResult, workDir], { env: { ...process.env, PYTHONIOENCODING: 'utf-8' } });
+                } catch(e) { resolve({ ok:false, url: src.url, label: src.label, workDir, highlights: [], error: String(e.message||e) }); return; }
+                job.procs = job.procs || []; job.procs.push(child); job.proc = child;
+                const outs = fs.createWriteStream(logPath, { flags: 'a' });
+                try { child.stdout.pipe(outs); child.stderr.pipe(outs); } catch {}
+                child.on('close', (c)=>{
+                  try { outs.end(); } catch {}
+                  try { job.procs = (job.procs||[]).filter(p=> p!==child); } catch {}
+                  let hl = [];
+                  let vinfo = null;
+                  try {
+                    const sdp = path.join(workDir, 'session_data.json');
+                    if (fs.existsSync(sdp)) { const d0 = JSON.parse(fs.readFileSync(sdp,'utf8')); if (Array.isArray(d0.highlights)) hl = d0.highlights; vinfo = d0.video_info || null; }
+                  } catch {}
+                  if (!hl.length) {
+                    try {
+                      const hp = path.join(workDir, 'highlights.json');
+                      if (fs.existsSync(hp)) { const h0 = JSON.parse(fs.readFileSync(hp,'utf8')); hl = Array.isArray(h0) ? h0 : (h0.highlights||[]); }
+                    } catch {}
+                  }
+                  try { fs.appendFileSync(logPath, `[INFO] Source ${idx+1}/${sourceUrls.length} done ${hl.length} highlights${c!==0?(' (exit '+c+')'):''}\n`); } catch {}
+                  resolve({ ok: hl.length>0, url: src.url, label: src.label, workDir, highlights: hl, video_info: vinfo, error: c!==0?('exit '+c):null });
+                });
+                child.on('error', (e)=>{ try { outs.end(); } catch {} resolve({ ok:false, url: src.url, label: src.label, workDir, highlights: [], error: String(e.message||e) }); });
+              });
+            };
+            const _results = new Array(sourceUrls.length);
+            let _next = 0;
+            const _workers = Array.from({ length: Math.min(3, sourceUrls.length) }, async ()=>{
+              while (_next < sourceUrls.length) { const i = _next++; _results[i] = await runOneSource(sourceUrls[i], i); }
+            });
+            await Promise.all(_workers);
+            // --- Merge highlights: tag source, filter durasi, dedup overlap per-source, sort virality ---
+            const parseTs = (t)=>{
+              if (t==null) return NaN;
+              if (typeof t==='number') return t;
+              const s = String(t).trim().replace(',', '.');
+              if (/^\d+(\.\d+)?$/.test(s)) return parseFloat(s);
+              const parts = s.split(':');
+              let sec = 0;
+              for (const p of parts) { sec = sec*60 + parseFloat(p); }
+              return sec;
+            };
+            let mergedHighlights = [];
+            let firstVideoInfo = null;
+            _results.forEach((r, i)=>{
+              if (!r) return;
+              if (r.video_info && !firstVideoInfo) firstVideoInfo = r.video_info;
+              (r.highlights||[]).forEach(h=>{
+                if (!h || typeof h!=='object') return;
+                h.source_url = r.url;
+                h.source_label = r.label || `source_${i+1}`;
+                h.source_index = i;
+                mergedHighlights.push(h);
+              });
+            });
+            mergedHighlights = mergedHighlights.filter(h=>{
+              const s = parseTs(h.start_time ?? h.start);
+              const e = parseTs(h.end_time ?? h.end);
+              if (!isFinite(s) || !isFinite(e) || e<=s) return false;
+              const d = e - s;
+              h.duration_seconds = Math.round(d*10)/10;
+              return d >= _fltMin && d <= _fltMax;
+            });
+            {
+              const bySrc = new Map();
+              mergedHighlights.forEach(h=>{ const k = h.source_url||('src'+(h.source_index??'')); if (!bySrc.has(k)) bySrc.set(k, []); bySrc.get(k).push(h); });
+              const kept = [];
+              for (const arr of bySrc.values()) {
+                arr.sort((a,b)=> (b.virality_score||0)-(a.virality_score||0));
+                const acc = [];
+                for (const h of arr) {
+                  const s = parseTs(h.start_time ?? h.start), e = parseTs(h.end_time ?? h.end);
+                  let ov = false;
+                  for (const k of acc) {
+                    const ks = parseTs(k.start_time ?? k.start), ke = parseTs(k.end_time ?? k.end);
+                    if (s < ke && ks < e) { ov = true; break; }
+                  }
+                  if (!ov) acc.push(h);
+                }
+                kept.push(...acc);
+              }
+              mergedHighlights = kept;
+            }
+            mergedHighlights.forEach(h=>{ if (h.virality_score==null) h.virality_score = 5; else { const v = parseFloat(h.virality_score); h.virality_score = isFinite(v)?v:5; } });
+            mergedHighlights.sort((a, b) => (b.virality_score || 0) - (a.virality_score || 0));
+            const count = mergedHighlights.length;
             job.count = count;
+            try {
+              const sdPathM = path.join(sessionDir, 'session_data.json');
+              let base = {};
+              try { if (fs.existsSync(sdPathM)) base = JSON.parse(fs.readFileSync(sdPathM,'utf8')); } catch {}
+              base.session_dir = sessionDir;
+              base.url = sourceUrls[0].url;
+              base.video_info = firstVideoInfo || base.video_info || { title: 'Unknown', channel: 'Unknown' };
+              base.highlights = mergedHighlights;
+              base.status = 'highlights_ready';
+              base.campaign = base.campaign || {};
+              base.campaign.preset = preset;
+              base.campaign.num_clips = numClips;
+              base.campaign.multi_source = { count, sources: sourceUrls.map((s,i)=>({ index:i, url:s.url, label:s.label||'', work_dir: `_work_${i}` })) };
+              try { if (brief && brief.source_links) base.campaign.source_links = brief.source_links; } catch {}
+              base.preset = preset;
+              if (aiBrief) base.ai_brief = aiBrief;
+              if (bgmPath) base.bgm_path = bgmPath;
+              if (!base.created_at) base.created_at = new Date().toISOString();
+              fs.writeFileSync(sdPathM, JSON.stringify(base, null, 2));
+              try { fs.writeFileSync(path.join(sessionDir, 'highlights.json'), JSON.stringify(mergedHighlights, null, 2)); } catch {}
+              try { fs.appendFileSync(logPath, `[INFO] Merged ${count} highlights dari ${_results.filter(r=>r&&r.ok).length}/${sourceUrls.length} sumber sukses -> session_data.json\n`); } catch {}
+            } catch(e) { try { fs.appendFileSync(logPath, `[WARN] Merge write gagal: ${String(e.message||e).slice(0,150)}\n`); } catch {} }
+            try { fs.writeFileSync(resultFile, JSON.stringify({ ok: true, stage: 'highlight', session_id: sessionId, session_dir: sessionDir, count, sources: sourceUrls.length })); } catch {}
+            if (!count) {
+              job.code = 1; job.stage = 'failed'; job.finishedAt = Date.now();
+              const errAll = 'Semua sumber gagal / tidak ada highlight viable (merged kosong)';
+              try { fs.appendFileSync(logPath, `\n[ERROR] ${errAll}\n`); } catch {}
+              try { fs.writeFileSync(resultFile, JSON.stringify({ ok: false, stage: 'highlight', error: errAll })); } catch {}
+              return;
+            }
             // --- Hashtag/hook enrichment: inject hashtags_required + suggested ke session_data highlights captions ---
             try {
               if (aiBrief && (aiBrief.hashtags_required||aiBrief.hashtags_suggested)) {
@@ -1353,16 +1406,13 @@ const server = http.createServer((req, res) => {
                   const hook = aiBrief.hook_wajib || '';
                   if (sd2.highlights && Array.isArray(sd2.highlights)) {
                     sd2.highlights.forEach(h=>{
-                      // simpan hashtag di highlight untuk sesi/session.html
                       if (allTags) h.hashtags = allTags;
                       if (hook && h.timed_title && !String(h.timed_title).toLowerCase().includes(String(hook).toLowerCase().slice(0,12))) {
-                        // jangan ubah timed_title paksa, cuma catat hook terpisah
                         h.hook_wajib = hook;
                       }
                       h.brief_hashtags_required = aiBrief.hashtags_required||[];
                       h.brief_hashtags_suggested = aiBrief.hashtags_suggested||[];
                     });
-                    // also store at session top
                     sd2.ai_brief = aiBrief;
                     sd2.bgm_path = bgmPath || null;
                     fs.writeFileSync(sdPath2, JSON.stringify(sd2, null, 2));
@@ -1373,15 +1423,14 @@ const server = http.createServer((req, res) => {
             } catch(e) { try { fs.appendFileSync(logPath, `[WARN] Hashtag inject gagal: ${String(e.message||e).slice(0,150)}\n`); } catch {} }
             if (!autoRender) {
               job.code = 0; job.finishedAt = Date.now(); job.stage = 'done';
+              try { fs.writeFileSync(resultFile, JSON.stringify({ ok: true, stage: 'done', session_id: sessionId, session_dir: sessionDir, count, rendered: 0, sources: sourceUrls.length })); } catch {}
               invalidateSessions();
               return;
             }
             job.stage = 'render';
-            try { fs.appendFileSync(logPath, `\n[INFO] Highlight OK ${count} clips, auto-render top ${topN} preset=${preset}\n`); } catch {}
-            let highlights = [];
-            try { const sd2 = JSON.parse(fs.readFileSync(path.join(sessionDir, 'session_data.json'), 'utf8')); highlights = sd2.highlights || []; } catch {}
-            highlights.sort((a, b) => (b.virality_score || 0) - (a.virality_score || 0));
-            const selIdx = highlights.slice(0, topN).map((_, i) => i);
+            try { fs.appendFileSync(logPath, `\n[INFO] Highlight OK ${count} clips (multi-source ${sourceUrls.length}), auto-render top ${topN} preset=${preset}\n`); } catch {}
+            mergedHighlights.sort((a, b) => (b.virality_score || 0) - (a.virality_score || 0));
+            const selIdx = mergedHighlights.slice(0, topN).map((_, i) => i);
             if (!selIdx.length) {
               job.code = 0; job.stage = 'done'; job.finishedAt = Date.now();
               try { fs.writeFileSync(resultFile, JSON.stringify({ ok: true, stage: 'done', session_id: sessionId, session_dir: sessionDir, count, rendered: 0 })); } catch {}
@@ -1391,38 +1440,49 @@ const server = http.createServer((req, res) => {
             const selStr = selIdx.join(',');
             const env = { ...process.env, SELECTED: selStr, ADD_HOOK: '1', ADD_CAPS: '1', PRESET: preset, PYTHONIOENCODING: 'utf-8' };
             if (bgmPath && fs.existsSync(bgmPath)) { env.BGM_PATH = bgmPath; try { fs.appendFileSync(logPath, `[INFO] Render akan pakai backsound ${bgmPath}\n`); } catch {} }
-            // hashtags already injected into session_data.json (hashtags_all + brief_hashtags_*), env kept for future metadata hook
             if (aiBrief && aiBrief.hashtags_required) { try { env.HASHTAGS_REQ = (aiBrief.hashtags_required||[]).join(' '); env.HASHTAGS_SUG = (aiBrief.hashtags_suggested||[]).join(' '); } catch {} }
             const renderLog = path.join(sessionDir, 'process.log');
             try { fs.mkdirSync(path.dirname(renderLog), { recursive: true }); } catch {}
             try { fs.appendFileSync(renderLog, `\n===== auto-render start ${new Date().toISOString()} preset=${preset} selected=${selStr} =====\n`); } catch {}
             const procChild = spawn(PY, [path.join(__dirname, 'process_session.py'), sessionDir], { env });
-            job.proc = procChild;
-            const outRender = fs.createWriteStream(renderLog, { flags: 'a' });
-            const campAppend = fs.createWriteStream(logPath, { flags: 'a' });
-            procChild.stdout.on('data', d => { try { outRender.write(d); campAppend.write(d); } catch {} });
-            procChild.stderr.on('data', d => { try { outRender.write(d); campAppend.write(d); } catch {} });
-            procChild.on('close', code3 => {
-              try { outRender.end(); campAppend.end(); } catch {}
-              job.code = code3; job.finishedAt = Date.now();
-              if (code3 === 0) {
-                job.stage = 'done';
-                try {
-                  const sdFinal = JSON.parse(fs.readFileSync(path.join(sessionDir, 'session_data.json'), 'utf8'));
-                  const clipsCount = (sdFinal.highlights || []).length;
-                  // count actual mp4 files
-                  let renderedFiles = 0;
-                  try { renderedFiles = fs.readdirSync(path.join(sessionDir, 'clips')).filter(f => fs.statSync(path.join(sessionDir, 'clips', f)).isDirectory()).length; } catch {}
-                  fs.writeFileSync(resultFile, JSON.stringify({ ok: true, stage: 'done', session_id: sessionId, session_dir: sessionDir, count, rendered: selIdx.length, clips: renderedFiles }));
-                } catch { try { fs.writeFileSync(resultFile, JSON.stringify({ ok: true, stage: 'done', session_id: sessionId, count, rendered: selIdx.length })); } catch {} }
-                invalidateSessions();
-              } else {
-                job.stage = 'failed';
-                try { fs.writeFileSync(resultFile, JSON.stringify({ ok: false, stage: 'render', error: `Render gagal code ${code3}`, session_id: sessionId, count })); } catch {}
-                try { fs.appendFileSync(logPath, `\n[ERROR] Render failed code ${code3}\n`); } catch {}
-              }
+            job.proc = procChild; job.procs = [procChild];
+            await new Promise((resolve)=>{
+              const outRender = fs.createWriteStream(renderLog, { flags: 'a' });
+              const campAppend = fs.createWriteStream(logPath, { flags: 'a' });
+              procChild.stdout.on('data', d => { try { outRender.write(d); campAppend.write(d); } catch {} });
+              procChild.stderr.on('data', d => { try { outRender.write(d); campAppend.write(d); } catch {} });
+              procChild.on('close', code3 => {
+                try { outRender.end(); campAppend.end(); } catch {}
+                job.code = code3; job.finishedAt = Date.now();
+                if (code3 === 0) {
+                  job.stage = 'done';
+                  try {
+                    const sdFinal = JSON.parse(fs.readFileSync(path.join(sessionDir, 'session_data.json'), 'utf8'));
+                    const clipsCount = (sdFinal.highlights || []).length;
+                    let renderedFiles = 0;
+                    try { renderedFiles = fs.readdirSync(path.join(sessionDir, 'clips')).filter(f => fs.statSync(path.join(sessionDir, 'clips', f)).isDirectory()).length; } catch {}
+                    fs.writeFileSync(resultFile, JSON.stringify({ ok: true, stage: 'done', session_id: sessionId, session_dir: sessionDir, count, rendered: selIdx.length, clips: renderedFiles }));
+                  } catch { try { fs.writeFileSync(resultFile, JSON.stringify({ ok: true, stage: 'done', session_id: sessionId, count, rendered: selIdx.length })); } catch {} }
+                  invalidateSessions();
+                } else {
+                  job.stage = 'failed';
+                  try { fs.writeFileSync(resultFile, JSON.stringify({ ok: false, stage: 'render', error: `Render gagal code ${code3}`, session_id: sessionId, count })); } catch {}
+                  try { fs.appendFileSync(logPath, `\n[ERROR] Render failed code ${code3}\n`); } catch {}
+                }
+                resolve();
+              });
             });
+            } catch(e) {
+              job.code = 1; job.stage = 'failed'; job.finishedAt = Date.now();
+              try { fs.appendFileSync(logPath, `\n[ERROR] Multi-source highlight gagal: ${String(e.message||e).slice(0,400)}\n`); } catch {}
+              try { fs.writeFileSync(resultFile, JSON.stringify({ ok: false, stage: 'highlight', error: String(e.message||e).slice(0,400) })); } catch {}
+            }
+          })().catch(e=>{
+            job.code = 1; job.stage = 'failed'; job.finishedAt = Date.now();
+            try { fs.appendFileSync(logPath, `\n[ERROR] Multi-source fatal: ${String(e.message||e).slice(0,300)}\n`); } catch {}
+            try { fs.writeFileSync(resultFile, JSON.stringify({ ok: false, stage: 'highlight', error: String(e.message||e).slice(0,300) })); } catch {}
           });
+
         });
         json(res, 200, { ok: true, started: true, campId, session_id: `tk_${campId}` });
       });
@@ -1443,7 +1503,7 @@ const server = http.createServer((req, res) => {
       const campId = p.split('/').filter(Boolean).pop();
       const job = CAMPAIGN_JOBS.get(campId);
       if (!job || job.code !== undefined) return json(res, 404, { error: 'Tidak ada job berjalan', campId });
-      try { if (job.proc && !job.proc.killed) { try { process.kill(-job.proc.pid, 'SIGKILL'); } catch { try { job.proc.kill('SIGKILL'); } catch {} } } } catch {}
+      try { const _toKill = (job.procs && job.procs.length ? job.procs : (job.proc ? [job.proc] : [])); _toKill.forEach(pr=>{ try{ if(!pr.killed){ try{ process.kill(-pr.pid,'SIGKILL'); }catch{ try{ pr.kill('SIGKILL'); }catch{} } } }catch{} }); } catch {}
       job.code = 130; job.finishedAt = Date.now(); job.stage = 'cancelled';
       try { fs.appendFileSync(job.logPath, '\n[CANCELLED by user]\n'); } catch {}
       return json(res, 200, { ok: true, cancelled: true, campId });
@@ -2228,82 +2288,6 @@ print(json.dumps(out))`;
       });
       return;
     }
-    // --- Cookies management (yt-dlp): upload, status, hapus, test ---
-    const COOKIES_FILE = path.join(ROOT, 'cookies.txt');
-    const cookiesInfo = () => {
-      try {
-        const st = fs.statSync(COOKIES_FILE);
-        const txt = fs.readFileSync(COOKIES_FILE, 'utf8');
-        const lines = txt.split('\n').filter(l => l.trim() && !l.trim().startsWith('#')).length;
-        return { exists: true, size: st.size, lines, mtime: st.mtimeMs,
-          domains: [...new Set(txt.split('\n').map(l => l.trim().split('\t')[0]).filter(d => d && !d.startsWith('#') && !d.startsWith('http')))].slice(0, 10) };
-      } catch { return { exists: false }; }
-    };
-    // POST /api/cookies - upload cookies.txt (base64 content)
-    if (p === '/api/cookies' && req.method === 'POST') {
-      let body = '';
-      req.on('data', c => body += c); req.on('error', () => {});
-      req.on('end', () => {
-        try {
-          const o = JSON.parse(body || '{}');
-          const b64 = String(o.data || '').trim();
-          if (!b64) return json(res, 400, { error: 'Tidak ada data cookies' });
-          let txt = Buffer.from(b64, 'base64').toString('utf8');
-          if (!/^# (HTTP )?Cookie/m.test(txt) && !txt.includes('\t') && txt.includes('yt-dlp')) {
-            return json(res, 400, { error: 'Format bukan cookies.txt (Netscape)' });
-          }
-          if (!txt.match(/# (HTTP )?Cookie/)) {
-            // tambahkan header Netscape bila belum ada (agar yt-dlp mau baca)
-            txt = '# Netscape HTTP Cookie File\n# http://curl.haxx.se/rfc/cookie_spec.html\n# This file was generated by AutoClipper web panel\n' + txt;
-          }
-          fs.writeFileSync(COOKIES_FILE, txt, 'utf8');
-          json(res, 200, { ok: true, ...cookiesInfo() });
-        } catch (e) { json(res, 500, { error: String(e) }); }
-      });
-      return;
-    }
-    // GET /api/cookies - status cookies
-    if (p === '/api/cookies' && req.method === 'GET') {
-      return json(res, 200, cookiesInfo());
-    }
-    // DELETE /api/cookies - hapus cookies
-    if (p === '/api/cookies' && req.method === 'DELETE') {
-      try { if (fs.existsSync(COOKIES_FILE)) fs.rmSync(COOKIES_FILE); json(res, 200, { ok: true, exists: false }); }
-      catch (e) { json(res, 500, { error: String(e) }); }
-      return;
-    }
-    // POST /api/cookies/test - uji cookies terhadap video YouTube
-    if (p === '/api/cookies/test' && req.method === 'POST') {
-      let body = '';
-      req.on('data', c => body += c); req.on('end', () => {
-        let o = {}; try { o = JSON.parse(body || '{}'); } catch {}
-        if (!fs.existsSync(COOKIES_FILE)) return json(res, 400, { error: 'Belum ada cookies' });
-        const url = String(o.url || 'https://www.youtube.com/watch?v=jNQXAC9IVRw').trim() || 'https://www.youtube.com/watch?v=jNQXAC9IVRw';
-        const args = ['--cookies', COOKIES_FILE, '--dump-single-json', '--no-warnings', '--skip-download', '--socket-timeout', '15', url];
-        const child = execFile('/usr/local/bin/yt-dlp', args, { timeout: 60000, maxBuffer: 8 * 1024 * 1024 }, (err, stdout, stderr) => {
-          if (err) {
-            const msg = String(stderr || err.message || '');
-            const needsAuth = /Sign in to confirm|confirm your identity|Sign in to YouTube|LOGIN_REQUIRED|"status": *"fail"/i.test(msg);
-            return json(res, 200, {
-              ok: false,
-              auth: needsAuth ? 'gagal' : 'tidak-yakin',
-              message: needsAuth
-                ? 'Cookies TIDAK valid - yt-dlp butuh login (YouTube minta verifikasi). Export cookies baru dari browser yang sudah login.'
-                : 'yt-dlp gagal menjalankan test: ' + msg.split('\n').slice(-3).join(' '),
-              detail: msg.split('\n').slice(-8),
-            });
-          }
-          let info = null; try { info = JSON.parse(stdout); } catch {}
-          return json(res, 200, {
-            ok: true,
-            auth: 'ok',
-            message: 'Cookies VALID. Login berhasil.',
-            title: info && info.title, channel: info && (info.channel || info.uploader), id: info && info.id,
-          });
-        });
-      });
-      return;
-    }
     // --- Auto BGM management: daftar/upload/hapus file musik per mood ---
     const BGM_MOODS = ['chill', 'epic', 'sad', 'upbeat', 'suspense'];
     const BGM_DIR = path.join(ROOT, 'assets', 'bgm');
@@ -2498,6 +2482,54 @@ print(json.dumps(out))`;
       } catch (e) { json(res, 500, { error: String(e) }); }
       return;
     }
+    // POST /api/redownload/:session - redownload 1 source URL ke _temp (force, async + log)
+    // body { url, index? } - download via redownload_source.py (yt-dlp/rclone/gdown)
+    const mRedl = p.match(/^\/api\/redownload\/([^/]+)$/);
+    if (mRedl && req.method === 'POST') {
+      const sid = safe(mRedl[1]);
+      const sessDir = path.join(SESSIONS, sid);
+      if (!sessDir.startsWith(SESSIONS) || !fs.existsSync(path.join(sessDir, 'session_data.json'))) return json(res, 404, { error: 'session tidak ditemukan' });
+      const prev = REDOWNLOAD_JOBS.get(sid);
+      if (prev && prev.code === undefined) return json(res, 409, { error: 'Redownload untuk sesi ini masih berjalan' });
+      let body = '';
+      req.on('data', c => body += c);
+      req.on('end', () => {
+        let o = {};
+        try { o = JSON.parse(body || '{}'); } catch {}
+        const url = String(o.url || '').trim();
+        const index = String(o.index ?? '0');
+        if (!url) return json(res, 400, { error: 'url wajib diisi' });
+        const logPath = path.join(sessDir, 'redownload.log');
+        const resultFile = path.join(ROOT, 'output', `.redownload_result_${sid}_${Date.now()}.json`);
+        fs.appendFileSync(logPath, `\n===== redownload start ${new Date().toISOString()} idx=${index} url=${url.slice(0,100)} =====\n`);
+        const out = fs.createWriteStream(logPath, { flags: 'a' });
+        const child = spawn(PY, [path.join(__dirname, 'redownload_source.py'), sessDir, url, index]);
+        child.stdout.pipe(out); child.stderr.pipe(out);
+        const job = { proc: child, code: undefined, startedAt: Date.now(), resultFile, url, index };
+        REDOWNLOAD_JOBS.set(sid, job);
+        child.on('close', code => { job.code = code; job.finishedAt = Date.now(); out.end(); });
+        json(res, 200, { ok: true, started: true });
+      });
+      return;
+    }
+    // GET /api/redownload/status/:session
+    const mRedlSt = p.match(/^\/api\/redownload\/status\/([^/]+)$/);
+    if (mRedlSt) {
+      const sid = safe(mRedlSt[1]);
+      const job = REDOWNLOAD_JOBS.get(sid);
+      let result = null;
+      try { if (job && job.code !== undefined && fs.existsSync(job.resultFile)) result = JSON.parse(fs.readFileSync(job.resultFile, 'utf8')); } catch {}
+      return json(res, 200, {
+        running: !!(job && job.code === undefined),
+        code: job ? job.code : null,
+        url: job ? job.url : null,
+        index: job ? job.index : null,
+        elapsed_s: job ? Math.round(((job.code !== undefined && job.finishedAt ? job.finishedAt : Date.now()) - job.startedAt) / 1000) : null,
+        log: tailFile(path.join(SESSIONS, sid, 'redownload.log'), 6000),
+        progress: parseOverall(tailFile(path.join(SESSIONS, sid, 'redownload.log'), 6000)),
+        result,
+      });
+    }
     // POST /api/refind/:session - regenerate highlights sesi ada (async + log)
     const mRef = p.match(/^\/api\/refind\/([^/]+)$/);
     if (mRef && req.method === 'POST') {
@@ -2540,215 +2572,24 @@ print(json.dumps(out))`;
         result,
       });
     }
-    // GET /api/dashboard - ringkasan agregat: total klip, viral tertinggi, story outputs, klip terbaru
+    // GET /api/dashboard - ringkasan agregat: total klip, viral tertinggi, klip terbaru
         if (p === '/api/dashboard') {
           try {
             const sessions = listSessions(); // pakai cache 1.5s, bukan _listSessions raw scan
             const allClips = sessions.flatMap(s => (s.clips || []).map(c => ({ ...c, session: s.id, sessionTitle: s.title })));
             const scored = allClips.filter(c => c.score != null).sort((a, b) => (b.score || 0) - (a.score || 0)).slice(0, 5);
             const recent = allClips.slice().sort((a, b) => (b.created || 0) - (a.created || 0)).slice(0, 5);
-            let storyOutputs = [];
-            try {
-              const base = path.join(ROOT, 'output', 'story_clips');
-              if (fs.existsSync(base)) {
-                const now = Date.now();
-                if (DASH_STORY_CACHE.t && now - DASH_STORY_CACHE.t < 5000) {
-                  storyOutputs = DASH_STORY_CACHE.data;
-                } else {
-                  storyOutputs = fs.readdirSync(base).filter(d => {
-                    try { return fs.statSync(path.join(base, d)).isDirectory(); } catch { return false; }
-                  }).sort().flatMap(d => {
-                    const dir = path.join(base, d);
-                    return fs.readdirSync(dir).filter(f => f.toLowerCase().endsWith('.mp4')).map(f => ({
-                      clip: d, file: f,
-                      url: '/video/story/' + encodeURIComponent(d) + '/' + encodeURIComponent(f),
-                      size_bytes: fs.statSync(path.join(dir, f)).size,
-                      mtime: fs.statSync(path.join(dir, f)).mtimeMs,
-                    }));
-                  }).sort((a, b) => (b.mtime || 0) - (a.mtime || 0)).slice(0, 5);
-                  DASH_STORY_CACHE.t = now;
-                  DASH_STORY_CACHE.data = storyOutputs;
-                }
-              }
-            } catch {}
-            let fb = { count: 0, lastStatus: null };
-            try {
-              const fp = path.join(ROOT, 'output', 'fb_upload_results.json');
-              if (fs.existsSync(fp)) {
-                const rows = JSON.parse(fs.readFileSync(fp, 'utf8'));
-                fb.count = Array.isArray(rows) ? rows.length : 0;
-                fb.lastStatus = Array.isArray(rows) && rows.length ? rows[rows.length - 1] : null;
-              }
-            } catch {}
+            const fb = { count: 0, lastStatus: null };
             return json(res, 200, {
               total_sessions: sessions.length,
               total_clips: allClips.length,
               top_viral: scored,
               recent: recent,
-              story: storyOutputs,
+              story: [],
               fb,
             });
           } catch (e) { return json(res, 500, { error: String(e) }); }
         }
-    // POST /api/story/run - jalankan Story Clip pipeline (multi-source) async
-    if (p === '/api/story/run' && req.method === 'POST') {
-      const prev = STORY_JOBS.get('run');
-      if (prev && prev.code === undefined) return json(res, 409, { error: 'Story pipeline masih berjalan' });
-      let body = '';
-      req.on('data', c => body += c);
-      req.on('end', () => {
-        let o = {};
-        try { o = JSON.parse(body || '{}'); } catch {}
-        const appDir = ROOT;
-        const outDir = path.join(appDir, 'output');
-        const storyDir = path.join(outDir, 'story');
-        const pick = (v, def) => { try { const r = v && String(v).trim() ? path.resolve(appDir, String(v).trim()) : ''; if (r && (r === ROOT || r.startsWith(ROOT + path.sep)) && fs.existsSync(r)) return r; } catch {} return def; };
-        const sourcesJson = pick(o.sources, path.join(storyDir, 'sources.json'));
-        const recipeJson = pick(o.recipe, path.join(storyDir, 'story_recipe.json'));
-        if (!fs.existsSync(sourcesJson) || !fs.existsSync(recipeJson)) {
-          return json(res, 400, { error: `sources.json / story_recipe.json dibutuhkan` });
-        }
-        let cfgSt = {};
-        try { cfgSt = JSON.parse(fs.readFileSync(path.join(ROOT, 'config.json'), 'utf8')); } catch {}
-        const resultFile = path.join(outDir, `.story_result_${Date.now()}.json`);
-        const logPath = path.join(outDir, `story_${Date.now()}.log`);
-        const opts = JSON.stringify({
-          sources_json: sourcesJson,
-          recipe_json: recipeJson,
-          outputs_dir: outDir,
-          whisper_model: o.whisper_model || (cfgSt.story_clip && cfgSt.story_clip.whisper_model) || 'medium',
-          skip_download: !!o.skip_download,
-          download_height: o.download_height || 'max',
-          ratio: o.ratio || '9:16',
-        });
-        const out = fs.createWriteStream(logPath, { flags: 'a' });
-        const child = spawn(PY, [path.join(__dirname, 'story_run.py'), resultFile], { env: { ...process.env, PYTHONIOENCODING: 'utf-8', STORY_OPTS: opts } });
-        child.stdout.pipe(out); child.stderr.pipe(out);
-        STORY_JOBS.set('run', { proc: child, code: undefined, startedAt: Date.now(), resultFile, logPath });
-        child.on('close', code => { const j = STORY_JOBS.get('run'); if (j) { j.code = code; j.finishedAt = Date.now(); } out.end(); });
-        json(res, 200, { ok: true, started: true, log: logPath });
-      });
-      return;
-    }
-    // GET /api/story/status
-    if (p === '/api/story/status') {
-      const j = STORY_JOBS.get('run');
-      let result = null;
-      try { if (j && j.code !== undefined && fs.existsSync(j.resultFile)) result = JSON.parse(fs.readFileSync(j.resultFile, 'utf8')); } catch {}
-      return json(res, 200, {
-        running: !!(j && j.code === undefined),
-        code: j ? j.code : null,
-        elapsed_s: j ? Math.round(((j.code !== undefined && j.finishedAt ? j.finishedAt : Date.now()) - j.startedAt) / 1000) : null,
-        log: j && j.logPath ? tailFile(j.logPath) : '',
-        progress: j && j.logPath ? parseOverall(tailFile(j.logPath)) : null,
-        result,
-      });
-    }
-    // POST /api/story/cancel
-    if (p === '/api/story/cancel' && req.method === 'POST') {
-      const j = STORY_JOBS.get('run');
-      if (!j || j.code !== undefined) return json(res, 404, { error: 'Tidak ada story pipeline berjalan' });
-      try { process.kill(-j.proc.pid, 'SIGKILL'); } catch { try { j.proc.kill('SIGKILL'); } catch {} }
-      return json(res, 200, { ok: true, cancelled: true });
-    }
-    // GET /api/story/outputs - daftar hasil dari output/story_clips
-    if (p === '/api/story/outputs') {
-      try {
-        const base = path.join(ROOT, 'output', 'story_clips');
-        if (!fs.existsSync(base)) return json(res, 200, []);
-        const list = fs.readdirSync(base).filter(d => fs.statSync(path.join(base, d)).isDirectory()).sort().flatMap(d => {
-          try {
-            const dir = path.join(base, d);
-            return fs.readdirSync(dir).filter(f => f.toLowerCase().endsWith('.mp4')).map(f => {
-              const fp = path.join(dir, f);
-              return { clip: d, file: f, url: '/video/story/' + encodeURIComponent(d) + '/' + encodeURIComponent(f), size_bytes: fs.statSync(fp).size, mtime: fs.statSync(fp).mtimeMs };
-            });
-          } catch { return []; }
-        });
-        return json(res, 200, list);
-      } catch (e) { return json(res, 500, { error: String(e) }); }
-    }
-    // POST /api/fb/upload - jalankan Facebook Reels uploader async
-    if (p === '/api/fb/upload' && req.method === 'POST') {
-      const prev = FB_JOBS.get('run');
-      if (prev && prev.code === undefined) return json(res, 409, { error: 'Facebook upload masih berjalan' });
-      let body = '';
-      req.on('data', c => body += c);
-      req.on('end', () => {
-        let o = {};
-        try { o = JSON.parse(body || '{}'); } catch {}
-        const outDir = path.join(ROOT, 'output');
-        let manifest = o.manifest && fs.existsSync(path.join(ROOT, String(o.manifest))) ? path.join(ROOT, String(o.manifest)) : path.join(outDir, 'render_manifest.json');
-        const resultFile = path.join(outDir, `.fb_result_${Date.now()}.json`);
-        const logPath = path.join(outDir, `fb_upload_${Date.now()}.log`);
-        const opts = JSON.stringify({ manifest, result: path.join(outDir, 'fb_upload_results.json'), updated: manifest + '_fb_uploaded.json', test_mode: !!o.test_mode });
-        const out = fs.createWriteStream(logPath, { flags: 'a' });
-        const child = spawn(PY, [path.join(__dirname, 'fb_upload.py'), resultFile], { env: { ...process.env, PYTHONIOENCODING: 'utf-8', FB_OPTS: opts } });
-        child.stdout.pipe(out); child.stderr.pipe(out);
-        FB_JOBS.set('run', { proc: child, code: undefined, startedAt: Date.now(), resultFile, logPath });
-        child.on('close', code => { const j = FB_JOBS.get('run'); if (j) { j.code = code; j.finishedAt = Date.now(); } out.end(); });
-        json(res, 200, { ok: true, started: true });
-      });
-      return;
-    }
-    // GET /api/fb/status
-    if (p === '/api/fb/status') {
-      const j = FB_JOBS.get('run');
-      let result = null;
-      try { if (j && j.code !== undefined && fs.existsSync(j.resultFile)) result = JSON.parse(fs.readFileSync(j.resultFile, 'utf8')); } catch {}
-      return json(res, 200, {
-        running: !!(j && j.code === undefined),
-        code: j ? j.code : null,
-        elapsed_s: j ? Math.round(((j.code !== undefined && j.finishedAt ? j.finishedAt : Date.now()) - j.startedAt) / 1000) : null,
-        log: j && j.logPath ? tailFile(j.logPath) : '',
-        result,
-      });
-    }
-    // POST /api/fb/cancel
-    if (p === '/api/fb/cancel' && req.method === 'POST') {
-      const j = FB_JOBS.get('run');
-      if (!j || j.code !== undefined) return json(res, 404, { error: 'Tidak ada upload berjalan' });
-      try { process.kill(-j.proc.pid, 'SIGKILL'); } catch { try { j.proc.kill('SIGKILL'); } catch {} }
-      return json(res, 200, { ok: true, cancelled: true });
-    }
-    // GET /api/story/sources | /api/story/recipe - baca JSON input (untuk editor UI)
-    if (p === '/api/story/read' && req.method === 'GET') {
-      const url = new URL(req.url, 'http://x');
-      const file = String(url.searchParams.get('file') || '').replace(/[^a-z_]/gi, '');
-      if (file !== 'sources' && file !== 'recipe') return json(res, 400, { error: 'file must be sources|recipe' });
-      const fp = path.join(ROOT, 'output', 'story', file === 'sources' ? 'sources.json' : 'story_recipe.json');
-      if (!fs.existsSync(fp)) return json(res, 200, { ok: true, content: null });
-      try {
-        return json(res, 200, { ok: true, content: fs.readFileSync(fp, 'utf8') });
-      } catch (e) { return json(res, 500, { error: String(e) }); }
-    }
-    // POST /api/story/save {file:'sources'|'recipe', content} - simpan JSON input ke output/story
-    if (p === '/api/story/save' && req.method === 'POST') {
-      let body = ''; req.on('data', c => body += c); req.on('end', () => {
-        let o = {}; try { o = JSON.parse(body || '{}'); } catch {}
-        const file = String(o.file || '').replace(/[^a-z_]/gi, '');
-        if (file !== 'sources' && file !== 'recipe') return json(res, 400, { error: 'file must be sources|recipe' });
-        if (typeof o.content !== 'string' || !o.content.trim()) return json(res, 400, { error: 'content required' });
-        if (file === 'sources') { try { const j = JSON.parse(o.content); if (typeof j !== 'object') throw 0; } catch { return json(res, 400, { error: 'sources.json bukan JSON valid' }); } }
-        if (file === 'recipe') { try { const j = JSON.parse(o.content); if (typeof j !== 'object') throw 0; } catch { return json(res, 400, { error: 'story_recipe.json bukan JSON valid' }); } }
-        try {
-          const dir = path.join(ROOT, 'output', 'story');
-          fs.mkdirSync(dir, { recursive: true });
-          const fp = path.join(dir, file === 'sources' ? 'sources.json' : 'story_recipe.json');
-          fs.writeFileSync(fp, o.content, 'utf8');
-          return json(res, 200, { ok: true, path: fp });
-        } catch (e) { return json(res, 500, { error: String(e) }); }
-      });
-      return;
-    }
-    // GET /api/fb/manifests - daftar render_manifest*.json di output/
-    if (p === '/api/fb/manifests') {
-      try {
-        const outDir = path.join(ROOT, 'output');
-        const files = fs.existsSync(outDir) ? fs.readdirSync(outDir).filter(f => /^render_manifest.*\.json$/.test(f)).sort() : [];
-        return json(res, 200, files.map(f => ({ name: f, rel: path.join('output', f), abs: path.join(outDir, f), size: (() => { try { return fs.statSync(path.join(outDir, f)).size; } catch { return 0; } })() })));
-      } catch (e) { return json(res, 500, { error: String(e) }); }
-    }
     // POST /api/tasks/stop - hentikan job berjalan (SIGTERM → SIGKILL tree)
     if (p === '/api/tasks/stop' && req.method === 'POST') {
       let body = '';
@@ -2761,6 +2602,7 @@ print(json.dumps(out))`;
         if (kind === 'create') { job = CREATE_JOB; label = 'find highlight'; }
         else if (kind === 'refind') { job = REFIND_JOBS.get(qs); label = `re-find ${qs}`; }
         else if (kind === 'process') { job = PROCESS_JOBS.get(qs); label = `process ${qs}`; }
+        else if (kind === 'redownload') { job = REDOWNLOAD_JOBS.get(qs); label = `redownload ${qs}`; }
         else if (kind === 'render') { job = RENDER_JOBS.get(`${qs}/${qc}`); label = `render ${qs}/${qc}`; }
         else if (kind === 'campaign') { 
           let campId = qs.startsWith('tk_') ? qs.slice(3) : qs;
@@ -2768,8 +2610,6 @@ print(json.dumps(out))`;
           if (!job) { for (const [cid, cj] of CAMPAIGN_JOBS) if (cj.session_id === qs) { job = cj; break; } }
           label = `campaign ${campId || qs}`;
         }
-        else if (kind === 'story') { job = STORY_JOBS.get('run'); label = 'story clip'; }
-        else if (kind === 'fb') { job = FB_JOBS.get('run'); label = 'facebook upload'; }
         if (!job) return json(res, 404, { error: 'job tidak ditemukan' });
         if (job.code !== undefined) return json(res, 409, { error: 'job sudah selesai' });
         try {
@@ -2801,15 +2641,13 @@ print(json.dumps(out))`;
       }
       for (const [sid, j] of REFIND_JOBS) jobs.push({ kind: 'refind', type: '🔁 Re-find', session: sid, detail: '', running: j.code === undefined, code: j.code, elapsed_s: Math.round(((j.code !== undefined && j.finishedAt ? j.finishedAt : Date.now()) - j.startedAt) / 1000), logPath: path.join(SESSIONS, sid, 'refind.log') });
       for (const [sid, j] of PROCESS_JOBS) jobs.push({ kind: 'process', type: '🎬 Process', session: sid, detail: '', running: j.code === undefined, code: j.code, elapsed_s: Math.round(((j.code !== undefined && j.finishedAt ? j.finishedAt : Date.now()) - j.startedAt) / 1000), logPath: path.join(SESSIONS, sid, 'process.log') });
+      for (const [sid, j] of REDOWNLOAD_JOBS) jobs.push({ kind: 'redownload', type: '⬇️ Redownload', session: sid, detail: `#${j.index} ${(j.url||'').slice(0,60)}`, running: j.code === undefined, code: j.code, elapsed_s: Math.round(((j.code !== undefined && j.finishedAt ? j.finishedAt : Date.now()) - j.startedAt) / 1000), logPath: path.join(SESSIONS, sid, 'redownload.log') });
       for (const [key, j] of RENDER_JOBS) {
         const [sid, clip] = key.split('/');
         jobs.push({ kind: 'render', type: '⚙️ Render', session: sid, detail: clip, running: j.code === undefined, code: j.code, elapsed_s: Math.round(((j.code !== undefined && j.finishedAt ? j.finishedAt : Date.now()) - j.startedAt) / 1000), logPath: path.join(SESSIONS, sid, 'clips', clip, 'render.log') });
       }
       for (const [campId, j] of CAMPAIGN_JOBS) jobs.push({ kind: 'campaign', type: '🚀 Campaign Auto', session: j.session_id || `tk_${campId}`, detail: `${campId} - ${j.stage} ${j.preset || ''}`.trim(), running: j.code === undefined, code: j.code, elapsed_s: Math.round(((j.code !== undefined && j.finishedAt ? j.finishedAt : Date.now()) - j.startedAt) / 1000), logPath: j.logPath });
-      const storyJ = STORY_JOBS.get('run');
-      if (storyJ) jobs.push({ kind: 'story', type: '🎬 Story Clip', session: '-', detail: '', running: storyJ.code === undefined, code: storyJ.code, elapsed_s: Math.round(((storyJ.code !== undefined && storyJ.finishedAt ? storyJ.finishedAt : Date.now()) - storyJ.startedAt) / 1000), logPath: storyJ.logPath });
-      const fbJ = FB_JOBS.get('run');
-      if (fbJ) jobs.push({ kind: 'fb', type: '📘 FB Upload', session: '-', detail: '', running: fbJ.code === undefined, code: fbJ.code, elapsed_s: Math.round(((fbJ.code !== undefined && fbJ.finishedAt ? fbJ.finishedAt : Date.now()) - fbJ.startedAt) / 1000), logPath: fbJ.logPath });
+
       for (const j of jobs) {
         try { j.last_line = lastLogLine(j.logPath); } catch { j.last_line = ''; }
         try { j.progress = parseOverall(tailFile(j.logPath)); } catch { j.progress = null; }
@@ -2827,6 +2665,7 @@ print(json.dumps(out))`;
         if (kind === 'create') { job = CREATE_JOB; logPath = job && job.logPath; }
         else if (kind === 'refind') { job = REFIND_JOBS.get(qs); logPath = qs ? path.join(SESSIONS, safe(qs), 'refind.log') : null; }
         else if (kind === 'process') { job = PROCESS_JOBS.get(qs); logPath = qs ? path.join(SESSIONS, safe(qs), 'process.log') : null; }
+        else if (kind === 'redownload') { job = REDOWNLOAD_JOBS.get(qs); logPath = qs ? path.join(SESSIONS, safe(qs), 'redownload.log') : null; }
         else if (kind === 'render') { job = RENDER_JOBS.get(`${qs}/${qc}`); logPath = qs && qc ? path.join(SESSIONS, safe(qs), 'clips', safe(qc), 'render.log') : null; }
         else if (kind === 'campaign') { 
           // qs is campaign public_id (e.g. 4273c29e-...) or tk_xxx; support both
@@ -2839,8 +2678,6 @@ print(json.dumps(out))`;
           }
           logPath = job && job.logPath;
         }
-        else if (kind === 'story') { job = STORY_JOBS.get('run'); logPath = job && job.logPath; }
-        else if (kind === 'fb') { job = FB_JOBS.get('run'); logPath = job && job.logPath; }
         else return json(res, 400, { error: 'bad kind' });
       } catch { return json(res, 400, { error: 'bad path' }); }
       if (!job) return json(res, 404, { error: 'job tidak ditemukan' });
@@ -3213,7 +3050,19 @@ print(json.dumps(out))`;
       return;
     }
 
+    // legacy standalone pages -> redirect to single-page hash routes
+    const LEGACY_REDIRECT = {
+      '/create.html': '/#create',
+      '/tasks.html': '/#task',
+      '/dependencies.html': '/#dependencies',
+      '/settings.html': '/#settings',
+    };
+    if (LEGACY_REDIRECT[p]) { res.writeHead(302, { Location: LEGACY_REDIRECT[p] }); return res.end(); }
+    if (p === '/session.html') { const sid = u.searchParams.get('id'); res.writeHead(302, { Location: sid ? '/#session/' + encodeURIComponent(sid) : '/#sesi' }); return res.end(); }
+    if (p === '/detail.html') { const s2 = u.searchParams.get('session'), c2 = u.searchParams.get('clip'); res.writeHead(302, { Location: (s2 && c2) ? '/#detail/' + encodeURIComponent(s2) + '/' + encodeURIComponent(c2) : '/#sesi' }); return res.end(); }
+
     // inject widget disk ke sidebar semua halaman HTML (tanpa merubah file HTML)
+    // single-page: only / and /index.html serve index.html; standalone html files removed
     let fp = path.join(PUBLIC, p === '/' ? 'index.html' : p);
     if ((p === '/' || /\.html$/.test(p)) && !p.includes('login.html')) {
       getDiskStats().then(st => {

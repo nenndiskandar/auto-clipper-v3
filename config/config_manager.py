@@ -295,7 +295,7 @@ class ConfigManager:
                 "api_key": "",
                 "model": "groq/whisper-large-v3",
                 "faster_whisper": {
-                    "model_size": "large-v3"
+                    "model_size": "medium"
                 }
             },
             "hook_maker": {

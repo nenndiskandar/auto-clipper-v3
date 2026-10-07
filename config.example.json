@@ -58,7 +58,7 @@
       "base_url": "http://localhost:20127/v1/audio/transcriptions",
       "api_key": "YOUR_OMNIROUTE_API_KEY",
       "model": "groq/whisper-large-v3",
-      "faster_whisper": { "model_size": "large-v3" }
+      "faster_whisper": { "model_size": "medium" }
     },
     "hook_maker": {
       "base_url": "http://localhost:20127/v1/audio/speech",
