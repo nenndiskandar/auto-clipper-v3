@@ -354,3 +354,20 @@ output/sessions/*
 output/bgm/*
 !output/sessions/.gitkeep
 !output/bgm/.gitkeep
+
+# Node.js (webjs has no package.json but keep for safety)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Runtime / temp
+*.bak
+*.bak.*
+webjs/server.v3.js.bak
+output/sessions/.tmp/
+.env
+session_data.json.bak
+
+# Service secrets
+webjs/.env
+webjs/output/
